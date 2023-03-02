@@ -312,9 +312,9 @@ return [
             'can'  => 'manage-blog',
         ],
         [
-            'text'        => 'pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'far fa-fw fa-file',
+            'text'        => 'Clientes',
+            'url'         => 'clientes',
+            'icon'        => 'fa-duotone fa-user-tie',
             'label'       => 4,
             'label_color' => 'success',
         ],
