@@ -20,6 +20,7 @@ class ClientesController extends Controller
     public function index()
     {
         $cliente = Cliente::all();
+        dd($cliente);
         return view('clientes.index')->with('clientes',$cliente);
 
     }

@@ -20,4 +20,4 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::resource('clientes','App\Http\Controllers\HomeController');
+Route::resource('clientes','App\Http\Controllers\ClientesController');

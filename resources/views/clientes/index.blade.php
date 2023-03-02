@@ -21,16 +21,16 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($articulos as $articulo)
+            @foreach ($clientes as $cli)
                 <tr>
-                    <th>{{$articulo->id}}</th>
-                    <th>{{$articulo->codigo}}</th>
-                    <th>{{$articulo->descripcion}}</th>
-                    <th>{{$articulo->cantidad}}</th>
-                    <th>{{$articulo->precio}}</th>
+                    <th>{{$cli->id}}</th>
+                    <th>{{$cli->codigo}}</th>
+                    <th>{{$cli->descripcion}}</th>
+                    <th>{{$cli->cantidad}}</th>
+                    <th>{{$cli->precio}}</th>
                     <td>
-                        <form action="{{route('clientes.destroy',$articulo->id)}}" method="POST">
-                            <a href="/articulos/{{$articulo->id}}/edit" class="btn btn-info">Editar</a>
+                        <form action="{{route('clientes.destroy',$cli->id)}}" method="POST">
+                            <a href="/articulos/{{$cli->id}}/edit" class="btn btn-info">Editar</a>
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger">Borrar</button>
