@@ -13,24 +13,27 @@
         <thead class="bd-primary text-dark">
             <tr>
                 <th scope="col">ID</th>
-                <th scope="col">Codigo</th>
-                <th scope="col">Descripcion</th>
-                <th scope="col">Cantidad</th>
-                <th scope="col">Precios</th>
-                <th scope="col">Acciones</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Identificación</th>
+                <th scope="col">Status de Contrato</th>
+                <th scope="col">Telefono</th>
+                <th scope="col">Correo Electronico</th>
+                <th scope="col">Dirección</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($clientes as $cli)
+            @foreach ($cliente as $cli)
                 <tr>
-                    <th>{{$cli->id}}</th>
-                    <th>{{$cli->codigo}}</th>
-                    <th>{{$cli->descripcion}}</th>
-                    <th>{{$cli->cantidad}}</th>
-                    <th>{{$cli->precio}}</th>
+                    <th>{{$cli->idcli}}</th>
+                    <th>{{$cli->nombre}}</th>
+                    <th>{{$cli->rif_cedula}}</th>
+                    <th>{{$cli->stscontr}}</th>
+                    <th>{{$cli->telefono}}</th>
+                    <th>{{$cli->email}}</th>
+                    <th>{{$cli->direccion}}</th>
                     <td>
-                        <form action="{{route('clientes.destroy',$cli->id)}}" method="POST">
-                            <a href="/articulos/{{$cli->id}}/edit" class="btn btn-info">Editar</a>
+                        <form action="{{route('clientes.destroy',$cli->idcli)}}" method="POST">
+                            <a href="/clientes/{{$cli->id}}/edit" class="btn btn-info">Editar</a>
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger">Borrar</button>

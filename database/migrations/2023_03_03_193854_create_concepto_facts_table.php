@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStatusTable extends Migration
+class CreateConceptoFactsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateStatusTable extends Migration
      */
     public function up()
     {
-        Schema::create('status', function (Blueprint $table) {
-            $table->id();
-            $table->string('tipsts');
-            $table->string('status',3);
+        Schema::create('concepto_facts', function (Blueprint $table) {
+            $table->id('idcfact');
+            $table->integer('num_ing');
+            $table->integer('num_egre');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateStatusTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('status');
+        Schema::dropIfExists('concepto_facts');
     }
 }

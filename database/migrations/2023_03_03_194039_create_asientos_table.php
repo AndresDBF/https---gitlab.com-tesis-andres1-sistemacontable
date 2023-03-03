@@ -27,7 +27,7 @@ class CreateAsientosTable extends Migration
             $table->unsignedBigInteger('idcta')->unsigned();
             $table->foreign('idcta')
                   ->references('idcta')
-                  ->on('cat_cuentas');
+                  ->on('catalogo_cuentas');
             $table->string('descripcion');
             $table->float('monto_deb',14,2);
             $table->float('monto_cre',14,2);

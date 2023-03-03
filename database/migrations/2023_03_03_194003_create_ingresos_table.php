@@ -23,7 +23,7 @@ class CreateIngresosTable extends Migration
             $table->unsignedBigInteger('idcfact')->nullable();
             $table->foreign('idcfact')
                   ->references('idcfact')
-                  ->on('concepto_fact');
+                  ->on('concepto_facts');
             $table->unsignedBigInteger('coduser')->nullable();
             $table->foreign('coduser')
                   ->references('id')
@@ -35,7 +35,7 @@ class CreateIngresosTable extends Migration
             $table->unsignedBigInteger('idcta')->nullable();
             $table->foreign('idcta')
                   ->references('idcta')
-                  ->on('cat_cuentas');
+                  ->on('catalogo_cuentas');
             $table->timestamps();
         });
     }

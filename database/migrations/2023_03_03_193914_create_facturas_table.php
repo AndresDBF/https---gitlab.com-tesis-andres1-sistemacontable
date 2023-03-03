@@ -25,11 +25,11 @@ class CreateFacturasTable extends Migration
             $table->unsignedBigInteger('idcfact')->nullable();
             $table->foreign('idcfact')
                   ->references('idcfact')
-                  ->on('concepto_fact');
+                  ->on('concepto_facts');
             $table->unsignedBigInteger('idtfact')->nullable();
             $table->foreign('idtfact')
                   ->references('idtfact')
-                  ->on('tip_fact');
+                  ->on('tip_facts');
             $table->timestamps();
         });
     }

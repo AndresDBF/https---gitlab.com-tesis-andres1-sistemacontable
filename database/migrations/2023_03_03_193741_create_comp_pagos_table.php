@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateComprPagoTable extends Migration
+class CreateCompPagosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateComprPagoTable extends Migration
      */
     public function up()
     {
-        Schema::create('compr_pago', function (Blueprint $table) {
+        Schema::create('comp_pagos', function (Blueprint $table) {
             $table->id('idcomp');
             $table->integer('numcompr');
             $table->string('nombre',50);
@@ -38,6 +38,6 @@ class CreateComprPagoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('compr_pago');
+        Schema::dropIfExists('comp_pagos');
     }
 }

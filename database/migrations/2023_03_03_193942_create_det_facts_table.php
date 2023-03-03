@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDetFactTable extends Migration
+class CreateDetFactsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDetFactTable extends Migration
      */
     public function up()
     {
-        Schema::create('det_fact', function (Blueprint $table) {
+        Schema::create('det_facts', function (Blueprint $table) {
             $table->unsignedBigInteger('idfact')->nullable();
             $table->foreign('idfact')
                   ->references('idfact')
@@ -38,6 +38,6 @@ class CreateDetFactTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('det_fact');
+        Schema::dropIfExists('det_facts');
     }
 }

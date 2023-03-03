@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cliente;
+use App\Models\ReglaStatus;
 
 class ClientesController extends Controller
 {
@@ -20,8 +21,7 @@ class ClientesController extends Controller
     public function index()
     {
         $cliente = Cliente::all();
-        dd($cliente);
-        return view('clientes.index')->with('clientes',$cliente);
+        return view('clientes.index')->with('cliente',$cliente);
 
     }
 
@@ -32,7 +32,23 @@ class ClientesController extends Controller
      */
     public function create()
     {
-        return view('clientes/create');
+            $consulta = Cliente::orderBy('idcli','desc')
+                               ->take(1)
+                               ->get();
+            $cuantos = count($consulta);
+            if ($cuantos ==0){
+                $idesigue = 1;
+    
+            }
+            else{
+                $idesigue = $consulta[0]->idcli+1;
+            }
+            $estatus = ReglaStatus::orderBy('sts')
+                                  ->where('nomtabla','clientes')
+                                  ->get();
+        return view('clientes/create')
+                ->with('idsigue',$idesigue)
+                ->with('estatus',$estatus);
     }
 
     /**
@@ -43,7 +59,18 @@ class ClientesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $clientes = new Cliente();
+        $clientes->idcli = $request->code;
+        $clientes->nombre = $request->get('name');
+        $clientes->rif_cedula = $request->get('identification');
+        $clientes->stscontr = $request->get('idd');
+        $clientes->telefono = $request->get('phone');
+        $clientes->email = $request->get('email');
+        $clientes->direccion = $request->get('direction');
+        $clientes->save();
+
+        return redirect('/clientes');
     }
 
     /**
@@ -88,7 +115,7 @@ class ClientesController extends Controller
      */
     public function destroy($id)
     {
-        $cliente = Cliente::find($id);
+        $cliente = Cliente::where('idcli',$id);
         $cliente->delete();
         return redirect('/clientes');
     }

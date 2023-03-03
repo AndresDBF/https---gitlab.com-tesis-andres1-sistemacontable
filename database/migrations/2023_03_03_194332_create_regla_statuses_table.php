@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateConceptoFactTable extends Migration
+class CreateReglaStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateConceptoFactTable extends Migration
      */
     public function up()
     {
-        Schema::create('concepto_fact', function (Blueprint $table) {
-            $table->id('idcfact');
-            $table->integer('num_ing');
-            $table->integer('num_egre');
+        Schema::create('regla_statuses', function (Blueprint $table) {
+            $table->id();
+            $table->string('nomtabla');
+            $table->string('codproceso');
+            $table->string('sts',3);
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateConceptoFactTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('concepto_fact');
+        Schema::dropIfExists('regla_statuses');
     }
 }
