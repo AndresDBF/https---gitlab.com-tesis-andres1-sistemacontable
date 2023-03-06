@@ -15,10 +15,10 @@ class CreateAsientosTable extends Migration
     {
         Schema::create('asientos', function (Blueprint $table) {
             $table->id('idasi');
-            $table->unsignedBigInteger('iding')->nullable();
-            $table->foreign('iding')
-                  ->references('iding')
-                  ->on('ingresos');
+            $table->unsignedBigInteger('idcont')->nullable();
+            $table->foreign('idcont')
+                  ->references('idcont')
+                  ->on('contr_clis');
             $table->date('fec_asi');
             $table->string('refer');
             $table->string('observacion',100);
@@ -27,7 +27,7 @@ class CreateAsientosTable extends Migration
             $table->unsignedBigInteger('idcta')->unsigned();
             $table->foreign('idcta')
                   ->references('idcta')
-                  ->on('catalogo_cuentas');
+                  ->on('cat_cuentas');
             $table->string('descripcion');
             $table->float('monto_deb',14,2);
             $table->float('monto_cre',14,2);

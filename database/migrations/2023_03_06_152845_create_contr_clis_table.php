@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCompPagosTable extends Migration
+class CreateContrClisTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,20 @@ class CreateCompPagosTable extends Migration
      */
     public function up()
     {
-        Schema::create('comp_pagos', function (Blueprint $table) {
-            $table->id('idcomp');
-            $table->integer('numcompr');
-            $table->string('nombre',50);
-            $table->float('monto',14,2);
-            $table->string('stscompr',3);
-            $table->unsignedBigInteger('iduser')->nullable();
-            $table->foreign('iduser')
-                  ->references('id')
-                  ->on('users');
+        Schema::create('contr_clis', function (Blueprint $table) {
+            $table->id('idcont');
             $table->unsignedBigInteger('idcli')->nullable();
             $table->foreign('idcli')
                   ->references('idcli')
                   ->on('clientes');
+            $table->string('stscontr',3);
+            $table->string('tip_pag');
+            $table->float('monto_pag',14,2);
+            $table->string('moneda',2);
+            $table->unsignedBigInteger('idcta')->nullable();
+            $table->foreign('idcta')
+                    ->references('idcta')
+                    ->on('cat_cuentas');
             $table->timestamps();
         });
     }
@@ -38,6 +38,6 @@ class CreateCompPagosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comp_pagos');
+        Schema::dropIfExists('contr_clis');
     }
 }

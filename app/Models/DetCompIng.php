@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CompPago extends Model
+class DetCompIng extends Model
 {
     use HasFactory;
 }

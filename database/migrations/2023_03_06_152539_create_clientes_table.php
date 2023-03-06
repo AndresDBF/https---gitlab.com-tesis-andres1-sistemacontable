@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDetCompPagosTable extends Migration
+class CreateClientesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateDetCompPagosTable extends Migration
      */
     public function up()
     {
-        Schema::create('det_comp_pagos', function (Blueprint $table) {
-            $table->unsignedBigInteger('idcomp')->nullable();
-            $table->foreign('idcomp')
-                  ->references('idcomp')
-                  ->on('comp_pagos');
+        Schema::create('clientes', function (Blueprint $table) {
+            $table->id('idcli');
             $table->string('nombre',50);
-            $table->date('fecha');
-            $table->string('descripcion');
+            $table->string('rif_cedula',15);
+            $table->string('telefono',15);
+            $table->string('email')->nullable();
+            $table->string('direccion');
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ class CreateDetCompPagosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('det_comp_pagos');
+        Schema::dropIfExists('clientes');
     }
 }

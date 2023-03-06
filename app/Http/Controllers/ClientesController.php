@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cliente;
+use App\Models\ContrCli;
 use App\Models\ReglaStatus;
 
 class ClientesController extends Controller
@@ -43,12 +44,11 @@ class ClientesController extends Controller
             else{
                 $idesigue = $consulta[0]->idcli+1;
             }
-            $estatus = ReglaStatus::orderBy('sts')
-                                  ->where('nomtabla','clientes')
-                                  ->get();
         return view('clientes/create')
-                ->with('idsigue',$idesigue)
-                ->with('estatus',$estatus);
+                ->with('idsigue',$idesigue);
+
+                /* $last2 = DB::table('items')->orderBy('id', 'DESC')->first(); */
+                
     }
 
     /**
@@ -60,15 +60,43 @@ class ClientesController extends Controller
     public function store(Request $request)
     {
 
-        $clientes = new Cliente();
-        $clientes->idcli = $request->code;
-        $clientes->nombre = $request->get('name');
-        $clientes->rif_cedula = $request->get('identification');
-        $clientes->stscontr = $request->get('idd');
-        $clientes->telefono = $request->get('phone');
-        $clientes->email = $request->get('email');
-        $clientes->direccion = $request->get('direction');
-        $clientes->save();
+        $customer = new Cliente();
+        $customer->idcli = $request->code;
+        $customer->nombre = $request->get('name');
+        $customer->rif_cedula = $request->get('identification');
+        $customer->telefono = $request->get('phone');
+        $customer->email = $request->get('email');
+        $customer->direccion = $request->get('direction');
+        $customer->save();
+
+        $contrCustomer = new ContrCli();
+        $contrCustomer->idcli = $customer->idcli;
+        $contrCustomer->stscontr = $request->get('stscontr');
+        if ($request->get('tip_pag')==1){
+            $contrCustomer->tip_pag = "Anual";
+        }
+        elseif ($request->get('tip_pag')==2) {
+            $contrCustomer->tip_pag = "Mensual";
+        }
+        elseif ($request->get('tip_pag')==3) {
+            $contrCustomer->tip_pag = "Trimestral";
+        }
+        elseif ($request->get('tip_pag')==4) {
+            $contrCustomer->tip_pag = "Semestral";
+        }
+
+        $contrCustomer->monto_pag = $request->get('valueCont');
+        if ($request->get('money')==1){
+            $contrCustomer->moneda = "BOL";
+        }
+        elseif ($request->get('money')==2) {
+            $contrCustomer->moneda = "USD";
+        }
+        elseif ($request->get('money')==3) {
+            $contrCustomer->moneda = "COP";
+        }
+        $contrCustomer->idcta = $request->get('account');
+        $contrCustomer->save();
 
         return redirect('/clientes');
     }

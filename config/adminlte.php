@@ -314,7 +314,14 @@ return [
         [
             'text'        => 'Clientes',
             'url'         => 'clientes',
-            'icon'        => 'fa-duotone fa-user-tie',
+            'icon'        => 'fas fa-fw fa-users',
+            'label'       => 4,
+            'label_color' => 'success',
+        ],
+        [
+            'text'        => 'Asiento',
+            'url'         => 'clientes',
+            'icon'        => 'fas fa-fw fa-users',
             'label'       => 4,
             'label_color' => 'success',
         ],

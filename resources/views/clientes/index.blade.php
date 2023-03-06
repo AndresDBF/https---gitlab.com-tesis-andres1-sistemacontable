@@ -27,7 +27,6 @@
                     <th>{{$cli->idcli}}</th>
                     <th>{{$cli->nombre}}</th>
                     <th>{{$cli->rif_cedula}}</th>
-                    <th>{{$cli->stscontr}}</th>
                     <th>{{$cli->telefono}}</th>
                     <th>{{$cli->email}}</th>
                     <th>{{$cli->direccion}}</th>
