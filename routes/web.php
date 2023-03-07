@@ -21,3 +21,6 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('clientes','App\Http\Controllers\ClientesController');
+Route::get('seat', function(){
+    return view('seat.index');
+});

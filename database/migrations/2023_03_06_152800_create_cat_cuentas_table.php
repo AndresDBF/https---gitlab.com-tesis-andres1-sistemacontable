@@ -20,10 +20,14 @@ class CreateCatCuentasTable extends Migration
             $table->string('tipmov');
             $table->string('stscta',3);
             $table->string('cta1');
-            $table->string('cta2');
-            $table->string('cta3');
-            $table->string('cta4');
-            $table->string('cta5');
+            $table->string('cta2')
+                  ->nullable();
+            $table->string('cta3')
+                  ->nullable();
+            $table->string('cta4')
+                  ->nullable();
+            $table->string('cta5')
+                  ->nullable();
             $table->timestamps();
         });
     }

@@ -21,7 +21,7 @@ class CreateDetFactsTable extends Migration
             $table->string('nomacre',50);
             $table->string('dirfact',100);
             $table->string('rif-cedula',15);
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('telefono',15);
             $table->string('tip_pago',10);
             $table->string('desc_fact');

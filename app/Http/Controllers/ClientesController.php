@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Cliente;
 use App\Models\ContrCli;
 use App\Models\ReglaStatus;
+use App\Models\CatCuenta;
 
 class ClientesController extends Controller
 {
@@ -21,8 +22,11 @@ class ClientesController extends Controller
      */
     public function index()
     {
-        $cliente = Cliente::all();
-        return view('clientes.index')->with('cliente',$cliente);
+        $customer = Cliente::all();
+        $contrCustomer = ContrCli::all();
+        return view('clientes.index')
+                ->with('customer',$customer)
+                ->with('contrcustomer',$contrCustomer);
 
     }
 
@@ -44,8 +48,11 @@ class ClientesController extends Controller
             else{
                 $idesigue = $consulta[0]->idcli+1;
             }
+            $accounts = CatCuenta::orderBy('tipcta')
+                                 ->get();
         return view('clientes/create')
-                ->with('idsigue',$idesigue);
+                ->with('idsigue',$idesigue)
+                ->with('accounts',$accounts);
 
                 /* $last2 = DB::table('items')->orderBy('id', 'DESC')->first(); */
                 
@@ -59,7 +66,7 @@ class ClientesController extends Controller
      */
     public function store(Request $request)
     {
-
+        
         $customer = new Cliente();
         $customer->idcli = $request->code;
         $customer->nombre = $request->get('name');
@@ -72,29 +79,9 @@ class ClientesController extends Controller
         $contrCustomer = new ContrCli();
         $contrCustomer->idcli = $customer->idcli;
         $contrCustomer->stscontr = $request->get('stscontr');
-        if ($request->get('tip_pag')==1){
-            $contrCustomer->tip_pag = "Anual";
-        }
-        elseif ($request->get('tip_pag')==2) {
-            $contrCustomer->tip_pag = "Mensual";
-        }
-        elseif ($request->get('tip_pag')==3) {
-            $contrCustomer->tip_pag = "Trimestral";
-        }
-        elseif ($request->get('tip_pag')==4) {
-            $contrCustomer->tip_pag = "Semestral";
-        }
-
-        $contrCustomer->monto_pag = $request->get('valueCont');
-        if ($request->get('money')==1){
-            $contrCustomer->moneda = "BOL";
-        }
-        elseif ($request->get('money')==2) {
-            $contrCustomer->moneda = "USD";
-        }
-        elseif ($request->get('money')==3) {
-            $contrCustomer->moneda = "COP";
-        }
+        $contrCustomer->tip_pag = $request->get('tip_pag');
+        $contrCustomer->monto_pag = $request->get('valuecont');
+        $contrCustomer->moneda = $request->get('money');
         $contrCustomer->idcta = $request->get('account');
         $contrCustomer->save();
 

@@ -21,7 +21,7 @@ class CreateAsientosTable extends Migration
                   ->on('contr_clis');
             $table->date('fec_asi');
             $table->string('refer');
-            $table->string('observacion',100);
+            $table->string('observacion',100)->nullable();
             $table->string('contacto_acre',50);
             $table->string('contacto_benf',50);
             $table->unsignedBigInteger('idcta')->unsigned();

@@ -15,8 +15,8 @@ class CreateConceptoFactsTable extends Migration
     {
         Schema::create('concepto_facts', function (Blueprint $table) {
             $table->id('idcfact');
-            $table->integer('num_ing');
-            $table->integer('num_egre');
+            $table->integer('num_ing')->nullable();
+            $table->integer('num_egre')->nullable();
             $table->timestamps();
         });
     }

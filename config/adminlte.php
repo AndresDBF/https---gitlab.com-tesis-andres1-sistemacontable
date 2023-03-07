@@ -320,10 +320,33 @@ return [
         ],
         [
             'text'        => 'Asiento',
-            'url'         => 'clientes',
-            'icon'        => 'fas fa-fw fa-users',
-            'label'       => 4,
+            'url'         => 'seat',
+            'icon'        => 'fas fa-fw fa-wallet',
             'label_color' => 'success',
+        ],
+        [
+            'text'        => 'Ingresos',
+            'url'         => 'seat',
+            'icon'        => 'fas fa-fw fa-dollar-sign',
+            'label_color' => 'success',
+            'submenu' => [
+                [
+                    'text' => 'Comprobante de Ingreso',
+                    'url'  => '#',
+                ],
+                [
+                    'text' => 'Ingreso',
+                    'url'  => '#',
+                ],
+
+            ],
+        ],
+        [
+            'text'        => 'Factura',
+            'url'         => 'fact',
+            'icon'        => 'fas fa-fw fa-file-invoice-dollar',
+            'label_color' => 'success',
+
         ],
         [
             'text'        => 'admin',

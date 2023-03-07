@@ -57,10 +57,10 @@
               <label for="dni">Tipo de Pago</label>
               <select name = 'tip_pag' class="custom-select">
                 <option selected="">Selecciona un tipo de pago</option>
-                  <option value="1">Anual</option>
-                  <option value="2">Mensual</option>
-                  <option value="3">Semestral</option>
-                  <option value="4">Trimestral</option>
+                  <option value="Anual">Anual</option>
+                  <option value="Mensual">Mensual</option>
+                  <option value="Semestral">Semestral</option>
+                  <option value="Trimestral">Trimestral</option>
               </select>
             </div>
           </div>
@@ -76,25 +76,28 @@
                 <label for="dni">Moneda</label>
                 <select name = 'money' class="custom-select">
                   <option selected="">Selecciona una Moneda</option>
-                    <option value="1">Bolivares</option>
-                    <option value="2">Dolares</option>
-                    <option value="3">Pesos</option>
+                    <option value="BOL">Bolivares</option>
+                    <option value="USD">Dolares</option>
+                    <option value="COP">Pesos</option>
                 </select>
               </div>
             </div>
           </div>
         </div>
-
           <div class="form-group">
             <label for="dni">Cuenta de Ingreso</label>
-            <select name = 'tip_pag' class="custom-select">
-              <option selected="">Selecciona una cuenta</option>
-                <option value="1">Anual</option>
-                <option value="2">Mensual</option>
-                <option value="3">Semestral</option>
-                <option value="4">Trimestral</option>
+            <select name = 'account' class="custom-select">
+                <option selected="">Selecciona una cuenta</option>
+                @foreach ($accounts as $account)
+                    <option value="{{$account->idcta}}">
+                      <p class="row aling-items-start">{{$account->tipcta}}</p>
+                      <p class="ms-2">/ {{$account->tipmov}}</p>
+                      <p class="ms-4">/ {{$account->nombre_cuenta}}</p>
+                    </option>
+                @endforeach
             </select>
           </div>
+          
       </div>
       <div class="well pb-3">
         <a href="/clientes" class="btn btn-secondary" tabindex="5">Cancelar</a>
