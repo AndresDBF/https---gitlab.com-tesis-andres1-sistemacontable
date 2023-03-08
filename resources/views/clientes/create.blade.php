@@ -84,10 +84,33 @@
             </div>
           </div>
         </div>
+        
           <div class="form-group">
-            <label for="dni">Cuenta de Ingreso</label>
+            <label for="dni">Tipo de Cuenta</label>
             <select name = 'account' class="custom-select">
                 <option selected="">Selecciona una cuenta</option>
+                @foreach ($accounts as $account)
+                    <option value="{{$account->idcta}}">{{$account->tipcta}}</option>
+                @endforeach
+            </select>
+          </div>
+
+          <div class="form-group" {{ action('ControllerName', ['id'=>1]) }}>
+            <label for="dni">Tipo de Movimiento </label>
+            <select name = 'account' class="custom-select">
+                <option selected="">Selecciona una movimiento</option>
+                @foreach ($accounts as $account)
+                    <option value="{{$account->idcta}}">      
+                      <p class="ms-2">/ {{$account->tipmov}}</p>
+                    </option>
+                @endforeach
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="dni">Nombre de Cuenta</label>
+            <select name = 'account' class="custom-select">
+                <option selected="">Selecciona Nonbre de Cuenta</option>
                 @foreach ($accounts as $account)
                     <option value="{{$account->idcta}}">
                       <p class="row aling-items-start">{{$account->tipcta}}</p>
