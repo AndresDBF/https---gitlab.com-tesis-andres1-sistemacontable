@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cliente;
 use App\Models\ContrCli;
-use App\Models\ReglaStatus;
 use App\Models\CatCuenta;
+use App\Models\ReglaStatus;
+use App\Models\lvalue;
 
 class ClientesController extends Controller
 {
@@ -105,9 +106,42 @@ class ClientesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($idcli)
     {
-        //
+        $dateCustom = Cliente::join('contr_clis','clientes.idcli','=','contr_clis.idcli')
+                             ->select('clientes.idcli','clientes.nombre','clientes.rif_cedula','clientes.telefono','clientes.email',
+                             'clientes.direccion','contr_clis.stscontr','contr_clis.tip_pag','contr_clis.monto_pag','contr_clis.moneda',
+                             'contr_clis.idcta')
+                             ->get();
+                             
+        $accounts = CatCuenta::join('contr_clis','cat_cuentas.idcta','=','contr_clis.idcta')
+                             ->select('cat_cuentas.idcta','cat_cuentas.tipcta','cat_cuentas.tipmov','cat_cuentas.nombre_cuenta')
+                             ->where('idcli',$idcli)
+                             ->get();  
+
+        $accountList = CatCuenta::WhereNotIn('idcta',$accounts)                   
+                                ->get();
+                                
+        $status = ReglaStatus::where('nomtabla','contr_clis')
+                            ->WhereNotIn('sts',$dateCustom)
+                            ->get();
+                            
+        $methodpag = lvalue::select('tipvalue')
+                            ->where('tipvalue','tippago')
+                            ->WhereNotIn('value',$dateCustom) 
+                            ->get();
+
+                            
+        $money = lvalue::where('tipvalue','moneda')
+                        ->get();
+
+        return view('clientes.edit')
+             ->with('datecustom',$dateCustom[0])
+             ->with('accounts',$accounts[0])
+             ->with('accountlist',$accountList)
+             ->with('status',$status)
+             ->with('money',$money)
+             ->with('methodpag',$methodpag);
     }
 
     /**

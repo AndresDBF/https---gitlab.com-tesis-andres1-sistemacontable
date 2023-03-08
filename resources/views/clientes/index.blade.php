@@ -33,14 +33,13 @@
                         <th>{{$contr->moneda}}</th>
                         <th>{{$cli->email}}</th>
                         <td>
+                            
                             <form action="{{route('clientes.destroy',$cli->idcli)}}" method="POST">
-                                <a href="/clientes/{{$cli->id}}/edit" class="btn btn-info">Editar</a>
+                                <a href="/clientes/{{$cli->idcli}}/edit" class="btn btn-info">Editar</a>
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger">Borrar</button>
                             </form>
-
-                            
                         </td>
                     </tr>
                 @endforeach

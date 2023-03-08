@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class ContrCli extends Model
 {
     use HasFactory;
+    protected $primaryKey= 'idcont';
+    protected $fillable = ['idcli','stscontr','tip_pag','monto_pag','moneda','idcta'];
 }

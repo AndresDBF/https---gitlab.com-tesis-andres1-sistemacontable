@@ -84,7 +84,7 @@
             </div>
           </div>
         </div>
-        
+
           <div class="form-group">
             <label for="dni">Tipo de Cuenta</label>
             <select name = 'account' class="custom-select">
@@ -95,7 +95,7 @@
             </select>
           </div>
 
-          <div class="form-group" {{ action('ControllerName', ['id'=>1]) }}>
+          <div class="form-group">
             <label for="dni">Tipo de Movimiento </label>
             <select name = 'account' class="custom-select">
                 <option selected="">Selecciona una movimiento</option>
