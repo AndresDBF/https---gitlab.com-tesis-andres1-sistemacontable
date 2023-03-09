@@ -16,33 +16,28 @@
                 <th scope="col">Nombre</th>
                 <th scope="col">Identificación</th>
                 <th scope="col">Status de Contrato</th>
-                <th scope="col">Monto del Contrato</th>
-                <th scope="col">Moneda</th>
-                <th scope="col">Correo Electrónico</th>
+                <th scope="col">Tipo de Contrato</th>
+                <th scope="col">Acciones</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($customer as $cli)
-                @foreach ($contrcustomer as $contr)
-                    <tr>
-                        <th>{{$cli->idcli}}</th>
-                        <th>{{$cli->nombre}}</th>
-                        <th>{{$cli->rif_cedula}}</th>
-                        <th>{{$contr->stscontr}}</th>
-                        <th>{{$contr->monto_pag}}</th>
-                        <th>{{$contr->moneda}}</th>
-                        <th>{{$cli->email}}</th>
-                        <td>
+                <tr>
+                    <th>{{$cli->idcli}}</th>
+                    <th>{{$cli->nombre}}</th>
+                    <th>{{$cli->rif_cedula}}</th>
+                    <th>{{$cli->stscontr}}</th>
+                    <th>{{$cli->tip_pag}}</th>
+                    <td>
+                        <a href="/clientes/{{$cli->idcli}}/edit" class="btn btn-info">Editar</a>
+                        <form action="{{route('clientes.destroy',$cli->idcli)}}" method="POST">
                             
-                            <form action="{{route('clientes.destroy',$cli->idcli)}}" method="POST">
-                                <a href="/clientes/{{$cli->idcli}}/edit" class="btn btn-info">Editar</a>
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-danger">Borrar</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger">Borrar</button>
+                        </form>
+                    </td>
+                </tr>
             @endforeach
         </tbody>
     </table>

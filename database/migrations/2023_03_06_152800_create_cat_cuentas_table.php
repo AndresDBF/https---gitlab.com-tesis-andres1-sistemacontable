@@ -15,7 +15,7 @@ class CreateCatCuentasTable extends Migration
     {
         Schema::create('cat_cuentas', function (Blueprint $table) {
             $table->id('idcta');
-            $table->string('nombre_cuenta',25);
+            $table->string('nombre_cuenta');
             $table->string('tipcta');
             $table->string('tipmov');
             $table->string('stscta',3);

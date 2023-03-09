@@ -16,11 +16,13 @@ class CatalogoCuentasSeeder extends Seeder
     {
         $data = [
             array('nombre_cuenta'=>'Caja','tipcta'=>'Activo','tipmov'=>'Activo-Circulante','stscta'=>'ACT','cta1'=>'1.10.01'),
-            /* array('nombre_cuenta'=>'Fondo Fijo de Caja','tipcta'=>'Activo','tipmov'=>'Activo-Circulante','stscta'=>'ACT','cta1'=>'1.10.02','cta2'=>'1.10.02.01'), */
+            array('nombre_cuenta'=>'Clientes','tipcta'=>'Activo','tipmov'=>'Activo-Circulante','stscta'=>'ACT','cta1'=>'1.10.02'), 
             array('nombre_cuenta'=>'Bancos','tipcta'=>'Activo','tipmov'=>'Activo-Circulante','stscta'=>'ACT','cta1'=>'1.10.03'),
-            /* array('nombre_cuenta'=>'Documentos por cobrar','tipcta'=>'Activo','tipmov'=>'Activo-Circulante','stscta'=>'ACT','cta1'=>'1.10.04'),
-            array('nombre_cuenta'=>'Intereses por Cobrar','tipcta'=>'Activo','tipmov'=>'Activo-Circulante','stscta'=>'ACT','cta1'=>'1.10.05'),
-            array('nombre_cuenta'=>'Documentos por cobrar','tipcta'=>'Activo','tipmov'=>'Activo-Circulante','stscta'=>'ACT','cta1'=>'1.10.06'), */
+            array('nombre_cuenta'=>'Mobiliario y equipo de oficina','tipcta'=>'Activo','tipmov'=>'Activo No Circulante','stscta'=>'ACT','cta1'=>'1.11.01'),
+            array('nombre_cuenta'=>'Proveedores','tipcta'=>'Pasivo','tipmov'=>'Pasivo a corto plazo','stscta'=>'ACT','cta1'=>'2.20.01'),
+            array('nombre_cuenta'=>'Proveedores extranjeros','tipcta'=>'Pasivo','tipmov'=>'Pasivo a corto plazo','stscta'=>'ACT','cta1'=>'2.20.02'),
+            array('nombre_cuenta'=>'Documentos por pagar','tipcta'=>'Pasivo','tipmov'=>'Pasivo a corto plazo','stscta'=>'ACT','cta1'=>'2.20.03'),
+
         ];
         CatCuenta::insert($data);
     }

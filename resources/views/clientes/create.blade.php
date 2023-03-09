@@ -105,7 +105,7 @@
                     </option>
                 @endforeach
             </select>
-          </div>
+          </div> 
 
           <div class="form-group">
             <label for="dni">Nombre de Cuenta</label>

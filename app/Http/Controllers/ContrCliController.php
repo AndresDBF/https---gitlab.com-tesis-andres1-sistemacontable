@@ -9,18 +9,13 @@ use App\Models\CatCuenta;
 use App\Models\ReglaStatus;
 use App\Models\lvalue;
 
-class ClientesController extends Controller
+class ContrCliController extends Controller
 {
-
-    public function __construct()
+    /* public function __construct()
     {
         $this->middleware('auth');
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $customer = Cliente::join('contr_clis','clientes.idcli','=','contr_clis.idcli')
@@ -31,20 +26,13 @@ class ClientesController extends Controller
         return view('clientes.index')
              ->with('customer',$customer);
 
-    }
+    } */
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function createcli()
     {
-        
             $consulta = Cliente::orderBy('idcli','desc')
                                ->take(1)
                                ->get();
-                               
             $cuantos = count($consulta);
             if ($cuantos == 0){
                 $idesigue = 1;
@@ -53,26 +41,25 @@ class ClientesController extends Controller
             else{
                 $idesigue = $consulta[0]->idcli+1;
             }
-            $accounts = CatCuenta::orderBy('tipcta')
+            $accounts = CatCuenta::select('tipcta','tipmov')
+                                 ->distinct()
+                                 ->orderBy('tipcta')
                                  ->get();
                                  
-            
+            $nameaccount = CatCuenta::select('nombre_cuenta')
+                                    ->distinct()
+                                    
+                                    ->get();
         return view('clientes/create')
                 ->with('idsigue',$idesigue)
-                ->with('accounts',$accounts);
-                
+                ->with('accounts',$accounts)
+                ->with('nameaccount',$nameaccount);
 
                 /* $last2 = DB::table('items')->orderBy('id', 'DESC')->first(); */
                 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function storecli(Request $request)
     {
         
         $customer = new Cliente();
@@ -91,67 +78,31 @@ class ClientesController extends Controller
         $contrCustomer->monto_pag = $request->get('valuecont');
         $contrCustomer->moneda = $request->get('money');
         $contrCustomer->idcta = $request->get('account');
-                                        
         $contrCustomer->save();
 
         return redirect('/clientes');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function editcli($idcli)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($idcli)
-    {        
-        
         $dateCustom = Cliente::join('contr_clis','clientes.idcli','=','contr_clis.idcli')
                              ->select('clientes.idcli','clientes.nombre','clientes.rif_cedula','clientes.telefono','clientes.email',
                              'clientes.direccion','contr_clis.stscontr','contr_clis.tip_pag','contr_clis.monto_pag','contr_clis.moneda',
                              'contr_clis.idcta')
-                             ->where('clientes.idcli',$idcli)
-                             ->get();   
+                             ->get();
                              
-        $accounts = CatCuenta::join('contr_clis','contr_clis.idcta','=','cat_cuentas.idcta')
+        $accounts = CatCuenta::join('contr_clis','cat_cuentas.idcta','=','contr_clis.idcta')
                              ->select('cat_cuentas.idcta','cat_cuentas.tipcta','cat_cuentas.tipmov','cat_cuentas.nombre_cuenta')
-                             ->where('contr_clis.idcli',$idcli)
+                             ->where('idcli',$idcli)
                              ->get();  
-                            
-                             
-                  
-        $accounttip = CatCuenta::join('contr_clis','contr_clis.idcta','=','cat_cuentas.idcta')
-                                ->select('cat_cuentas.idcta','cat_cuentas.tipcta')
-                                ->distinct()
-                                ->where('cat_cuentas.tipcta','act')
-                                ->get();
-                                dd($accounttip);
+
         $accountList = CatCuenta::WhereNotIn('idcta',$accounts)                   
                                 ->get();
                                 
-        /* if ($accounts->tipcta = 'Activo') {
-            
-            $accounts = CatCuenta::join('contr_clis','contr_clis.idcta','=','cat_cuentas.idcta')
-                             ->select('cat_cuentas.idcta','cat_cuentas.tipcta','cat_cuentas.tipmov','cat_cuentas.nombre_cuenta')
-                             ->distinct()
-                             ->get();  
-                             dd($accounts);
-                             
-        }         */    
         $status = ReglaStatus::where('nomtabla','contr_clis')
-                                ->WhereNotIn('sts',$dateCustom)
-                                ->get();         
+                            ->WhereNotIn('sts',$dateCustom)
+                            ->get();
+
         $methodpag = lvalue::where('tipvalue','tippago')
                             ->get();
 
@@ -167,18 +118,11 @@ class ClientesController extends Controller
              ->with('methodpag',$methodpag);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function updatecli(Request $request, $id)
     {
-
+        dd($id);
         $customer = Cliente::find($request->idcli);
-
+        dd($customer);
         $customer->nombre = $request->get('name');
         $customer->rif_cedula = $request->get('identification');
         $customer->telefono = $request->get('phone');
@@ -197,19 +141,10 @@ class ClientesController extends Controller
         return redirect('/clientes');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function deletecli($id)
     {
-        $contrcli = ContrCli::where('idcli',$id);
-        $contrcli->delete();
         $cliente = Cliente::where('idcli',$id);
         $cliente->delete();
-        
         return redirect('/clientes');
     }
 }

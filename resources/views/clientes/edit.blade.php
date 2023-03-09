@@ -7,11 +7,11 @@
 @stop
 
 @section('content')
-<form action="/clientes" method="POST">
+<form action="/clientes/{{$datecustom->idcli}}" method="POST">
     @csrf
       <div class="mb-3">
         <label for="" class="form-label">Codigo Cliente</label>
-        <input type="text" name="code" id="code" class="form-control" readonly="readonly" value="1" tabindex="1">
+        <input type="text" name="code" id="code" class="form-control" readonly="readonly" value="{{$datecustom->idcli}}" tabindex="1">
       </div>
       <div class="well">
         <div class="row">
@@ -60,19 +60,19 @@
           </div>
           <div class="col-xs-6 col-sm-6 col-md-4">
             <div class="form-group">
-              <label for="dni">Tipo de Pago</label>
-              <select name = 'tip_pag' class="custom-select">
+              <label for="dni">Tipo Pago</label>
+              <select name='tip_pag' class="custom-select">
                 @if ($datecustom->tip_pag == null)
-                    <option selected="">Selecciona un tipo de pago</option>
-                @else
-                    <option value="{{$datecustom->tip_pag}}">{{$datecustom->tip_pag}}</option>
+                  <option selected="">Selecciona Estatus</option>
                 @endif
+                  <option value="{{$datecustom->tip_pag}}">{{$datecustom->tip_pag}}</option>
                 @foreach ($methodpag as $method)
-                    <option value="{{$method->tip_pag}}">{{$method->tip_pag}}</option>
+                  <option value="{{$method->tippago}}">{{$method->descripcion}}</option>
                 @endforeach
               </select>
             </div>
           </div>
+          
         </div>
         <div class="well">
           <div class="row">
