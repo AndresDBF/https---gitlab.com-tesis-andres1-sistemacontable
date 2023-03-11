@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClientesController;
+use App\Http\Controllers\Importarexcel;
 //use App\Http\Controllers\ClientesController;
 /*
 |--------------------------------------------------------------------------
@@ -21,3 +23,10 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('clientes','App\Http\Controllers\ClientesController');
+
+
+Route::get('accounttype', [ClientesController::class, 'tipocuenta']);
+Route::post('movementtype/{id}', [ClientesController::class, 'tipomovimiento']);
+Route::post('accountname/{id}', [ClientesController::class, 'nombrecuenta']);
+
+Route::get('importar', [Importarexcel::class, 'impportar']);

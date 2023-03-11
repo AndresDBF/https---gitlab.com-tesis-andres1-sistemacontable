@@ -86,38 +86,24 @@
         </div>
 
           <div class="form-group">
-            <label for="dni">Tipo de Cuenta</label>
-            <select name = 'account' class="custom-select">
+            <label for="accounttype">Tipo de Cuenta</label>
+            <select name = 'accounttype' id ="accounttype" class="custom-select">
                 <option selected="">Selecciona una cuenta</option>
-                @foreach ($accounts as $account)
-                    <option value="{{$account->idcta}}">{{$account->tipcta}}</option>
-                @endforeach
+                
             </select>
           </div>
 
           <div class="form-group">
-            <label for="dni">Tipo de Movimiento </label>
-            <select name = 'account' class="custom-select">
+            <label for="movementtype">Tipo de Movimiento </label>
+            <select name = 'movementtype' id ="movementtype" class="custom-select">
                 <option selected="">Selecciona una movimiento</option>
-                @foreach ($accounts as $account)
-                    <option value="{{$account->idcta}}">      
-                      <p class="ms-2">/ {{$account->tipmov}}</p>
-                    </option>
-                @endforeach
             </select>
           </div> 
 
           <div class="form-group">
-            <label for="dni">Nombre de Cuenta</label>
-            <select name = 'account' class="custom-select">
+            <label for="accountname">Nombre de Cuenta</label>
+            <select name = 'accountname'id="accountname" class="custom-select">
                 <option selected="">Selecciona Nonbre de Cuenta</option>
-                @foreach ($accounts as $account)
-                    <option value="{{$account->idcta}}">
-                      <p class="row aling-items-start">{{$account->tipcta}}</p>
-                      <p class="ms-2">/ {{$account->tipmov}}</p>
-                      <p class="ms-4">/ {{$account->nombre_cuenta}}</p>
-                    </option>
-                @endforeach
             </select>
           </div>
           
@@ -129,3 +115,100 @@
   </form> 
   
 @stop
+<script 
+    src="http://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous">
+</script>
+<script>
+$( document ).ready(function() 
+{
+    cargartipocuenta()
+    $( "#accounttype" ).change(function() 
+    {
+        var accounttype = $('#accounttype').val();
+        $.ajax(
+        {
+          url: "/movementtype/"+accounttype,
+          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+          dataType: 'json', // what to expect back from the server                                                                  
+          data: {},
+          processData: false,
+          cache: false,
+          contentType: false,
+          type: 'post',
+          success: function(data) 
+          {
+              if (data)
+              {
+                var $movementtype = $('#movementtype');
+                $movementtype.empty();
+                var $accountname = $('#accountname');
+                $accountname.empty();
+                data.forEach(element=>
+                {
+                    $movementtype.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
+                });
+              }
+          }
+        });
+    });
+    $( "#movementtype" ).change(function() 
+    {
+        var movementtype = $('#movementtype').val();
+        $.ajax(
+        {
+          url: "/accountname/"+movementtype,
+          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+          dataType: 'json', // what to expect back from the server                                                                  
+          data: {},
+          processData: false,
+          cache: false,
+          contentType: false,
+          type: 'post',
+          success: function(data) 
+          {
+              if (data)
+              {
+                var $accountname = $('#accountname');
+                $accountname.empty();
+                data.forEach(element=>
+                {
+                    $accountname.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
+                });
+              }
+          }
+        });
+    });
+});
+function cargartipocuenta()
+{
+  var datas = new FormData();  
+  $.ajax({
+      url: "/accounttype",
+      dataType: 'json', // what to expect back from the server                                                                  
+      data: {},
+      processData: false,
+      cache: false,
+      contentType: false,
+      type: 'get',
+      success: function(data) 
+      {
+          if (data)
+          {
+            var $accounttype = $('#accounttype');
+            $accounttype.empty();
+            data.forEach(element=>
+            {
+                $accounttype.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
+            });
+          }
+          else
+          {
+             
+          }
+          
+      }
+  });
+}
+</script>
