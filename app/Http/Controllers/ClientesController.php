@@ -7,6 +7,9 @@ use App\Models\Cliente;
 use App\Models\ContrCli;
 use App\Models\CatCuenta;
 use App\Models\ReglaStatus;
+use App\Models\Tipocuenta;
+use App\Models\Tipomovimiento; 
+use App\Models\Nombrecuenta;
 use App\Models\lvalue;
 
 class ClientesController extends Controller
@@ -212,4 +215,17 @@ class ClientesController extends Controller
         
         return redirect('/clientes');
     }
+    public function tipocuenta()
+    {
+        return Tipocuenta::all();
+    }
+    public function tipomovimiento(Request $request)
+    {
+        return Tipomovimiento::where("tipocuenta",$request->id)->get();
+    }
+    public function nombrecuenta(Request $request)
+    {
+        return Nombrecuenta::where("tipomovimiento",$request->id)->get();
+    }
+    
 }
