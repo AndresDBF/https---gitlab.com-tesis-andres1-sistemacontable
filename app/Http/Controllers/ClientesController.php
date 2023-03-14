@@ -119,24 +119,22 @@ class ClientesController extends Controller
         
         $dateCustom = Cliente::join('contr_clis','clientes.idcli','=','contr_clis.idcli')
                              ->select('clientes.idcli','clientes.nombre','clientes.rif_cedula','clientes.telefono','clientes.email',
-                             'clientes.direccion','contr_clis.stscontr','contr_clis.tip_pag','contr_clis.monto_pag','contr_clis.moneda',
-                             'contr_clis.idcta')
+                                      'clientes.direccion','contr_clis.stscontr','contr_clis.tip_pag','contr_clis.monto_pag','contr_clis.moneda',
+                                      'contr_clis.idcta')
                              ->where('clientes.idcli',$idcli)
                              ->get();   
                              
         $accounts = CatCuenta::join('contr_clis','contr_clis.idcta','=','cat_cuentas.idcta')
                              ->select('cat_cuentas.idcta','cat_cuentas.tipcta','cat_cuentas.tipmov','cat_cuentas.nombre_cuenta')
-                             ->where('contr_clis.idcli',$idcli)
-                             ->get();  
-                            
+                             ->whereNotIn('contr_clis.idcli',$idcli)
+                             ->get();
                              
-                  
+
         $accounttip = CatCuenta::join('contr_clis','contr_clis.idcta','=','cat_cuentas.idcta')
                                 ->select('cat_cuentas.idcta','cat_cuentas.tipcta')
                                 ->distinct()
-                                ->where('cat_cuentas.tipcta','act')
+                                ->whereNotIn('cat_cuentas.tipcta',[$idcli->idcta])
                                 ->get();
-                                dd($accounttip);
         $accountList = CatCuenta::WhereNotIn('idcta',$accounts)                   
                                 ->get();
                                 

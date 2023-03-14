@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-//use App\Http\Controllers\ClientesController;
+use App\Http\Controllers\AsientoController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,3 +21,4 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('clientes','App\Http\Controllers\ClientesController');
+Route::get('asiento',[AsientoController::class,'index'])->name('asiento');

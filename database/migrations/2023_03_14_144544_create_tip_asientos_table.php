@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReglaStatusesTable extends Migration
+class CreateTipAsientosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateReglaStatusesTable extends Migration
      */
     public function up()
     {
-        Schema::create('regla_statuses', function (Blueprint $table) {
-            $table->id();
-            $table->string('nomtabla');
-            $table->string('codproceso');
-            $table->string('sts',3);
+        Schema::create('tip_asientos', function (Blueprint $table) {
+            $table->id('idtasi');
+            $table->string('tipasi');
+            $table->string('descripcion');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateReglaStatusesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('regla_statuses');
+        Schema::dropIfExists('tip_asientos');
     }
 }

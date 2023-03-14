@@ -2,12 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Schema;
-use Spatie\Permission\Models\Role;
-use App\Models\User;
 
-class CreateRoles extends Migration
+class CreateReglaStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,11 +13,12 @@ class CreateRoles extends Migration
      */
     public function up()
     {
-        $role1 = Role::create(['name' => 'admin']);
-        $role2 = Role::create(['name' => 'escritor']);
-        
-        $user = User::find(1);
-        $user->assignRole('admin');
+        Schema::create('regla_statuses', function (Blueprint $table) {
+            $table->id();
+            $table->string('tipsts');
+            $table->string('sts');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -30,6 +28,6 @@ class CreateRoles extends Migration
      */
     public function down()
     {
-        
+        Schema::dropIfExists('regla_statuses');
     }
 }
