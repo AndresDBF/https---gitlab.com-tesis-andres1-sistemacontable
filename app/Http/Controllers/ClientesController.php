@@ -153,19 +153,19 @@ class ClientesController extends Controller
         $status = ReglaStatus::where('nomtabla','contr_clis')
                                 ->WhereNotIn('sts',$dateCustom)
                                 ->get();         
-        $methodpag = lvalue::where('tipvalue','tippago')
+       /*  $methodpag = lvalue::where('tipvalue','tippago')
                             ->get();
 
         $money = lvalue::where('tipvalue','moneda')
-                        ->get();
+                        ->get(); */
         
         return view('clientes.edit')
              ->with('datecustom',$dateCustom[0])
              ->with('accounts',$accounts[0])
              ->with('accountlist',$accountList)
-             ->with('status',$status)
-             ->with('money',$money)
-             ->with('methodpag',$methodpag);
+             ->with('status',$status);
+             /* ->with('money',$money)
+             ->with('methodpag',$methodpag); */
     }
 
     /**

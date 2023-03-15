@@ -18,14 +18,11 @@ class CreateRoles extends Migration
     {
         $role1 = Role::create(['name' => 'admin']);
         $role2 = Role::create(['name' => 'escritor']);
-        
-<<<<<<< HEAD
+
         $user = User::find(1);
         $user->assignRole('admin');
-=======
         //$user = User::find(1);
         //$user->assignRole('admin');
->>>>>>> c460ca5a5f5823c6756f45eaaa57e9aec497af78
     }
 
     /**
