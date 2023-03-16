@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class CatgSubCuenta extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'idscu',	
+        'idcta',	
+        'tipsubcta',	
+        'descripcion',
+    ];
 }

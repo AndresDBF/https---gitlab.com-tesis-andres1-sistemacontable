@@ -15,9 +15,9 @@ class ReglasStsSeeder extends Seeder
     public function run()
     {
         $data = [
-            array('nomtabla' =>'contr_clis','codproceso'=>'contrato','sts'=>'ACT'),
-            array('nomtabla' =>'contr_clis','codproceso'=>'contrato','sts'=>'ANU'),
-            array('nomtabla' =>'contr_clis','codproceso'=>'contrato','sts'=>'RET'),
+            array('tipsts'=>'contrato','sts'=>'ANU'),
+            array('tipsts'=>'contrato','sts'=>'ACT'),
+            array('tipsts'=>'contrato','sts'=>'RET'),
         ];
         ReglaStatus::insert($data);
     }

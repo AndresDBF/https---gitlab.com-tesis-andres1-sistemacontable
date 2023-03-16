@@ -7,10 +7,16 @@ use App\Models\Cliente;
 use App\Models\ContrCli;
 use App\Models\CatCuenta;
 use App\Models\ReglaStatus;
-use App\Models\Tipocuenta;
+use App\Models\Moneda;
+use App\Models\CatGrupo;
+use App\Models\CatSubGru;
+use App\Models\CatgCuenta;
+use App\Models\CatgSubCuenta;
+use App\Models\TipPago;
+/* use App\Models\Tipocuenta;
 use App\Models\Tipomovimiento; 
-use App\Models\Nombrecuenta;
-use App\Models\lvalue;
+use App\Models\Nombrecuenta; */
+
 
 class ClientesController extends Controller
 {
@@ -56,13 +62,19 @@ class ClientesController extends Controller
             else{
                 $idesigue = $consulta[0]->idcli+1;
             }
-            $accounts = CatCuenta::orderBy('tipcta')
-                                 ->get();
+            /* $accounts = CatCuenta::orderBy('tipcta')
+                                 ->get(); */
+            $tippag = TipPago::orderBy('descripcion')
+                             ->get();
+            $money = Moneda::all();
+            $status = ReglaStatus::all();
                                  
             
         return view('clientes/create')
                 ->with('idsigue',$idesigue)
-                ->with('accounts',$accounts);
+                ->with('tippag',$tippag)
+                ->with('money',$money)
+                ->with('status',$status);
                 
 
                 /* $last2 = DB::table('items')->orderBy('id', 'DESC')->first(); */
@@ -213,7 +225,23 @@ class ClientesController extends Controller
         
         return redirect('/clientes');
     }
-    public function tipocuenta()
+    public function groupaccount()
+    {
+        return CatGrupo::all();
+    }
+    public function subgroupaccount(Request $request)
+    {
+        return CatSubGru::where("tipcta",$request->id)->get();
+    }
+    public function accountname(Request $request)
+    {
+        return CatgCuenta::where("tipcta",$request->id)->get();
+    }
+    public function subaccountname(Request $request){
+        return CatgSubCuenta::where('tipsubcta',$request->id)->get();
+    }
+
+    /* public function tipocuenta()
     {
         return Tipocuenta::all();
     }
@@ -224,6 +252,5 @@ class ClientesController extends Controller
     public function nombrecuenta(Request $request)
     {
         return Nombrecuenta::where("tipomovimiento",$request->id)->get();
-    }
-    
+    } */
 }

@@ -86,6 +86,35 @@
         </div>
 
           <div class="form-group">
+            <label for="groupaccount">Grupo de Cuenta</label>
+            <select name = 'groupaccount' id ="groupaccount" class="custom-select">
+                <option selected="">Seleccionar Grupo</option>
+                
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="subgroupaccount">Subgrupo de Cuenta</label>
+            <select name = 'subgroupaccount' id ="subgroupaccount" class="custom-select">
+                <option selected="">Seleccionar Subgrupo</option>
+            </select>
+          </div> 
+
+          <div class="form-group">
+            <label for="accountname">Nombre de Cuenta</label>
+            <select name = 'accountname'id="accountname" class="custom-select">
+                <option selected="">Seleccionar Cuenta</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="subaccountname">Nombre de Subcuenta</label>
+            <select name = 'subaccountname'id="subaccountname" class="custom-select">
+                <option selected="">Seleccionar Subcuenta</option>
+            </select>
+          </div>
+
+          {{-- <div class="form-group">
             <label for="accounttype">Tipo de Cuenta</label>
             <select name = 'accounttype' id ="accounttype" class="custom-select">
                 <option selected="">Selecciona una cuenta</option>
@@ -105,7 +134,7 @@
             <select name = 'accountname'id="accountname" class="custom-select">
                 <option selected="">Selecciona Nonbre de Cuenta</option>
             </select>
-          </div>
+          </div> --}}
           
       </div>
       <div class="well pb-3">

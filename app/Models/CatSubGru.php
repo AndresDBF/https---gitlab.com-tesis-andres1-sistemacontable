@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class CatSubGru extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'idsgr',	
+        'idcta',	
+        'tipsubg',	
+        'descripcion',
+    ];
 }

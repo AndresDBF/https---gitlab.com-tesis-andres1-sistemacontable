@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\CatCuentaImport;
+use App\Imports\CatgCuentaImport;
+use App\Imports\CatGrupoImport;
+use App\Imports\CatgSubCuentaImport;
+use App\Imports\CatSubGruImport;
+use App\Models\CatCuenta;
 
 class Importarexcel extends Controller
 {
@@ -37,7 +42,7 @@ class Importarexcel extends Controller
                 $value = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
             }
         } */
-        Excel::import(new CatCuentaImport, request()->file('excel'));
+        Excel::import(new CatgSubCuentaImport(), request()->file('excel'));
         
         return redirect()->to(url('excel/importar'));
 

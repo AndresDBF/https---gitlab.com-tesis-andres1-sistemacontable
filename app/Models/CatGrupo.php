@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class CatGrupo extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'idgru',
+        'idcta',	
+        'tipgrup',
+        'descripcion',
+    ];
 }
