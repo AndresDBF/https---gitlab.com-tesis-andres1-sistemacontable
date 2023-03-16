@@ -48,7 +48,9 @@
               <label for="dni">Estatus de Contrato</label>
               <select name = 'stscontr' class="custom-select">
                 <option selected="">Selecciona el Estatus de contrato</option>
-                  <option value="ACT">Activo</option>
+                  @foreach ($status as $sts)
+                    <option value="{{$sts->sts}}">{{$sts->sts}}</option>
+                  @endforeach
               </select>
             </div>
           </div>
@@ -57,10 +59,9 @@
               <label for="dni">Tipo de Pago</label>
               <select name = 'tip_pag' class="custom-select">
                 <option selected="">Selecciona un tipo de pago</option>
-                  <option value="Anual">Anual</option>
-                  <option value="Mensual">Mensual</option>
-                  <option value="Semestral">Semestral</option>
-                  <option value="Trimestral">Trimestral</option>
+                  @foreach ($tippag as $tip)
+                      <option value="{{$tip->tippago}}">{{$tip->descripcion}}</option>
+                  @endforeach
               </select>
             </div>
           </div>
@@ -76,9 +77,9 @@
                 <label for="dni">Moneda</label>
                 <select name = 'money' class="custom-select">
                   <option selected="">Selecciona una Moneda</option>
-                    <option value="BOL">Bolivares</option>
-                    <option value="USD">Dolares</option>
-                    <option value="COP">Pesos</option>
+                    @foreach ($money as $mon)
+                      <option value="{{$mon->tipmoneda}}">{{$mon->descripcion}}</option>
+                    @endforeach
                 </select>
               </div>
             </div>
@@ -144,100 +145,102 @@
   </form> 
   
 @stop
-<script 
-    src="http://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous">
-</script>
-<script>
-$( document ).ready(function() 
-{
-    cargartipocuenta()
-    $( "#accounttype" ).change(function() 
-    {
-        var accounttype = $('#accounttype').val();
-        $.ajax(
-        {
-          url: "/movementtype/"+accounttype,
-          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-          dataType: 'json', // what to expect back from the server                                                                  
-          data: {},
-          processData: false,
-          cache: false,
-          contentType: false,
-          type: 'post',
-          success: function(data) 
-          {
-              if (data)
-              {
-                var $movementtype = $('#movementtype');
-                $movementtype.empty();
-                var $accountname = $('#accountname');
-                $accountname.empty();
-                data.forEach(element=>
-                {
-                    $movementtype.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
-                });
-              }
-          }
-        });
-    });
-    $( "#movementtype" ).change(function() 
-    {
-        var movementtype = $('#movementtype').val();
-        $.ajax(
-        {
-          url: "/accountname/"+movementtype,
-          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-          dataType: 'json', // what to expect back from the server                                                                  
-          data: {},
-          processData: false,
-          cache: false,
-          contentType: false,
-          type: 'post',
-          success: function(data) 
-          {
-              if (data)
-              {
-                var $accountname = $('#accountname');
-                $accountname.empty();
-                data.forEach(element=>
-                {
-                    $accountname.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
-                });
-              }
-          }
-        });
-    });
-});
-function cargartipocuenta()
-{
-  var datas = new FormData();  
-  $.ajax({
-      url: "/accounttype",
-      dataType: 'json', // what to expect back from the server                                                                  
-      data: {},
-      processData: false,
-      cache: false,
-      contentType: false,
-      type: 'get',
-      success: function(data) 
+@section('js')
+  <script 
+      src="http://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous">
+  </script>
+  <script>
+  $( document ).ready(function() 
+  {
+      cargartipocuenta()
+      $( "#accounttype" ).change(function() 
       {
-          if (data)
+          var accounttype = $('#accounttype').val();
+          $.ajax(
           {
-            var $accounttype = $('#accounttype');
-            $accounttype.empty();
-            data.forEach(element=>
+            url: "/movementtype/"+accounttype,
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            dataType: 'json', // what to expect back from the server                                                                  
+            data: {},
+            processData: false,
+            cache: false,
+            contentType: false,
+            type: 'post',
+            success: function(data) 
             {
-                $accounttype.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
-            });
-          }
-          else
+                if (data)
+                {
+                  var $movementtype = $('#movementtype');
+                  $movementtype.empty();
+                  var $accountname = $('#accountname');
+                  $accountname.empty();
+                  data.forEach(element=>
+                  {
+                      $movementtype.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
+                  });
+                }
+            }
+          });
+      });
+      $( "#movementtype" ).change(function() 
+      {
+          var movementtype = $('#movementtype').val();
+          $.ajax(
           {
-             
-          }
-          
-      }
+            url: "/accountname/"+movementtype,
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            dataType: 'json', // what to expect back from the server                                                                  
+            data: {},
+            processData: false,
+            cache: false,
+            contentType: false,
+            type: 'post',
+            success: function(data) 
+            {
+                if (data)
+                {
+                  var $accountname = $('#accountname');
+                  $accountname.empty();
+                  data.forEach(element=>
+                  {
+                      $accountname.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
+                  });
+                }
+            }
+          });
+      });
   });
-}
-</script>
+  function cargartipocuenta()
+  {
+    var datas = new FormData();  
+    $.ajax({
+        url: "/accounttype",
+        dataType: 'json', // what to expect back from the server                                                                  
+        data: {},
+        processData: false,
+        cache: false,
+        contentType: false,
+        type: 'get',
+        success: function(data) 
+        {
+            if (data)
+            {
+              var $accounttype = $('#accounttype');
+              $accounttype.empty();
+              data.forEach(element=>
+              {
+                  $accounttype.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
+              });
+            }
+            else
+            {
+              
+            }
+            
+        }
+    });
+  }
+  </script>
+@stop
