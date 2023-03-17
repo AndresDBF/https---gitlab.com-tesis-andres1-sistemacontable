@@ -105,8 +105,7 @@ class ClientesController extends Controller
         $contrCustomer->tip_pag = $request->get('tip_pag');
         $contrCustomer->monto_pag = $request->get('valuecont');
         $contrCustomer->moneda = $request->get('money');
-        $contrCustomer->idcta = $request->get('account');
-                                        
+        $contrCustomer->idcta = $request->get('account');                            
         $contrCustomer->save();
 
         return redirect('/clientes');
