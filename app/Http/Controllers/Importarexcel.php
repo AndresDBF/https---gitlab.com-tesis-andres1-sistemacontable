@@ -42,7 +42,12 @@ class Importarexcel extends Controller
                 $value = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
             }
         } */
-        Excel::import(new CatgSubCuentaImport(), request()->file('excel'));
+        //Excel::import(new CatCuentaImport(), request()->file('excel'));
+        //Excel::import(new CatGrupoImport(), request()->file('excel'));
+        //Excel::import(new CatSubGruImport(), request()->file('excel'));
+        Excel::import(new CatgCuentaImport(), request()->file('excel'));
+        //Excel::import(new CatgSubCuentaImport(), request()->file('excel'));
+
         
         return redirect()->to(url('excel/importar'));
 

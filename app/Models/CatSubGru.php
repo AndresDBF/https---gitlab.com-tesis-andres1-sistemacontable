@@ -10,7 +10,8 @@ class CatSubGru extends Model
     use HasFactory;
     protected $fillable = [
         'idsgr',	
-        'idcta',	
+        'idcta',
+        'tipgrup',
         'tipsubg',	
         'descripcion',
     ];

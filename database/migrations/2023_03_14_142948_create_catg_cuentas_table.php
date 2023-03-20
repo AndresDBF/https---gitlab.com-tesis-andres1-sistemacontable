@@ -19,6 +19,7 @@ class CreateCatgCuentasTable extends Migration
             $table->foreign('idcta')
                   ->references('idcta')
                   ->on('cat_cuentas');
+            $table->string('tipsubg',20);
             $table->string('tipcta',20);
             $table->string('descripcion');
             $table->timestamps();

@@ -111,12 +111,12 @@
                   </select>
                 </div>
       
-                <div class="form-group">
+                {{-- <div class="form-group">
                   <label for="subaccountname">Nombre de Subcuenta</label>
                   <select name = 'subaccountname'id="subaccountname" class="custom-select">
                       <option selected="">Seleccionar Subcuenta</option>
                   </select>
-                </div>
+                </div> --}}
       
                 {{-- <div class="form-group">
                   <label for="accounttype">Tipo de Cuenta</label>
@@ -165,10 +165,10 @@
       cargartipocuenta()
       $( "#groupaccount" ).change(function() /* el # busca el id del div html */
       {
-          var accounttype = $('#groupaccount').val();
+          var groupaccount = $('#groupaccount').val();
           $.ajax(
           {
-            url: "/subgroupaccount/"+accounttype,
+            url: "/subgroupaccount/"+groupaccount,
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             dataType: 'json', // what to expect back from the server                                                                  
             data: {},
@@ -180,24 +180,24 @@
             {
                 if (data)
                 {
-                  var $movementtype = $('#movementtype');
-                  $movementtype.empty();
+                  var $subgroupaccount = $('#subgroupaccount');
+                  $subgroupaccount.empty();
                   var $accountname = $('#accountname');
                   $accountname.empty();
                   data.forEach(element=>
                   {
-                      $movementtype.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
+                      $subgroupaccount.append('<option value=' + element.tipsubg + '>' + element.descripcion + '</option>')
                   });
                 }
             }
           });
       });
-      $( "#movementtype" ).change(function() 
+      $( "#subgroupaccount" ).change(function() 
       {
-          var movementtype = $('#movementtype').val();
+          var subgroupaccount = $('#subgroupaccount').val();
           $.ajax(
           {
-            url: "/accountname/"+movementtype,
+            url: "/accountname/"+subgroupaccount,
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             dataType: 'json', // what to expect back from the server                                                                  
             data: {},
@@ -213,7 +213,7 @@
                   $accountname.empty();
                   data.forEach(element=>
                   {
-                      $accountname.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
+                      $accountname.append('<option value=' + element.tipcta + '>' + element.descripcion + '</option>')
                   });
                 }
             }
@@ -224,7 +224,7 @@
   {
     var datas = new FormData();  
     $.ajax({
-        url: "/accounttype",
+        url: "/groupaccount",
         dataType: 'json', // what to expect back from the server                                                                  
         data: {},
         processData: false,
@@ -235,11 +235,11 @@
         {
             if (data)
             {
-              var $accounttype = $('#accounttype');
+              var $accounttype = $('#groupaccount');
               $accounttype.empty();
               data.forEach(element=>
               {
-                  $accounttype.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
+                  $accounttype.append('<option value=' + element.tipgrup + '>' + element.descripcion + '</option>')
               });
             }
             else

@@ -17,7 +17,7 @@ class CreateCatCuentasTable extends Migration
             $table->id('idcta');
             $table->string('stscta',3);
             $table->integer('cta1');
-            $table->integer('cta2')->nullable();
+            $table->string('cta2')->nullable();
             $table->string('cta3')->nullable();
             $table->string('cta4')->nullable();
             $table->string('cta5')->nullable();
