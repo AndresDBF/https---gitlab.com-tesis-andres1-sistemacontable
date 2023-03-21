@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLvaluesTable extends Migration
+class CreateCatGruposTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreateLvaluesTable extends Migration
      */
     public function up()
     {
-        Schema::create('lvalues', function (Blueprint $table) {
-            $table->id();
-            $table->string('tipvalue');
-            $table->string('value');
+        Schema::create('cat_grupos', function (Blueprint $table) {
+            $table->id('idgru');
+            $table->unsignedBigInteger('idcta');
+            $table->foreign('idcta')
+                  ->references('idcta')
+                  ->on('cat_cuentas');
+            $table->string('tipgrup',20);
             $table->string('descripcion');
             $table->timestamps();
         });
@@ -29,6 +32,6 @@ class CreateLvaluesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lvalues');
+        Schema::dropIfExists('cat_grupos');
     }
 }

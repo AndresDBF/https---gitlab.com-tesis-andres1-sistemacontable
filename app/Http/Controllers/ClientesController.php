@@ -7,10 +7,16 @@ use App\Models\Cliente;
 use App\Models\ContrCli;
 use App\Models\CatCuenta;
 use App\Models\ReglaStatus;
-use App\Models\Tipocuenta;
+use App\Models\Moneda;
+use App\Models\CatGrupo;
+use App\Models\CatSubGru;
+use App\Models\CatgCuenta;
+use App\Models\CatgSubCuenta;
+use App\Models\TipPago;
+/* use App\Models\Tipocuenta;
 use App\Models\Tipomovimiento; 
-use App\Models\Nombrecuenta;
-use App\Models\lvalue;
+use App\Models\Nombrecuenta; */
+
 
 class ClientesController extends Controller
 {
@@ -56,13 +62,19 @@ class ClientesController extends Controller
             else{
                 $idesigue = $consulta[0]->idcli+1;
             }
-            $accounts = CatCuenta::orderBy('tipcta')
-                                 ->get();
-                                 
+            /* $accounts = CatCuenta::orderBy('tipcta')
+                                 ->get(); */
+            $tippag = TipPago::orderBy('descripcion')
+                             ->get();
+            $money = Moneda::all();
+            $status = ReglaStatus::all();
+                     
             
         return view('clientes/create')
                 ->with('idsigue',$idesigue)
-                ->with('accounts',$accounts);
+                ->with('tippag',$tippag)
+                ->with('money',$money)
+                ->with('status',$status);
                 
 
                 /* $last2 = DB::table('items')->orderBy('id', 'DESC')->first(); */
@@ -93,8 +105,7 @@ class ClientesController extends Controller
         $contrCustomer->tip_pag = $request->get('tip_pag');
         $contrCustomer->monto_pag = $request->get('valuecont');
         $contrCustomer->moneda = $request->get('money');
-        $contrCustomer->idcta = $request->get('account');
-                                        
+        $contrCustomer->idcta = $request->get('account');                            
         $contrCustomer->save();
 
         return redirect('/clientes');
@@ -122,24 +133,22 @@ class ClientesController extends Controller
         
         $dateCustom = Cliente::join('contr_clis','clientes.idcli','=','contr_clis.idcli')
                              ->select('clientes.idcli','clientes.nombre','clientes.rif_cedula','clientes.telefono','clientes.email',
-                             'clientes.direccion','contr_clis.stscontr','contr_clis.tip_pag','contr_clis.monto_pag','contr_clis.moneda',
-                             'contr_clis.idcta')
+                                      'clientes.direccion','contr_clis.stscontr','contr_clis.tip_pag','contr_clis.monto_pag','contr_clis.moneda',
+                                      'contr_clis.idcta')
                              ->where('clientes.idcli',$idcli)
                              ->get();   
                              
         $accounts = CatCuenta::join('contr_clis','contr_clis.idcta','=','cat_cuentas.idcta')
                              ->select('cat_cuentas.idcta','cat_cuentas.tipcta','cat_cuentas.tipmov','cat_cuentas.nombre_cuenta')
-                             ->where('contr_clis.idcli',$idcli)
-                             ->get();  
-                            
+                             ->whereNotIn('contr_clis.idcli',$idcli)
+                             ->get();
                              
-                  
+
         $accounttip = CatCuenta::join('contr_clis','contr_clis.idcta','=','cat_cuentas.idcta')
                                 ->select('cat_cuentas.idcta','cat_cuentas.tipcta')
                                 ->distinct()
-                                ->where('cat_cuentas.tipcta','act')
+                                ->whereNotIn('cat_cuentas.tipcta',[$idcli->idcta])
                                 ->get();
-                                dd($accounttip);
         $accountList = CatCuenta::WhereNotIn('idcta',$accounts)                   
                                 ->get();
                                 
@@ -155,19 +164,19 @@ class ClientesController extends Controller
         $status = ReglaStatus::where('nomtabla','contr_clis')
                                 ->WhereNotIn('sts',$dateCustom)
                                 ->get();         
-        $methodpag = lvalue::where('tipvalue','tippago')
+       /*  $methodpag = lvalue::where('tipvalue','tippago')
                             ->get();
 
         $money = lvalue::where('tipvalue','moneda')
-                        ->get();
+                        ->get(); */
         
         return view('clientes.edit')
              ->with('datecustom',$dateCustom[0])
              ->with('accounts',$accounts[0])
              ->with('accountlist',$accountList)
-             ->with('status',$status)
-             ->with('money',$money)
-             ->with('methodpag',$methodpag);
+             ->with('status',$status);
+             /* ->with('money',$money)
+             ->with('methodpag',$methodpag); */
     }
 
     /**
@@ -215,7 +224,23 @@ class ClientesController extends Controller
         
         return redirect('/clientes');
     }
-    public function tipocuenta()
+    public function groupaccount()
+    {
+        return CatGrupo::all();
+    }
+    public function subgroupaccount(Request $request)
+    {
+        return CatSubGru::where("tipgrup",$request->tipgrup)->get();
+    }
+    public function accountname(Request $request)
+    {
+        return CatgCuenta::where("tipsubg",$request->tipsubg)->get();
+    }
+    public function subaccountname(Request $request){
+        return CatgSubCuenta::where('tipcta',$request->tipcta)->get();
+    }
+
+    /* public function tipocuenta()
     {
         return Tipocuenta::all();
     }
@@ -226,6 +251,5 @@ class ClientesController extends Controller
     public function nombrecuenta(Request $request)
     {
         return Nombrecuenta::where("tipomovimiento",$request->id)->get();
-    }
-    
+    } */
 }

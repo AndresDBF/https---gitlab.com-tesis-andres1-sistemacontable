@@ -15,23 +15,16 @@ class CreateCatCuentasTable extends Migration
     {
         Schema::create('cat_cuentas', function (Blueprint $table) {
             $table->id('idcta');
-            $table->string('nombre_cuenta');
-            $table->string('tipcta');
-            $table->string('tipmov');
             $table->string('stscta',3);
-            $table->string('cta1');
-            $table->string('cta2')
-                  ->nullable();
-            $table->string('cta3')
-                  ->nullable();
-            $table->string('cta4')
-                  ->nullable();
-            $table->string('cta5')
-                  ->nullable();
+            $table->integer('cta1');
+            $table->string('cta2')->nullable();
+            $table->string('cta3')->nullable();
+            $table->string('cta4')->nullable();
+            $table->string('cta5')->nullable();
             $table->timestamps();
         });
     }
-    
+
     /**
      * Reverse the migrations.
      *

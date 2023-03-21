@@ -15,6 +15,10 @@ class CreateFacturasTable extends Migration
     {
         Schema::create('facturas', function (Blueprint $table) {
             $table->id('idfact');
+            $table->unsignedBigInteger('idfadt');
+            $table->foreign('idfadt')
+                  ->references('idfadt')
+                  ->on('det_facts');
             $table->integer('numfact');
             $table->string('numctrl');
             $table->string('stsfact',3);
@@ -22,10 +26,6 @@ class CreateFacturasTable extends Migration
             $table->float('mtoimponible',14,2);
             $table->float('mtoimpuesto',14,2);
             $table->float('mtototal',14,2);
-            $table->unsignedBigInteger('idcfact')->nullable();
-            $table->foreign('idcfact')
-                  ->references('idcfact')
-                  ->on('concepto_facts');
             $table->timestamps();
         });
     }

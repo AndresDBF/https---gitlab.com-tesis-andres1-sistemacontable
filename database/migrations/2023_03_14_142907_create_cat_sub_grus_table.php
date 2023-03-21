@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTipocuentasTable extends Migration
+class CreateCatSubGrusTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,14 @@ class CreateTipocuentasTable extends Migration
      */
     public function up()
     {
-        Schema::create('tipocuentas', function (Blueprint $table) {
-            $table->id();
+        Schema::create('cat_sub_grus', function (Blueprint $table) {
+            $table->id('idsgr');
+            $table->unsignedBigInteger('idcta');
+            $table->foreign('idcta')
+                  ->references('idcta')
+                  ->on('cat_cuentas');
+            $table->string('tipgrup',20);
+            $table->string('tipsubg',20);
             $table->string('descripcion');
             $table->timestamps();
         });
@@ -27,6 +33,6 @@ class CreateTipocuentasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tipocuentas');
+        Schema::dropIfExists('cat_sub_grus');
     }
 }

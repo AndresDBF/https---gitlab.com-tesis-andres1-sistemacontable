@@ -320,7 +320,7 @@ return [
         ],
         [
             'text'        => 'Asiento',
-            'url'         => 'seat',
+            'url'         => 'asiento',
             'icon'        => 'fas fa-fw fa-wallet',
             'label_color' => 'success',
         ],

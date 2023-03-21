@@ -15,13 +15,13 @@ class CreateAsientosTable extends Migration
     {
         Schema::create('asientos', function (Blueprint $table) {
             $table->id('idasi');
-            $table->unsignedBigInteger('idcont')->nullable();
-            $table->foreign('idcont')
-                  ->references('idcont')
-                  ->on('contr_clis');
+            $table->unsignedBigInteger('idtasi')->nullable();
+            $table->foreign('idtasi')
+                  ->references('idtasi')
+                  ->on('tip_asientos');
             $table->date('fec_asi');
             $table->string('refer');
-            $table->string('observacion',100)->nullable();
+            $table->string('observacion')->nullable();
             $table->string('contacto_acre',50);
             $table->string('contacto_benf',50);
             $table->unsignedBigInteger('idcta')->unsigned();
@@ -30,7 +30,7 @@ class CreateAsientosTable extends Migration
                   ->on('cat_cuentas');
             $table->string('descripcion');
             $table->float('monto_deb',14,2);
-            $table->float('monto_cre',14,2);
+            $table->float('monto_hab',14,2);
             $table->timestamps();
         });
     }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTipomovimientosTable extends Migration
+class CreateDetCompIngsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,15 @@ class CreateTipomovimientosTable extends Migration
      */
     public function up()
     {
-        Schema::create('tipomovimientos', function (Blueprint $table) {
-            $table->id();
+        Schema::create('det_comp_ings', function (Blueprint $table) {
+            $table->id('iddcom');
+            $table->unsignedBigInteger('idfadt');
+            $table->foreign('idfadt')
+                  ->references('idfadt')
+                  ->on('det_facts');
+            $table->string('nombre',100);
+            $table->date('feccomp');
             $table->string('descripcion');
-            $table->integer('tipocuenta');
             $table->timestamps();
         });
     }
@@ -28,6 +33,6 @@ class CreateTipomovimientosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tipomovimientos');
+        Schema::dropIfExists('det_comp_ings');
     }
 }
