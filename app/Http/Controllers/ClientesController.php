@@ -230,11 +230,11 @@ class ClientesController extends Controller
     }
     public function subgroupaccount(Request $request)
     {
-        return CatSubGru::where("tipgrup",$request->tipgrup)->get();
+        return CatSubGru::where("idgru",$request->idsgr)->get();
     }
     public function accountname(Request $request)
     {
-        return CatgCuenta::where("tipsubg",$request->tipsubg)->get();
+        return CatgCuenta::where("tipsubg",$request->idgcu)->get();
     }
     public function subaccountname(Request $request){
         return CatgSubCuenta::where('tipcta',$request->tipcta)->get();

@@ -11,7 +11,7 @@ class CatSubGru extends Model
     protected $fillable = [
         'idsgr',	
         'idcta',
-        'tipgrup',
+        'idgru',
         'tipsubg',	
         'descripcion',
     ];
