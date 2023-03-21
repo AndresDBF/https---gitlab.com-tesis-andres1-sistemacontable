@@ -20,8 +20,9 @@ Route::get('asiento',[AsientoController::class,'index'])->name('asiento');
 
 
 Route::get('groupaccount', [ClientesController::class, 'groupaccount']);
-Route::post('subgroupaccount/{idsgr}', [ClientesController::class, 'subgroupaccount']);
-Route::post('accountname/{idgcu}', [ClientesController::class, 'accountname']);
+Route::post('subgroupaccount/{idgru}', [ClientesController::class, 'subgroupaccount']);
+Route::post('accountname/{idsgr}', [ClientesController::class, 'accountname']);
+Route::post('subaccountname/{idgcu}', [ClientesController::class, 'subaccountname']);
 
 Route::get('/excel/importar', [Importarexcel::class, 'impportar'])->name('/excel/importar');
 Route::post('/excel/importarexcel', [Importarexcel::class, 'importarexcel'])->name('/excel/importarexcel');

@@ -17,8 +17,9 @@ class CatgSubCuentaImport implements ToModel
         return new CatgSubCuenta([
             'idscu' 	  =>$row['0'],
             'idcta'	      =>$row['1'],
-            'tipsubcta'	  =>$row['2'],
-            'descripcion' =>$row['3'],
+            'idgcu'       =>$row['2'],
+            'tipsubcta'	  =>$row['3'],
+            'descripcion' =>$row['4'],
         ]);
     }
 }

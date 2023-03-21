@@ -230,26 +230,13 @@ class ClientesController extends Controller
     }
     public function subgroupaccount(Request $request)
     {
-        return CatSubGru::where("tipgrup",$request->tipgrup)->get();
+        return CatSubGru::where("idgru",$request->idgru)->get();
     }
     public function accountname(Request $request)
     {
-        return CatgCuenta::where("tipsubg",$request->tipsubg)->get();
+        return CatgCuenta::where("idsgr",$request->idsgr)->get();
     }
-    public function subaccountname(Request $request){
-        return CatgSubCuenta::where('tipcta',$request->tipcta)->get();
+     public function subaccountname(Request $request){
+        return CatgSubCuenta::where('idgcu',$request->idgcu)->get();
     }
-
-    /* public function tipocuenta()
-    {
-        return Tipocuenta::all();
-    }
-    public function tipomovimiento(Request $request)
-    {
-        return Tipomovimiento::where("tipocuenta",$request->id)->get();
-    }
-    public function nombrecuenta(Request $request)
-    {
-        return Nombrecuenta::where("tipomovimiento",$request->id)->get();
-    } */
 }
