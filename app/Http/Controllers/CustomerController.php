@@ -68,7 +68,7 @@ class ClientesController extends Controller
                              ->get();
             $money = Moneda::all();
             $status = ReglaStatus::all();
-                                 
+                     
             
         return view('clientes/create')
                 ->with('idsigue',$idesigue)
@@ -230,26 +230,14 @@ class ClientesController extends Controller
     }
     public function subgroupaccount(Request $request)
     {
-        return CatSubGru::where("tipcta",$request->id)->get();
+        return CatSubGru::where("idgru",$request->idgru)->get();
     }
     public function accountname(Request $request)
     {
-        return CatgCuenta::where("tipcta",$request->id)->get();
+        return CatgCuenta::where("idsgr",$request->idsgr)->get();
     }
-    public function subaccountname(Request $request){
-        return CatgSubCuenta::where('tipsubcta',$request->id)->get();
-    }
-
-    /* public function tipocuenta()
+    public function subaccountname(Request $request)
     {
-        return Tipocuenta::all();
+        return CatgSubCuenta::where('idgcu',$request->idgcu)->get();
     }
-    public function tipomovimiento(Request $request)
-    {
-        return Tipomovimiento::where("tipocuenta",$request->id)->get();
-    }
-    public function nombrecuenta(Request $request)
-    {
-        return Nombrecuenta::where("tipomovimiento",$request->id)->get();
-    } */
 }

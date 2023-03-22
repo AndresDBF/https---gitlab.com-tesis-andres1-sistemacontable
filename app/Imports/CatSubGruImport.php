@@ -16,7 +16,7 @@ class CatSubGruImport implements ToModel
     {
         return new CatSubGru([
             'idsgr'	     =>$row['0'],
-            'idcta'	     =>$row['1'],
+            'idgru'	     =>$row['1'],
             'tipsubg'	 =>$row['2'],
             'descripcion'=>$row['3'],
         ]);

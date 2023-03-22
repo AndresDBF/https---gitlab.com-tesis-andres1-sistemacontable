@@ -165,10 +165,10 @@
       cargartipocuenta()
       $( "#groupaccount" ).change(function() /* el # busca el id del div html */
       {
-          var accounttype = $('#groupaccount').val();
+          var groupaccount = $('#groupaccount').val();
           $.ajax(
           {
-            url: "/subgroupaccount/"+accounttype,
+            url: "/subgroupaccount/"+groupaccount,
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             dataType: 'json', // what to expect back from the server                                                                  
             data: {},
@@ -180,24 +180,24 @@
             {
                 if (data)
                 {
-                  var $movementtype = $('#movementtype');
-                  $movementtype.empty();
+                  var $subgroupaccount = $('#subgroupaccount');
+                  $subgroupaccount.empty();
                   var $accountname = $('#accountname');
                   $accountname.empty();
                   data.forEach(element=>
                   {
-                      $movementtype.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
+                      $subgroupaccount.append('<option value=' + element.idsgr + '>' + element.descripcion + '</option>')
                   });
                 }
             }
           });
       });
-      $( "#movementtype" ).change(function() 
+      $( "#subgroupaccount" ).change(function() 
       {
-          var movementtype = $('#movementtype').val();
+          var subgroupaccount = $('#subgroupaccount').val();
           $.ajax(
           {
-            url: "/accountname/"+movementtype,
+            url: "/accountname/"+subgroupaccount,
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             dataType: 'json', // what to expect back from the server                                                                  
             data: {},
@@ -211,9 +211,38 @@
                 {
                   var $accountname = $('#accountname');
                   $accountname.empty();
+                  var $subaccountname = $('#subaccountname');
+                  $subaccountname.empty();
                   data.forEach(element=>
                   {
-                      $accountname.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
+                      $accountname.append('<option value=' + element.idgcu + '>' + element.descripcion + '</option>')
+                  });
+                }
+            }
+          });
+      });
+      $( "#accountname" ).change(function() /* el # busca el id del div html */
+      {
+          var accountname = $('#accountname').val();
+          $.ajax(
+          {
+            url: "/subaccountname/"+accountname,
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            dataType: 'json', // what to expect back from the server                                                                  
+            data: {},
+            processData: false,
+            cache: false,
+            contentType: false,
+            type: 'post',
+            success: function(data) 
+            {
+                if (data)
+                {
+                  var $subaccountname = $('#subaccountname');
+                  $subaccountname.empty();
+                  data.forEach(element=>
+                  {
+                      $subaccountname.append('<option value=' + element.idscu + '>' + element.descripcion + '</option>')
                   });
                 }
             }
@@ -224,7 +253,7 @@
   {
     var datas = new FormData();  
     $.ajax({
-        url: "/accounttype",
+        url: "/groupaccount",
         dataType: 'json', // what to expect back from the server                                                                  
         data: {},
         processData: false,
@@ -233,13 +262,13 @@
         type: 'get',
         success: function(data) 
         {
-            if (data)
+            if (data) 
             {
-              var $accounttype = $('#accounttype');
-              $accounttype.empty();
+              var $groupaccount = $('#groupaccount');
+              $groupaccount.empty();
               data.forEach(element=>
               {
-                  $accounttype.append('<option value=' + element.id + '>' + element.descripcion + '</option>')
+                  $groupaccount.append('<option value=' + element.idgru + '>' + element.descripcion + '</option>')
               });
             }
             else

@@ -19,6 +19,10 @@ class CreateCatgSubCuentasTable extends Migration
             $table->foreign('idcta')
                   ->references('idcta')
                   ->on('cat_cuentas');
+            $table->unsignedBigInteger('idgcu');
+            $table->foreign('idgcu')
+                  ->references('idgcu')
+                  ->on('catg_cuentas');
             $table->string('tipsubcta',20);
             $table->string('descripcion');
             $table->timestamps();

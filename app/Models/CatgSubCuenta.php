@@ -11,6 +11,7 @@ class CatgSubCuenta extends Model
     protected $fillable = [
         'idscu',	
         'idcta',	
+        'idgcu',
         'tipsubcta',	
         'descripcion',
     ];

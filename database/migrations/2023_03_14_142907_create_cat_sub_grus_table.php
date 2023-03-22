@@ -19,6 +19,10 @@ class CreateCatSubGrusTable extends Migration
             $table->foreign('idcta')
                   ->references('idcta')
                   ->on('cat_cuentas');
+            $table->unsignedBigInteger('idgru');
+            $table->foreign('idgru')
+                  ->references('idgru')
+                  ->on('cat_grupos');
             $table->string('tipsubg',20);
             $table->string('descripcion');
             $table->timestamps();

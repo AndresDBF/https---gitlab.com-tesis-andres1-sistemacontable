@@ -24,7 +24,7 @@ class Importarexcel extends Controller
         /* // recibir el excel y guardarlo
         $file = $request->file('file');
         $nombre =$file->getClientOriginalName();
-        $destinationPath = 'uploads';
+        $destinationPath = 'uploads';// guarda el excel en la aplicacion
         $file->move($destinationPath,$file->getClientOriginalName());
         //leer le excel
         $inputFileName = './uploads/'.$nombre;
@@ -35,14 +35,19 @@ class Importarexcel extends Controller
         $highestColumn = $worksheet->getHighestColumn();
         $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
         
-        for ($row = 2; $row <= $highestRow; ++$row)
+        for ($row = 2; $row <= $highestRow; ++$row) // recorre filas
         {
-            for ($col = 1; $col <= $highestColumnIndex; ++$col)
+            for ($col = 1; $col <= $highestColumnIndex; ++$col) // recorre colunas
             {
-                $value = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+                $value = $worksheet->getCellByColumnAndRow($col, $row)->getValue(); // valor en cada celda
             }
         } */
-        Excel::import(new CatgSubCuentaImport(), request()->file('excel'));
+        //Excel::import(new CatCuentaImport(), request()->file('excel'));
+        //Excel::import(new CatGrupoImport(), request()->file('excel'));
+        //Excel::import(new CatSubGruImport(), request()->file('excel'));
+        //Excel::import(new CatgCuentaImport(), request()->file('excel'));
+        //Excel::import(new CatgSubCuentaImport(), request()->file('excel'));
+
         
         return redirect()->to(url('excel/importar'));
 
