@@ -11,7 +11,11 @@ class CatgCuenta extends Model
     protected $fillable = [
         'idgcu',
         'idcta',
+<<<<<<< HEAD
         'idsgr',
+=======
+        'tipsubg',
+>>>>>>> 4a51ac9c67a34874a99c2b62bd7b65a48004bf06
         'tipcta',
         'descripcion',
     ];
