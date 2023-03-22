@@ -111,37 +111,13 @@
                   </select>
                 </div>
       
-                {{-- <div class="form-group">
+                <div class="form-group">
                   <label for="subaccountname">Nombre de Subcuenta</label>
                   <select name = 'subaccountname'id="subaccountname" class="custom-select">
                       <option selected="">Seleccionar Subcuenta</option>
                   </select>
-                </div> --}}
-      
-                {{-- <div class="form-group">
-                  <label for="accounttype">Tipo de Cuenta</label>
-                  <select name = 'accounttype' id ="accounttype" class="custom-select">
-                      <option selected="">Selecciona una cuenta</option>
-                      
-                  </select>
                 </div>
-      
-                <div class="form-group">
-                  <label for="movementtype">Tipo de Movimiento </label>
-                  <select name = 'movementtype' id ="movementtype" class="custom-select">
-                      <option selected="">Selecciona una movimiento</option>
-                  </select>
-                </div> 
-      
-                <div class="form-group">
-                  <label for="accountname">Nombre de Cuenta</label>
-                  <select name = 'accountname'id="accountname" class="custom-select">
-                      <option selected="">Selecciona Nonbre de Cuenta</option>
-                  </select>
-                </div> --}}
-                
-            </div>
-            
+            </div> 
         </form> 
       </div>
       <div class="well pb-3">
@@ -186,11 +162,7 @@
                   $accountname.empty();
                   data.forEach(element=>
                   {
-<<<<<<< HEAD
                       $subgroupaccount.append('<option value=' + element.idsgr + '>' + element.descripcion + '</option>')
-=======
-                      $subgroupaccount.append('<option value=' + element.tipsubg + '>' + element.descripcion + '</option>')
->>>>>>> 4a51ac9c67a34874a99c2b62bd7b65a48004bf06
                   });
                 }
             }
@@ -219,7 +191,6 @@
                   $subaccountname.empty();
                   data.forEach(element=>
                   {
-<<<<<<< HEAD
                       $accountname.append('<option value=' + element.idgcu + '>' + element.descripcion + '</option>')
                   });
                 }
@@ -248,9 +219,6 @@
                   data.forEach(element=>
                   {
                       $subaccountname.append('<option value=' + element.idscu + '>' + element.descripcion + '</option>')
-=======
-                      $accountname.append('<option value=' + element.tipcta + '>' + element.descripcion + '</option>')
->>>>>>> 4a51ac9c67a34874a99c2b62bd7b65a48004bf06
                   });
                 }
             }
@@ -272,19 +240,11 @@
         {
             if (data) 
             {
-<<<<<<< HEAD
               var $groupaccount = $('#groupaccount');
               $groupaccount.empty();
               data.forEach(element=>
               {
                   $groupaccount.append('<option value=' + element.idgru + '>' + element.descripcion + '</option>')
-=======
-              var $accounttype = $('#groupaccount');
-              $accounttype.empty();
-              data.forEach(element=>
-              {
-                  $accounttype.append('<option value=' + element.tipgrup + '>' + element.descripcion + '</option>')
->>>>>>> 4a51ac9c67a34874a99c2b62bd7b65a48004bf06
               });
             }
             else

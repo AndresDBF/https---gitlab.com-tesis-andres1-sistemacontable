@@ -18,7 +18,7 @@ use App\Models\Tipomovimiento;
 use App\Models\Nombrecuenta; */
 
 
-class ClientesController extends Controller
+class CustomerController extends Controller
 {
 
     public function __construct()
@@ -37,6 +37,7 @@ class ClientesController extends Controller
         'clientes.email','contr_clis.stscontr','contr_clis.tip_pag')
         ->orderBy('clientes.nombre')
         ->get();
+        
         return view('clientes.index')
              ->with('customer',$customer);
 
@@ -230,7 +231,6 @@ class ClientesController extends Controller
     }
     public function subgroupaccount(Request $request)
     {
-<<<<<<< HEAD:app/Http/Controllers/CustomerController.php
         return CatSubGru::where("idgru",$request->idgru)->get();
     }
     public function accountname(Request $request)
@@ -238,19 +238,6 @@ class ClientesController extends Controller
         return CatgCuenta::where("idsgr",$request->idsgr)->get();
     }
     public function subaccountname(Request $request)
-=======
-        return CatSubGru::where("idgru",$request->idsgr)->get();
-    }
-    public function accountname(Request $request)
-    {
-        return CatgCuenta::where("tipsubg",$request->idgcu)->get();
-    }
-    public function subaccountname(Request $request){
-        return CatgSubCuenta::where('tipcta',$request->tipcta)->get();
-    }
-
-    /* public function tipocuenta()
->>>>>>> 4a51ac9c67a34874a99c2b62bd7b65a48004bf06:app/Http/Controllers/ClientesController.php
     {
         return CatgSubCuenta::where('idgcu',$request->idgcu)->get();
     }

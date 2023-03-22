@@ -45,11 +45,7 @@ class Importarexcel extends Controller
         //Excel::import(new CatCuentaImport(), request()->file('excel'));
         //Excel::import(new CatGrupoImport(), request()->file('excel'));
         //Excel::import(new CatSubGruImport(), request()->file('excel'));
-<<<<<<< HEAD:app/Http/Controllers/Importexcel.php
         //Excel::import(new CatgCuentaImport(), request()->file('excel'));
-=======
-        Excel::import(new CatgCuentaImport(), request()->file('excel'));
->>>>>>> 4a51ac9c67a34874a99c2b62bd7b65a48004bf06:app/Http/Controllers/Importarexcel.php
         //Excel::import(new CatgSubCuentaImport(), request()->file('excel'));
 
         
