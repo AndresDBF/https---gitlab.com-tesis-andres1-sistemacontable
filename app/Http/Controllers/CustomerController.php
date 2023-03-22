@@ -90,7 +90,7 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $customer = new Cliente();
         $customer->idcli = $request->code;
         $customer->nombre = $request->get('name');
@@ -106,6 +106,12 @@ class CustomerController extends Controller
         $contrCustomer->tip_pag = $request->get('tip_pag');
         $contrCustomer->monto_pag = $request->get('valuecont');
         $contrCustomer->moneda = $request->get('money');
+        if($request->get('subaccountname')){
+            $valcta4 = CatgSubCuenta::select('idcta','tipsubcta')
+                                    ->where('idscu',$request->get('subaccountname'))
+                                    ->get();
+            $contrCustomer->idcta = $valcta4->get('idcta');
+        }
         $contrCustomer->idcta = $request->get('account');                            
         $contrCustomer->save();
 

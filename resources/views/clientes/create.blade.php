@@ -44,6 +44,7 @@
             <br>
       
             <h1 class="pb-6">Contrato del Cliente</h1>
+            
             <div class="well">
               <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6">
@@ -118,12 +119,13 @@
                   </select>
                 </div>
             </div> 
-        </form> 
+        
       </div>
       <div class="well pb-3">
               <a href="/clientes" class="btn btn-secondary" tabindex="5">Cancelar</a>
               <button type="submit" class="btn btn-primary" tabindex="6">Guardar</button>
-      </div>  
+      </div> 
+    </form>  
     </div>
   </div>
   
