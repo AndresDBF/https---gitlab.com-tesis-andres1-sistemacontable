@@ -101,7 +101,7 @@ class CustomerController extends Controller
         $customer->email = $request->get('email');
         $customer->direccion = $request->get('direction');
         $customer->save();
-
+ 
         $contrCustomer = new ContrCli();
         $contrCustomer->idcli = $customer->idcli;
         $contrCustomer->stscontr = $request->get('stscontr');

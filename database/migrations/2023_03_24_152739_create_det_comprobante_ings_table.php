@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCompIngsTable extends Migration
+class CreateDetComprobanteIngsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateCompIngsTable extends Migration
      */
     public function up()
     {
-        Schema::create('comp_ings', function (Blueprint $table) {
-            $table->id('idcomp');
-            $table->unsignedBigInteger('iddcom');
-            $table->foreign('iddcom')
-                  ->references('iddcom')
-                  ->on('det_comp_ings');
+        Schema::create('det_comprobante_ings', function (Blueprint $table) {
+            $table->id('iddcomp');
+            $table->unsignedBigInteger('idcom');
+            $table->foreign('idcom')
+                  ->references('idcom')
+                  ->on('comprobante_ingresos');
             $table->unsignedBigInteger('idcli');
             $table->foreign('idcli')
                   ->references('idcli')
@@ -42,6 +42,6 @@ class CreateCompIngsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comp_ings');
+        Schema::dropIfExists('det_comprobante_ings');
     }
 }

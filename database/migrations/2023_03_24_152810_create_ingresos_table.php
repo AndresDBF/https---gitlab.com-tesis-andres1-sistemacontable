@@ -15,10 +15,10 @@ class CreateIngresosTable extends Migration
     {
         Schema::create('ingresos', function (Blueprint $table) {
             $table->id('iding');
-            $table->unsignedBigInteger('idcomp');
-            $table->foreign('idcomp')
-                  ->references('idcomp')
-                  ->on('comp_ings');
+            $table->unsignedBigInteger('iddcomp');
+            $table->foreign('iddcomp')
+                  ->references('iddcomp')
+                  ->on('det_comprobante_ings');
             $table->string('concepto_ing');
             $table->string('moneda',3);
             $table->float('stsing',3);

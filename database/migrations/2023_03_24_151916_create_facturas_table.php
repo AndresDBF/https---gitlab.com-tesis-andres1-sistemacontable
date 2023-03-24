@@ -15,17 +15,17 @@ class CreateFacturasTable extends Migration
     {
         Schema::create('facturas', function (Blueprint $table) {
             $table->id('idfact');
-            $table->unsignedBigInteger('idfadt');
-            $table->foreign('idfadt')
-                  ->references('idfadt')
-                  ->on('det_facts');
-            $table->integer('numfact');
-            $table->string('numctrl');
-            $table->string('stsfact',3);
-            $table->float('monto',14,2);
-            $table->float('mtoimponible',14,2);
-            $table->float('mtoimpuesto',14,2);
-            $table->float('mtototal',14,2);
+            $table->unsignedBigInteger('numreling');
+            $table->foreign('numreling')
+                  ->references('idcfact')
+                  ->on('concepto_facts');
+            $table->string('nomacre',50);
+            $table->string('dirfact');
+            $table->string('tipid',1);
+            $table->string('identificacion',10);
+            $table->integer('tiprif')->nullable();
+            $table->string('telefono',15);
+            $table->string('tip_pago',10);
             $table->timestamps();
         });
     }

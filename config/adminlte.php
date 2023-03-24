@@ -349,7 +349,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'Ingreso',
-                    'url'  => 'invoiceing',
+                    'url'  => 'createinvoiceing',
                 ],
                 [
                     'text' => 'Egreso',
