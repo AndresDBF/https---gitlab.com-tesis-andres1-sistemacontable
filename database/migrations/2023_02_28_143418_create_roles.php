@@ -21,8 +21,8 @@ class CreateRoles extends Migration
 
         $user = User::find(1);
         $user->assignRole('admin');
-        //$user = User::find(1);
-        //$user->assignRole('admin');
+        $user = User::find(1);
+        $user->assignRole('admin');
     }
 
     /**

@@ -44,6 +44,7 @@
             <br>
       
             <h1 class="pb-6">Contrato del Cliente</h1>
+            
             <div class="well">
               <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6">
@@ -117,39 +118,29 @@
                       <option selected="">Seleccionar Subcuenta</option>
                   </select>
                 </div>
+      
+                <div class="form-group">
+                  <label for="movementtype">Tipo de Movimiento </label>
+                  <select name = 'movementtype' id ="movementtype" class="custom-select">
+                      <option selected="">Selecciona una movimiento</option>
+                  </select>
+                </div> 
+      
+                <div class="form-group">
+                  <label for="accountname">Nombre de Cuenta</label>
+                  <select name = 'accountname'id="accountname" class="custom-select">
+                      <option selected="">Selecciona Nonbre de Cuenta</option>
+                  </select>
+                </div> --}}
+                
             </div>
-      </div> 
-    </div>
-    <div class="well pb-3">
-      <a href="/clientes" class="btn btn-secondary" tabindex="5">Cancelar</a>
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#seatmodal">Confirmar</button>
-      {{-- <button type="submit" class="btn btn-primary" tabindex="6">Guardar</button>--}}
-      <!-- Modal -->
-    <div class="modal fade" id="seatmodal" tabindex="-1" aria-labelledby="seatmodalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="seatmodalLabel">Completar Asiento Contable</h5>
-            {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-              <p>Cerrar</p>
-            </button> --}}
-          </div>
-          <div class="modal-body">
-              <div class="mb-3">
-                <label for="recipient-name" class="col-form-label">Observacion</label>
-                <input type="text" class="form-control" name="observation" id="observation">
-              </div>
-              <div class="mb-3">
-                <label for="message-text" class="col-form-label">Descripcion</label>
-                <textarea class="form-control" name="description" id="description"></textarea>
-              </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-          </div>
-        </div>
+            
+        </form> 
       </div>
+      <div class="well pb-3">
+              <a href="/clientes" class="btn btn-secondary" tabindex="5">Cancelar</a>
+              <button type="submit" class="btn btn-primary" tabindex="6">Guardar</button>
+      </div>  
     </div>
     </div> 
     </form> 
@@ -225,37 +216,6 @@
                 {
                   var $accountname = $('#accountname');
                   $accountname.empty();
-                  var $subaccountname = $('#subaccountname');
-                  $subaccountname.empty();
-                  $accountname.append('<option selected="">Seleccionar Cuenta</option>')
-                  data.forEach(element=>
-                  {
-                      $accountname.append('<option value=' + element.idgcu + '>' + element.descripcion + '</option>')
-                  });
-                }
-            }
-          });
-      });
-      $( "#accountname" ).change(function() /* el # busca el id del div html */
-      {
-          var accountname = $('#accountname').val();
-          $.ajax(
-          {
-            url: "/subaccountname/"+accountname,
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            dataType: 'json', // what to expect back from the server                                                                  
-            data: {},
-            processData: false,
-            cache: false,
-            contentType: false,
-            type: 'post',
-            success: function(data) 
-            {
-                if (data)
-                {
-                  var $subaccountname = $('#subaccountname');
-                  $subaccountname.empty();
-                  $subaccountname.append('<option selected="">Seleccionar SubCuenta</option>')
                   data.forEach(element=>
                   {
                       $subaccountname.append('<option value=' + element.idscu + '>' + element.descripcion + '</option>')
@@ -280,9 +240,8 @@
         {
             if (data) 
             {
-              var $groupaccount = $('#groupaccount');
-              $groupaccount.empty();
-              $groupaccount.append('<option selected="">Seleccionar Grupo</option>');
+              var $accounttype = $('#groupaccount');
+              $accounttype.empty();
               data.forEach(element=>
               {
                   $groupaccount.append('<option value=' + element.idgru + '>' + element.descripcion + '</option>')

@@ -21,7 +21,11 @@ class CatCuentaImport implements ToModel
                 'cta2'    => $row['3'],
                 'cta3'    => $row['4'],
                 'cta4'    => $row['5'],
+<<<<<<< HEAD
+/*                 'cta5'    => $row['6'], */
+=======
                 /* 'cta5'    => $row['6'], */
+>>>>>>> 4a51ac9c67a34874a99c2b62bd7b65a48004bf06
             ]);
     }
 }
