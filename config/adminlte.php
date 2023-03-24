@@ -318,12 +318,12 @@ return [
             'label'       => 4,
             'label_color' => 'success',
         ],
-        [
+        /* [
             'text'        => 'Asiento',
             'url'         => 'asiento',
             'icon'        => 'fas fa-fw fa-wallet',
             'label_color' => 'success',
-        ],
+        ], */
         [
             'text'        => 'Ingresos',
             'url'         => 'seat',
@@ -343,10 +343,20 @@ return [
         ],
         [
             'text'        => 'Factura',
-            'url'         => 'fact',
+            'url'         => 'factura',
             'icon'        => 'fas fa-fw fa-file-invoice-dollar',
             'label_color' => 'success',
+            'submenu' => [
+                [
+                    'text' => 'Ingreso',
+                    'url'  => 'invoiceing',
+                ],
+                [
+                    'text' => 'Egreso',
+                    'url'  => '#',
+                ],
 
+            ],
         ],
         [
             'text'        => 'admin',

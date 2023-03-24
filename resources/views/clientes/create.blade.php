@@ -117,43 +117,56 @@
                       <option selected="">Seleccionar Subcuenta</option>
                   </select>
                 </div>
-      
-                {{-- <div class="form-group">
-                  <label for="accounttype">Tipo de Cuenta</label>
-                  <select name = 'accounttype' id ="accounttype" class="custom-select">
-                      <option selected="">Selecciona una cuenta</option>
-                      
-                  </select>
-                </div>
-      
-                <div class="form-group">
-                  <label for="movementtype">Tipo de Movimiento </label>
-                  <select name = 'movementtype' id ="movementtype" class="custom-select">
-                      <option selected="">Selecciona una movimiento</option>
-                  </select>
-                </div> 
-      
-                <div class="form-group">
-                  <label for="accountname">Nombre de Cuenta</label>
-                  <select name = 'accountname'id="accountname" class="custom-select">
-                      <option selected="">Selecciona Nonbre de Cuenta</option>
-                  </select>
-                </div> --}}
-                
             </div>
-            
-        </form> 
-      </div>
-      <div class="well pb-3">
-              <a href="/clientes" class="btn btn-secondary" tabindex="5">Cancelar</a>
-              <button type="submit" class="btn btn-primary" tabindex="6">Guardar</button>
-      </div>  
+      </div> 
     </div>
+    <div class="well pb-3">
+      <a href="/clientes" class="btn btn-secondary" tabindex="5">Cancelar</a>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#seatmodal">Confirmar</button>
+      {{-- <button type="submit" class="btn btn-primary" tabindex="6">Guardar</button>--}}
+      <!-- Modal -->
+    <div class="modal fade" id="seatmodal" tabindex="-1" aria-labelledby="seatmodalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="seatmodalLabel">Completar Asiento Contable</h5>
+            {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+              <p>Cerrar</p>
+            </button> --}}
+          </div>
+          <div class="modal-body">
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Observacion</label>
+                <input type="text" class="form-control" name="observation" id="observation">
+              </div>
+              <div class="mb-3">
+                <label for="message-text" class="col-form-label">Descripcion</label>
+                <textarea class="form-control" name="description" id="description"></textarea>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div> 
+    </form> 
   </div>
   
   
 @stop
 @section('js')
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script>
+    var myModal = document.getElementById('myModal')
+    var myInput = document.getElementById('myInput')
+
+    myModal.addEventListener('shown.bs.modal', function () {
+      myInput.focus()
+    })
+  </script>
   <script 
       src="http://code.jquery.com/jquery-3.3.1.min.js"
       integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -184,6 +197,7 @@
                   $subgroupaccount.empty();
                   var $accountname = $('#accountname');
                   $accountname.empty();
+                  $subgroupaccount.append('<option selected="">Seleccionar SubGrupo</option>')
                   data.forEach(element=>
                   {
                       $subgroupaccount.append('<option value=' + element.idsgr + '>' + element.descripcion + '</option>')
@@ -213,6 +227,7 @@
                   $accountname.empty();
                   var $subaccountname = $('#subaccountname');
                   $subaccountname.empty();
+                  $accountname.append('<option selected="">Seleccionar Cuenta</option>')
                   data.forEach(element=>
                   {
                       $accountname.append('<option value=' + element.idgcu + '>' + element.descripcion + '</option>')
@@ -240,6 +255,7 @@
                 {
                   var $subaccountname = $('#subaccountname');
                   $subaccountname.empty();
+                  $subaccountname.append('<option selected="">Seleccionar SubCuenta</option>')
                   data.forEach(element=>
                   {
                       $subaccountname.append('<option value=' + element.idscu + '>' + element.descripcion + '</option>')
@@ -266,6 +282,7 @@
             {
               var $groupaccount = $('#groupaccount');
               $groupaccount.empty();
+              $groupaccount.append('<option selected="">Seleccionar Grupo</option>');
               data.forEach(element=>
               {
                   $groupaccount.append('<option value=' + element.idgru + '>' + element.descripcion + '</option>')

@@ -15,15 +15,10 @@ class CreateAsientosTable extends Migration
     {
         Schema::create('asientos', function (Blueprint $table) {
             $table->id('idasi');
-            $table->unsignedBigInteger('idtasi')->nullable();
-            $table->foreign('idtasi')
-                  ->references('idtasi')
-                  ->on('tip_asientos');
             $table->date('fec_asi');
-            $table->string('refer');
             $table->string('observacion')->nullable();
-            $table->string('contacto_acre',50);
-            $table->string('contacto_benf',50);
+/*             $table->string('contacto_acre',50);
+            $table->string('contacto_benf',50); */
             $table->unsignedBigInteger('idcta')->unsigned();
             $table->foreign('idcta')
                   ->references('idcta')

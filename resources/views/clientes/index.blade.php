@@ -7,6 +7,7 @@
 @stop
 
 @section('content')
+   
     <a href="clientes/create" class="btn btn-primary mb-3">CREAR</a>
     <table id="clientes" class="table table-striped table-bordered shadow-lg mt-4" style="width: 100%">
 
@@ -30,7 +31,7 @@
                     <th>{{$cli->tip_pag}}</th>
                     <td>
                         <a href="/clientes/{{$cli->idcli}}/edit" class="btn btn-info">Editar</a>
-                        <form action="{{route('clientes.destroy',$cli->idcli)}}" method="POST">
+                        <form action="{{route('clientes.destroy',$cli->idcli,$cli->idcont,$cli->idcuenta)}}" method="POST">
                             
                             @csrf
                             @method('DELETE')
