@@ -15,8 +15,8 @@ class CreateFacturasTable extends Migration
     {
         Schema::create('facturas', function (Blueprint $table) {
             $table->id('idfact');
-            $table->unsignedBigInteger('numreling');
-            $table->foreign('numreling')
+            $table->unsignedBigInteger('idcfact');
+            $table->foreign('idcfact')
                   ->references('idcfact')
                   ->on('concepto_facts');
             $table->string('nomacre',50);

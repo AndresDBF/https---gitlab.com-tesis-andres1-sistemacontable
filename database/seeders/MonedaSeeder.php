@@ -15,10 +15,10 @@ class MonedaSeeder extends Seeder
     public function run()
     {
         $data = [
-            array('tipmoneda'=>'1','descripcion'=>'DOLAR ESTADOUNIDENSE'),
-            array('tipmoneda'=>'2','descripcion'=>'BOLIVARES'),
-            array('tipmoneda'=>'3','descripcion'=>'PESOS COLOMBIANOS'),
-            array('tipmoneda'=>'4','descripcion'=>'EUROS'),
+            array('tipmoneda'=>'USD','descripcion'=>'DOLAR ESTADOUNIDENSE'),
+            array('tipmoneda'=>'BS','descripcion'=>'BOLIVARES'),
+            array('tipmoneda'=>'COP','descripcion'=>'PESOS COLOMBIANOS'),
+            array('tipmoneda'=>'EUR','descripcion'=>'EUROS'),
         ];
 
         Moneda::insert($data);

@@ -12,9 +12,30 @@
             <div class="card-body pl-6">
                 <form action="{{route('storeinvoiceing')}}" method="POST">
                     @csrf
-                    <div class="mb-3">
-                        <label for="" class="form-label">Numero de Relacion de ingreso</label>
-                        <input type="text" name="numreling" id="numreling" class="form-control" readonly="readonly" value="{{$numing}}" tabindex="1">
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-xs-3 col-sm-6 col-md-6">
+                                <label for="" class="form-label">Numero de Relacion de ingreso</label>
+                                <input type="text" name="numreling" id="code" class="form-control" readonly="readonly" value="{{$numing}}" tabindex="1">
+                            </div>
+                            <div class="col-xs-3 col-sm-6 col-md-6">
+                                <label for="" class="form-label">fecha de emision</label>
+                                <input type="text" name="fecemi" id="fecemi"  class="form-control" tabindex="4" value="{{$fecemi}}" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-xs-3 col-sm-6 col-md-6">
+                                <label for="" class="form-label">Numero de Factura</label>
+                                <input type="text" name="numfact" id="numfact" class="form-control" tabindex="2">
+                            </div>
+                            <div class="col-xs-3 col-sm-6 col-md-6">
+                                <label for="" class="form-label">Control de Factura</label>
+                                <input type="text" name="numctrl" id="numctrl" class="form-control" tabindex="3">
+                            </div>
+                            
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Nombre y Apellido o Razon Social</label>
@@ -63,17 +84,26 @@
                         <label for="" class="form-label">Telefono</label>
                         <input type="number" name="phone" id="phone" class="form-control text-decoration-none" tabindex="7">
                     </div>
-                    <div class="col-xs-6 col-sm-6">
-                        <div class="form-group">
-                          <label for="dni">Tipo de Pago</label>
-                          <select name = 'tip_pag' class="custom-select">
-                            <option selected="">Selecciona un tipo de pago</option>
-                              @foreach ($tippag as $tip)
-                                  <option value="{{$tip->tippago}}">{{$tip->descripcion}}</option>
-                              @endforeach
-                          </select>
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6">
+                                <div class="form-group">
+                                  <label for="dni">Tipo de Pago</label>
+                                  <select name = 'tip_pag' class="custom-select">
+                                    <option selected="">Selecciona un tipo de pago</option>
+                                      @foreach ($tippag as $tip)
+                                          <option value="{{$tip->tippago}}">{{$tip->descripcion}}</option>
+                                      @endforeach
+                                  </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6">
+                                <label for="" class="form-label">Numero Total de descripcion de factura</label>
+                                <input type="numeric" name="number" id="number" class="form-control" tabindex="4">
+                            </div>
                         </div>
                     </div>
+                    
                     <div class="well pb-3 mt-3">
                         <a href="/home" class="btn btn-secondary" tabindex="5">Cancelar</a>
                         <button type="submit" class="btn btn-primary" tabindex="6">Siguiente</button>
@@ -83,3 +113,4 @@
         </div>   
     </div>
 @stop
+

@@ -15,10 +15,10 @@ class TipPagoSeeder extends Seeder
     public function run()
     {
         $data = [
-            array('tippago'=>'1','descripcion'=>'ANUAL'),
-            array('tippago'=>'2','descripcion'=>'MENSUAL'),
-            array('tippago'=>'3','descripcion'=>'SEMESTRAL'),
-            array('tippago'=>'4','descripcion'=>'TRIMESTRAL'),
+            array('tippago'=>'ANU','descripcion'=>'ANUAL'),
+            array('tippago'=>'MEN','descripcion'=>'MENSUAL'),
+            array('tippago'=>'SEM','descripcion'=>'SEMESTRAL'),
+            array('tippago'=>'TRI','descripcion'=>'TRIMESTRAL'),
         ];
 
         TipPago::insert($data);
