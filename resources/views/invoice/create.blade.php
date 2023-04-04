@@ -28,7 +28,7 @@
                         <div class="row">
                             <div class="col-xs-3 col-sm-6 col-md-6">
                                 <label for="" class="form-label">Numero de Factura</label>
-                                <input type="text" name="numfact" id="numfact" class="form-control" tabindex="2">
+                                <input type="numeric" name="numfact" id="numfact" class="form-control" tabindex="2">
                             </div>
                             <div class="col-xs-3 col-sm-6 col-md-6">
                                 <label for="" class="form-label">Control de Factura</label>
@@ -98,8 +98,14 @@
                                 </div>
                             </div>
                             <div class="col-xs-6 col-sm-6">
-                                <label for="" class="form-label">Numero Total de descripcion de factura</label>
-                                <input type="numeric" name="number" id="number" class="form-control" tabindex="4">
+                                <label for="dni">Numero Total de descripcion de factura</label>
+                                <select name = 'numconcept' class="custom-select">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                  </select>
                             </div>
                         </div>
                     </div>

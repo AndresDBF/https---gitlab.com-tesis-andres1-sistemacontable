@@ -23,10 +23,10 @@ class CreateDetFactsTable extends Migration
             $table->string('numctrl');
             $table->string('stsfact',3);
             $table->date('fec_emi');
-            $table->float('monto',14,2);
-            $table->float('mtoimponible',14,2);
-            $table->float('mtoimpuesto',14,2);
-            $table->float('mtototal',14,2);
+            $table->float('monto',14,2)->nullable();
+            $table->float('mtoimponible',14,2)->nullable();
+            $table->float('mtoimpuesto',14,2)->nullable();
+            $table->float('mtototal',14,2)->nullable();
             $table->timestamps();
         });
     }

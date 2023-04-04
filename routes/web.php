@@ -25,8 +25,9 @@ Route::post('subaccountname/{idgcu}', [CustomerController::class, 'subaccountnam
 //Facturas de ingreso
 Route::get('createinvoiceing',[FacturasController::class,'createinvoiceing'])->name('createinvoiceing');
 Route::post('storeinvoiceing',[FacturasController::class,'storeinvoiceing'])->name('storeinvoiceing');
-Route::get('createdetinvoiceing',[FacturasController::class,'createdetinvoiceing'])->name('createdetinvoiceing');
+Route::get('createdetinvoiceing/{numConcept}',[FacturasController::class,'createdetinvoiceing'])->name('createdetinvoiceing');
 Route::post('storedetinvoiceing',[FacturasController::class,'storedetinvoiceing'])->name('storedetinvoiceing');
+Route::get('totalinvoice/{idfact}/{iddfact}',[FacturasController::class,'totalinvoice'])->name('totalinvoice');
 
 Route::get('/excel/importar', [Importexcel::class, 'impportar'])->name('/excel/importar');
 Route::post('/excel/importarexcel', [Importexcel::class, 'importarexcel'])->name('/excel/importarexcel');
