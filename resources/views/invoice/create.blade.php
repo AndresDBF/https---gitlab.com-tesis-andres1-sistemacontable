@@ -28,11 +28,11 @@
                         <div class="row">
                             <div class="col-xs-3 col-sm-6 col-md-6">
                                 <label for="" class="form-label">Numero de Factura</label>
-                                <input type="numeric" name="numfact" id="numfact" class="form-control" tabindex="2">
+                                <input type="numeric" name="numfact" id="numfact" value="000{{$numfact}}" class="form-control" tabindex="2">
                             </div>
                             <div class="col-xs-3 col-sm-6 col-md-6">
                                 <label for="" class="form-label">Control de Factura</label>
-                                <input type="text" name="numctrl" id="numctrl" class="form-control" tabindex="3">
+                                <input type="text" name="numctrl" id="numctrl" value="00-000{{$numctrl}}" class="form-control" tabindex="3">
                             </div>
                             
                         </div>

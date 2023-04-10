@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class ConceptoFact extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'idcfact';
+    
 }

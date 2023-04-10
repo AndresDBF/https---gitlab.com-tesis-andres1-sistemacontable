@@ -16,7 +16,7 @@
                         <div class="row">
                             <div class="col-xs-3 col-sm-6 col-md-6">
                                 <label for="" class="form-label">Numero de Relacion de ingreso</label>
-                                <input type="text" name="numreling" id="numreling" class="form-control" readonly="readonly" value="{{$invoice->idcfact}}" tabindex="1">
+                                <input type="text" name="numreling" id="numreling" class="form-control" readonly="readonly" value="{{$query->num_ing}}" tabindex="1">
                             </div>
                             <div class="col-xs-3 col-sm-6 col-md-6">
                                 <label for="" class="form-label">fecha de emision</label>
@@ -28,7 +28,7 @@
                         <div class="row">
                             <div class="col-xs-3 col-sm-6 col-md-6">
                                 <label for="" class="form-label">Numero de Factura</label>
-                                <input type="text" name="numfact" id="numfact" value="{{$detInvoice->numfact}}" class="form-control" tabindex="2">
+                                <input type="text" name="numfact" id="numfact" value="000{{$detInvoice->numfact}}" class="form-control" tabindex="2">
                             </div>
                             <div class="col-xs-3 col-sm-6 col-md-6">
                                 <label for="" class="form-label">Control de Factura</label>
@@ -126,12 +126,13 @@
                                   </select>
                                 </div>
                             </div>
+                            <div class="col-xs-6 col-sm-6">
+                                <label for="" class="form-label">Numero Total de descripcion de factura</label>
+                                <input type="numeric" name="numconcept" id="numconcept" value="{{$cantConcept}}" readonly="readonly" class="form-control" tabindex="4">
+                            </div>
                         </div>
                     </div>
-                    <div class="col-xs-6 col-sm-6">
-                        <label for="" class="form-label">Numero Total de descripcion de factura</label>
-                        <input type="numeric" name="numconcept" id="numconcept" value="{{$cantConcept}}" readonly="readonly" class="form-control" tabindex="4">
-                    </div>
+                    
             </div>
         </div>  
         <div class="card">
@@ -139,24 +140,31 @@
                 
                 <div class="well">
                     <div class="row">
-                        <div class="col-xs-3 col-sm-6 col-md-4">
+                        <div class="col-xs-1 col-sm-1 col-md-1">
+                            <label for="" class="form-label">Cantidad</label>
+                            @for ($i = 0; $i < $cantConcept; $i++)
+                                <input type="number" name="CantUnit_{{$i}}" id="CantUnit_{{$i}}" class="form-control text-decoration-none price-input" tabindex="7">
+                                <br>
+                            @endfor
+                        </div>
+                        <div class="col-xs-5 col-sm-5 col-md-5">
                             <label for="" class="form-label">Concepto de factura</label>
                             @for ($i = 0; $i < $cantConcept; $i++)
                                 <input type="text" name="concept_{{$i}}" id="concept_{{$i}}" class="form-control text-decoration-none" tabindex="7">
                                 <br>
                             @endfor
                         </div>
-                        <div class="col-xs-3 col-sm-6 col-md-4">
+                        <div class="col-xs-2 col-sm-2 col-md-2">
                             <label for="" class="form-label">Precio Unitario</label>
                             @for ($i = 0; $i < $cantConcept; $i++)
-                                <input type="number" name="amountUnit_{{$i}}" id="amountUnit_{{$i}}" class="form-control text-decoration-none" tabindex="7">
+                                <input type="number" name="amountUnit_{{$i}}" id="amountUnit_{{$i}}" class="form-control text-decoration-none price-input" tabindex="7">
                                 <br>
                             @endfor
                         </div>
-                        <div class="col-xs-3 col-sm-6 col-md-4">
+                        <div class="col-xs-2 col-sm-2 col-md-2">
                             <label for="" class="form-label">Precio del Bien</label>
                             @for ($i = 0; $i < $cantConcept; $i++)
-                                <input type="number" name="amountService_{{$i}}" id="amountService_{{$i}}" class="form-control text-decoration-none" tabindex="7">
+                                <input type="number" name="total-amount{{$i}}" id="total-amount{{$i}}" class="form-control text-decoration-none total-amount" tabindex="7" readonly>
                                 <br>
                             @endfor
                         </div>
@@ -171,3 +179,19 @@
         </form>      
     </div>
 @stop
+
+@section('js')
+<script>
+    $(document).ready(function() {
+    $('.price-input').change(function() {
+        var index = $(this).attr('id').replace(/[^\d]/g, '');
+        var cantidad = $('#CantUnit_'+index).val();
+        var precio_unitario = $('#amountUnit_'+index).val();
+        var total = cantidad * precio_unitario;
+        $('#total-amount'+index).val(total);
+    });
+});
+
+</script>
+
+@endsection

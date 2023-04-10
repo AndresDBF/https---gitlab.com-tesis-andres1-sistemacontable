@@ -5,6 +5,7 @@ use App\Http\Controllers\AsientoController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Importexcel;
 use App\Http\Controllers\FacturasController;
+use App\Http\Controllers\ComprIngController;
 //use App\Http\Controllers\ClientesController;
 
 
@@ -27,7 +28,11 @@ Route::get('createinvoiceing',[FacturasController::class,'createinvoiceing'])->n
 Route::post('storeinvoiceing',[FacturasController::class,'storeinvoiceing'])->name('storeinvoiceing');
 Route::get('createdetinvoiceing/{numConcept}',[FacturasController::class,'createdetinvoiceing'])->name('createdetinvoiceing');
 Route::post('storedetinvoiceing',[FacturasController::class,'storedetinvoiceing'])->name('storedetinvoiceing');
-Route::get('totalinvoice/{idfact}/{iddfact}',[FacturasController::class,'totalinvoice'])->name('totalinvoice');
+Route::get('totalinvoice/{idfact}',[FacturasController::class,'totalinvoice'])->name('totalinvoice');
+
+//Comprobante de ingreso
+Route::get('createing',[ComprIngController::class,'create'])->name('createing');
+
 
 Route::get('/excel/importar', [Importexcel::class, 'impportar'])->name('/excel/importar');
 Route::post('/excel/importarexcel', [Importexcel::class, 'importarexcel'])->name('/excel/importarexcel');
