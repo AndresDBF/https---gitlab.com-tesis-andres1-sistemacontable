@@ -200,7 +200,7 @@ class FacturasController extends Controller
                 $conceptFact->idfact = $queryFact[0]->idfact;
                 $conceptFact->descripcion = $request->get("concept_0");
                 $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                $conceptFact->monto_bien = $request->get("amountService_0");
+                $conceptFact->monto_bien = $request->get("total-amount0");
                 $conceptFact->save();
             }
             if ($request->get('numconcept')==2){
@@ -235,7 +235,7 @@ class FacturasController extends Controller
                         $conceptFact->idfact = $queryFact[0]->idfact;
                         $conceptFact->descripcion = $request->get("concept_0");
                         $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                        $conceptFact->monto_bien = $request->get("amountService_0");
+                        $conceptFact->monto_bien = $request->get("total-amount0");
                         $conceptFact->save();
                     }
                     if ($i == 1){
@@ -244,7 +244,7 @@ class FacturasController extends Controller
                         $conceptFact->idfact = $queryFact[0]->idfact;
                         $conceptFact->descripcion = $request->get("concept_1");
                         $conceptFact->monto_unitario = $request->get("amountUnit_1");
-                        $conceptFact->monto_bien = $request->get("amountService_1");
+                        $conceptFact->monto_bien = $request->get("total-amount1");
                         $conceptFact->save();
                     }
                     if ($i == 2){
@@ -253,49 +253,51 @@ class FacturasController extends Controller
                         $conceptFact->idfact = $queryFact[0]->idfact;
                         $conceptFact->descripcion = $request->get("concept_2");
                         $conceptFact->monto_unitario = $request->get("amountUnit_2");
-                        $conceptFact->monto_bien = $request->get("amountService_2");
+                        $conceptFact->monto_bien = $request->get("total-amount2");
                         $conceptFact->save();
                     }
                 }
             }
             if ($request->get('numconcept')==4){
+                for ($i=0; $i < 3; $i++) { 
+                    if ($i == 0){
+                        $conceptFact = new DescripcionFactura();
+                        $conceptFact->iddfact = $iddfact;
+                        $conceptFact->idfact = $queryFact[0]->idfact;
+                        $conceptFact->descripcion = $request->get("concept_0");
+                        $conceptFact->monto_unitario = $request->get("amountUnit_0");
+                        $conceptFact->monto_bien = $request->get("total-amount0");
+                        $conceptFact->save();
+                    }
+                    if ($i == 1){
+                        $conceptFact = new DescripcionFactura();
+                        $conceptFact->iddfact = $iddfact+1;
+                        $conceptFact->idfact = $queryFact[0]->idfact;
+                        $conceptFact->descripcion = $request->get("concept_1");
+                        $conceptFact->monto_unitario = $request->get("amountUnit_1");
+                        $conceptFact->monto_bien = $request->get("total-amount1");
+                        $conceptFact->save();
+                    }
+                    if ($i == 2){
+                        $conceptFact = new DescripcionFactura();
+                        $conceptFact->iddfact = $iddfact+1;
+                        $conceptFact->idfact = $queryFact[0]->idfact;
+                        $conceptFact->descripcion = $request->get("concept_2");
+                        $conceptFact->monto_unitario = $request->get("amountUnit_2");
+                        $conceptFact->monto_bien = $request->get("total-amount2");
+                        $conceptFact->save();
+                    }
+                    if ($i == 3){
+                        $conceptFact = new DescripcionFactura();
+                        $conceptFact->iddfact = $iddfact+1;
+                        $conceptFact->idfact = $queryFact[0]->idfact;
+                        $conceptFact->descripcion = $request->get("concept_3");
+                        $conceptFact->monto_unitario = $request->get("amountUnit_3");
+                        $conceptFact->monto_bien = $request->get("total-amount3");
+                        $conceptFact->save();
+                    }
+                }
                 
-                if ($i == 0){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_0");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                    $conceptFact->monto_bien = $request->get("amountService_0");
-                    $conceptFact->save();
-                }
-                if ($i == 1){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact+1;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_1");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_1");
-                    $conceptFact->monto_bien = $request->get("amountService_1");
-                    $conceptFact->save();
-                }
-                if ($i == 2){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact+1;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_2");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_2");
-                    $conceptFact->monto_bien = $request->get("amountService_2");
-                    $conceptFact->save();
-                }
-                if ($i == 3){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact+1;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_3");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_3");
-                    $conceptFact->monto_bien = $request->get("amountService_3");
-                    $conceptFact->save();
-                }
             }
             if ($request->get('numconcept')==5){
                 
@@ -421,43 +423,44 @@ class FacturasController extends Controller
                 $conceptFact->save();
             }
             if ($request->get('numconcept')==4){
-                if ($i == 0){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_0");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                    $conceptFact->monto_bien = $request->get("amountService_0");
-                    $conceptFact->save();
+                for ($i=0; $i < 1; $i++) { 
+                    if ($i == 0){
+                        $conceptFact = new DescripcionFactura();
+                        $conceptFact->iddfact = $iddfact;
+                        $conceptFact->idfact = $queryFact[0]->idfact;
+                        $conceptFact->descripcion = $request->get("concept_0");
+                        $conceptFact->monto_unitario = $request->get("amountUnit_0");
+                        $conceptFact->monto_bien = $request->get("total-amount0");
+                        $conceptFact->save();
+                    }
+                    if ($i == 1){
+                        $conceptFact = new DescripcionFactura();
+                        $conceptFact->iddfact = $iddfact+1;
+                        $conceptFact->idfact = $queryFact[0]->idfact;
+                        $conceptFact->descripcion = $request->get("concept_1");
+                        $conceptFact->monto_unitario = $request->get("amountUnit_1");
+                        $conceptFact->monto_bien = $request->get("total-amount1");
+                        $conceptFact->save();
+                    }
+                    if ($i == 2){
+                        $conceptFact = new DescripcionFactura();
+                        $conceptFact->iddfact = $iddfact+1;
+                        $conceptFact->idfact = $queryFact[0]->idfact;
+                        $conceptFact->descripcion = $request->get("concept_2");
+                        $conceptFact->monto_unitario = $request->get("amountUnit_2");
+                        $conceptFact->monto_bien = $request->get("total-amount2");
+                        $conceptFact->save();
+                    }
+                    if ($i == 3){
+                        $conceptFact = new DescripcionFactura();
+                        $conceptFact->iddfact = $iddfact+1;
+                        $conceptFact->idfact = $queryFact[0]->idfact;
+                        $conceptFact->descripcion = $request->get("concept_3");
+                        $conceptFact->monto_unitario = $request->get("amountUnit_3");
+                        $conceptFact->monto_bien = $request->get("total-amount3");
+                        $conceptFact->save();
+                    } 
                 }
-                if ($i == 1){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact+1;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_1");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_1");
-                    $conceptFact->monto_bien = $request->get("amountService_1");
-                    $conceptFact->save();
-                }
-                if ($i == 2){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact+1;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_2");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_2");
-                    $conceptFact->monto_bien = $request->get("amountService_2");
-                    $conceptFact->save();
-                }
-                if ($i == 3){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact+1;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_3");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_3");
-                    $conceptFact->monto_bien = $request->get("amountService_3");
-                    $conceptFact->save();
-                }
-                $conceptFact->save();
             }
             if ($request->get('numconcept')==5){
                 if ($i == 0){
