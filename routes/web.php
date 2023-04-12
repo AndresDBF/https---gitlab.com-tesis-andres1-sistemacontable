@@ -31,8 +31,7 @@ Route::post('storedetinvoiceing',[FacturasController::class,'storedetinvoiceing'
 Route::get('totalinvoice/{idfact}',[FacturasController::class,'totalinvoice'])->name('totalinvoice');
 
 //Comprobante de ingreso
-Route::get('createing',[ComprIngController::class,'findInvoice'])->name('createing');
-Route::get('getIdentification/{tipid}/{identification}/{numcheck}',[ComprIngController::class,'getIdentification'])->name('getIdentification');
+Route::get('searchInvoice',[ComprIngController::class,'searchInvoice'])->name('searchInvoice');
 
 Route::get('/excel/importar', [Importexcel::class, 'impportar'])->name('/excel/importar');
 Route::post('/excel/importarexcel', [Importexcel::class, 'importarexcel'])->name('/excel/importarexcel');

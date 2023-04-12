@@ -3,14 +3,22 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1 class="text-center">Comprobante de Ingreso</h1>
+    <h1 class="fw-bolder">Comprobante de Ingreso</h1>
 @stop
 
 @section('content')
 <div class="container">
+  
+  @if(session('error'))
+  <div class="alert alert-danger" role="alert">
+      {{ session('error') }}
+  </div>
+  @endif
+  </div>
   <div class="card">
     <div class="card-body pl-6">
-      <h3 class="text-center fw-bolder pb-4">Ingresa la identificacion del Beneficiario de la Factura</h3>
+      <h3 class="text-center fw-bolder pb-4">Ingresa la Identificación del Beneficiario de la Factura</h3>
+      <form action="{{route('storeinvoiceing')}}" method="POST"></form>
       <div class="well">
         <div class="row">
             <div class="col-xs-3 col-sm-6 col-md-4">
@@ -47,50 +55,10 @@
         </div>
     </div>
   </div>
-    
-  </div>
-    <div class="well">
-      <div class="row">
-        <div class="col-xs-3 col-sm-3 col-md-3">
-          <label for="" class="form-label">Numero de Relacion de ingreso</label>
-          <input type="text" name="numreling" id="code" class="form-control" readonly="readonly"  tabindex="1">
-        </div>
-        <div class="col-xs-3 col-sm-3 col-md-3">
-          <label for="" class="form-label">fecha de emision</label>
-          <input type="text" name="fecemi" id="fecemi"  class="form-control" tabindex="4"  readonly="readonly">
-        </div>
-        <div class="col-xs-3 col-sm-3 col-md-5">
-          <label for="" class="form-label">Nombre y Apellido o Razon Social</label>
-          <input type="text" name="name" id="name" class="form-control" readonly="readonly" tabindex="4">
-        </div>
-      </div>
-    </div>
-    
-    @if(session('error'))
-    <div class="alert alert-danger" role="alert">
-        {{ session('error') }}
-    </div>
-    @endif
-  </div>
+  
+</div>  
+<div class="well pb-3 mt-3">
+  <a href="/home" class="btn btn-secondary" tabindex="5">Cancelar</a>
+  <button type="submit" class="btn btn-primary" tabindex="6">Siguiente</button>
+</div>  
 @stop
-
-@section('js')
-
-<!-- Script para manejar la solicitud AJAX -->
-<script>
-$('#identification').on('change', function() {
-    var cedula = $(this).val();
-    var tipid = $('select[name="tipid"]').val();
-    var tiprif = $('select[name="tiprif"]').val();
-    $.ajax({
-        type: 'GET',
-        url: '/buscar-cedula/' + cedula + '/' + tipid + '/' + tiprif,
-        success: function(data) {
-            $('#name').val(data.nombre);
-            $('#code').val(data.relation);
-            $('#fecemi').val(data.fecha_emision);
-        }
-    });
-});
-</script>
-@endsection
