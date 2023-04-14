@@ -19,7 +19,7 @@ class CreateDetFactsTable extends Migration
             $table->foreign('idfact')
                   ->references('idfact')
                   ->on('facturas');
-            $table->integer('numfact');
+            $table->string('numfact');
             $table->string('numctrl');
             $table->string('stsfact',3);
             $table->date('fec_emi');

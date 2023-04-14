@@ -23,14 +23,10 @@ class CreateDetComprobanteIngsTable extends Migration
             $table->foreign('idcli')
                   ->references('idcli')
                   ->on('clientes');
-            $table->integer('num_compr');
-            $table->string('stscomp',3);
-            $table->float('monto',14,2);
-            $table->string('moneda',3);
-            $table->unsignedBigInteger('id');
-            $table->foreign('id')
-                  ->references('id')
-                  ->on('users');
+            $table->string('nombre_cliente');
+            $table->date('fec_trans')->format('d-m-y');
+            $table->string('formpago',3);
+            $table->string('descripcion');
             $table->timestamps();
         });
     }

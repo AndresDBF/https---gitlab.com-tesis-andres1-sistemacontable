@@ -19,9 +19,11 @@ class CreateComprobanteIngresosTable extends Migration
             $table->foreign('idfact')
                   ->references('idfact')
                   ->on('facturas');
-            $table->string('nombre',100);
-            $table->date('feccomp');
-            $table->string('descripcion');
+            $table->string('numconfirm',20);
+            $table->string('numfact');
+            $table->string('moneda',3);
+            $table->float('cantidad',14,2);
+            $table->string('cantidad_escr',100);
             $table->timestamps();
         });
     }

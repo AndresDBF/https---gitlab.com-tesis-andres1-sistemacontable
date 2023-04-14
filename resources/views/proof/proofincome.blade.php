@@ -8,14 +8,14 @@
 
 @section('content')
 <div class="container">
-    @if(Session::has('error'))
-    <div class="alert alert-success">{{Session::get('error')}}</div>
+    @if(session('error'))
+    <div class="alert alert-danger" role="alert">
+        {{ session('error') }}
+    </div>
     @endif
     <div class="card">
         <div class="card-body pl-6">
         <h3 class="text-center fw-bolder pb-4">Ingresa la Identificación del Beneficiario de la Factura</h3>
-        <form action="{{route('findInvoice')}}" method="POST">
-            @csrf
             <div class="well">
                 <div class="row">
                     <div class="col-xs-3 col-sm-6 col-md-4">
@@ -54,11 +54,40 @@
         </div>
     </div>
 </div>
-  
 
-<div class="well pb-3 mt-3">
-  <a href="/home" class="btn btn-secondary" tabindex="5">Cancelar</a>
-  <button type="submit" class="btn btn-primary" tabindex="6">Siguiente</button>
-</div>  
-</form>
+<table id="invoice" class="table table-striped table-bordered shadow-lg mt-4" style="width: 100%">
+
+    <thead class="bd-primary text-dark">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Codigo</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Precios</th>
+            <th scope="col">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($articulos as $articulo)
+            <tr>
+                <th>{{$articulo->id}}</th>
+                <th>{{$articulo->codigo}}</th>
+                <th>{{$articulo->descripcion}}</th>
+                <th>{{$articulo->cantidad}}</th>
+                <th>{{$articulo->precio}}</th>
+                <td>
+                    <form action="{{route('articulos.destroy',$articulo->id)}}" method="POST">
+                        <a href="/articulos/{{$articulo->id}}/edit" class="btn btn-info">Editar</a>
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger">Borrar</button>
+                    </form>
+
+                    
+                </td>
+            </tr>
+
+        @endforeach
+    </tbody>
+</table>
 @stop

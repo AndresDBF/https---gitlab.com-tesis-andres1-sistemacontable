@@ -332,7 +332,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'Comprobante de Ingreso',
-                    'url'  => 'createing',
+                    'url'  => 'searchInvoice',
                 ],
                 [
                     'text' => 'Ingreso',
