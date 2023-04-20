@@ -67,7 +67,8 @@ class CustomerController extends Controller
             }
             /* $accounts = CatCuenta::orderBy('tipcta')
                                  ->get(); */
-            $tippag = TipPago::orderBy('descripcion')
+            $tippag = TipPago::where('tip_proceso','contr_cli')
+                             ->orderBy('descripcion')
                              ->get();
             $money = Moneda::all();
             $status = ReglaStatus::all();
@@ -110,7 +111,7 @@ class CustomerController extends Controller
         $contrCustomer->moneda = $request->get('money');
         $contrCustomer->idcta = "12";
         $contrCustomer->save();
-        $seat = new Asiento();
+        $seatDeb = new Asiento();
         $consulta = Asiento::orderBy('idasi','desc')
                                ->take(1)
                                ->get();
@@ -123,14 +124,38 @@ class CustomerController extends Controller
             else{
                 $idesigue = $consulta[0]->idasi+1;
             }
-        $seat->idasi = $idesigue;
-        $seat->fec_asi = Carbon::now();
-        $seat->observacion = $request->get('observartion');
-        $seat->idcta = "12";
-        $seat->descripcion = $request->get('description');
-        $seat->monto_deb = $request->get('valuecont');
-        $seat->monto_hab = $request->get('valuecont');
-        $seat->save();
+        $seatDeb->idasi = $idesigue;
+        $seatDeb->fec_asi = Carbon::now();
+        $seatDeb->observacion = $request->get('observartion');
+        $seatDeb->idcta = "9";
+        $seatDeb->descripcion = $request->get('description');
+        $seatDeb->monto_deb = - $request->get('valuecont');
+        $seatDeb->monto_hab = 0;
+        $seatDeb->save();
+
+        $seatHab = new Asiento();
+        $consulta = Asiento::orderBy('idasi','desc')
+                               ->take(1)
+                               ->get();
+                               
+            $cuantos = count($consulta);
+            if ($cuantos == 0){
+                $idesigue = 1;
+    
+            }
+            else{
+                $idesigue = $consulta[0]->idasi+1;
+            }
+        $seatHab->idasi = $idesigue;
+        $seatHab->fec_asi = Carbon::now();
+        $seatHab->observacion = $request->get('observartion');
+        $seatHab->idcta = "17";
+        $seatHab->descripcion = $request->get('description');
+        $seatHab->monto_deb = 0;
+        $seatHab->monto_hab = $request->get('valuecont');
+        $seatHab->save();
+
+
 
         /* if($request->get('subaccountname')){
             $value4 = CatgSubCuenta::select('idcta')

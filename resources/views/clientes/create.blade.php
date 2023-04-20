@@ -90,7 +90,7 @@
                 </div>
               </div>
       
-                <div class="form-group">
+                {{-- <div class="form-group">
                   <label for="groupaccount">Grupo de Cuenta</label>
                   <select name = 'groupaccount' id ="groupaccount" class="custom-select">
                       <option selected="">Seleccionar Grupo</option>
@@ -117,8 +117,7 @@
                   <select name = 'subaccountname'id="subaccountname" class="custom-select">
                       <option selected="">Seleccionar Subcuenta</option>
                   </select>
-                </div>
-            </div>
+                </div> --}}
       </div> 
     </div>
     <div class="well pb-3">

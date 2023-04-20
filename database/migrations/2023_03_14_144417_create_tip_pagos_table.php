@@ -15,6 +15,7 @@ class CreateTipPagosTable extends Migration
     {
         Schema::create('tip_pagos', function (Blueprint $table) {
             $table->id();
+            $table->string('tip_proceso');
             $table->string('tippago',3);
             $table->string('descripcion');
             $table->timestamps();

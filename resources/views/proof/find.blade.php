@@ -9,7 +9,12 @@
 @section('content')
 <div class="container">
     @if(Session::has('error'))
-    <div class="alert alert-success">{{Session::get('error')}}</div>
+    <div class="alert alert-danger">{{Session::get('error')}}</div>
+    @endif
+    @if(session('successProof'))
+    <div class="alert alert-success" role="alert">
+        {{ session('successProof') }}
+    </div>
     @endif
     <div class="card">
         <div class="card-body pl-6">

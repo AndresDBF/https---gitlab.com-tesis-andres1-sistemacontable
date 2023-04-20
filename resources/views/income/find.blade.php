@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1 class="fw-bolder">Comprobante de Ingreso</h1>
+    <h1>Ingreso</h1>
 @stop
 
 @section('content')
@@ -62,7 +62,7 @@
 
             <thead class="bd-primary text-dark">
                 <tr>
-                    <th scope="col">Fecha de Emision</th>
+                    <th scope="col">Fecha de Emision de Factura</th>
                     <th scope="col">Cliente</th>
                     <th scope="col">Identificacion</th>
                     <th scope="col">Forma de Pago</th>
@@ -73,23 +73,22 @@
             <tbody>
                 @foreach ($findInvoice as $invoice)
                     @foreach ($findDetInvoice as $det)
-                            <tr>
-                              
-                                <th>{{$det->fec_emi}}</th>
-                                <th>{{$invoice->nomacre}}</th>
-                                <th>{{$invoice->identificacion}}</th>
-                                <th>{{$invoice->tip_pago}}</th>
-                                <th>{{$det->mtototal}}</th> 
-                                <th>
-                                    <a href="{{route('createIncome',['idfact'=>$invoice->idfact,'idcli'=>$nameCli->idcli])}}">
-                                    <button type="button" class="btn btn-success">Ir</button>
-                                </th>
-                            </tr>
+                    <tr>
+                    
+                        <th class="text-center">{{$det->fec_emi}}</th>
+                        <th class="text-center">{{$invoice->nomacre}}</th>
+                        <th class="text-center">{{$invoice->identificacion}}</th>
+                        <th class="text-center">{{$invoice->tip_pago}}</th>
+                        <th class="text-center">{{$det->mtototal}}</th> 
+                        <th>
+                            <a href="{{route('createIng',['idfact'=>$invoice->idfact,'idcli'=>$nameCli->idcli])}}">
+                            <button type="button" class="btn btn-success">Ir</button>
+                        </th>
+                    </tr>
                     @endforeach
                 @endforeach
             </tbody>
         </table>
     </div>
 </div>
-
 @stop

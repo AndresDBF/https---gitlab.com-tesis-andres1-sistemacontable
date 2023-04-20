@@ -9,4 +9,16 @@ class DetFact extends Model
 {
     use HasFactory;
     protected  $primaryKey = 'iddfact';
+    protected $fillable = [
+       
+        'idfact',
+        'numfact',
+        'numctrl',
+        'stsfact',
+        'fec_emi',
+        'monto',
+        'mtoimponible',
+        'mtoimpuesto',
+        'mtototal',
+    ];
 }

@@ -49,7 +49,7 @@
     </div>
 </div> 
 
-<a href="{{route('totalinvoice',['idfact'=>$idfact])}}">
+<a href="{{route('deleteInvoice',['idfact'=>$idfact])}}">
     <button type="button" class="btn btn-secondary">Atras</button>
 </a>
 <a href="{{route('home')}}">

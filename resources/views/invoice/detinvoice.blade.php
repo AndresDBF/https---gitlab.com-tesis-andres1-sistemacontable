@@ -78,18 +78,29 @@
                             </div>
                             <div class="col-xs-3 col-sm-6 col-md-4">
                                 <label for="" class="form-label">Numero de Chequeo</label>
-                                <select name = 'tiprif' class="custom-select">
-                                    <option selected="">Seleccionar Numero</option>
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
+                                <select name = 'numcheck' class="custom-select">
+                                    @if ($invoice->tiprif == null)
+                                        <option selected="">Seleccionar Numero</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>                               
+                                    @else
+                                        @for ($i = 0; $i < 10; $i++)
+                                            @if ($i == $invoice->tiprif)
+                                                <option value="{{$i}}" selected>{{$i}}</option>
+                                            @endif
+                                            <option value="{{$i}}">{{$i}}</option>
+                                        @endfor
+                                    
+                                    @endif
+                                    
                                 </select>
                             </div>
                         </div>

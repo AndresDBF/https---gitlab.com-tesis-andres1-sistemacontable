@@ -25,6 +25,7 @@ class CreateDetComprobanteIngsTable extends Migration
                   ->on('clientes');
             $table->string('nombre_cliente');
             $table->date('fec_trans')->format('d-m-y');
+            $table->string('stscom',3);
             $table->string('formpago',3);
             $table->string('descripcion');
             $table->timestamps();

@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class ComprobanteIngreso extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'idcom';
+    protected $fillable = [
+        'idcom',
+        'idfact',
+        'numconfirm',
+        'numfact',
+        'moneda',
+        'cantidad',
+    	'cantidad_escr',
+    ];
 }

@@ -36,8 +36,9 @@ class FacturasController extends Controller
                 
             }
            // $numing = $conceptoFact->idcfact;
-            $tippag = TipPago::orderBy('descripcion')
-                             ->get();
+           $tippag = TipPago::where('tip_proceso','contr_cli')
+                            ->orderBy('descripcion')
+                            ->get();
             $fecemi = Carbon::now()
                             ->format('d/m/y');
 
@@ -153,8 +154,9 @@ class FacturasController extends Controller
         $detInvoice = DetFact::orderBy('iddfact','desc')
                              ->take(1)
                              ->get();    
-        $tippag = TipPago::orderBy('descripcion')
-                          ->get();
+        $tippag = TipPago::where('tip_proceso','contr_cli')
+                             ->orderBy('descripcion')
+                             ->get();
         return view('invoice.detinvoice',compact('tippag','cantConcept'))
                 ->with('invoice',$invoice[0])
                 ->with('query',$query[0])
@@ -534,7 +536,7 @@ class FacturasController extends Controller
             $montoImponible += $detalle->monto_bien;
         } 
 
-        $montoImpuesto = floatval($montoImponible * 0.16);
+        //$montoImpuesto = $montoImponible;
         $totalFactura = floatval($montoImponible + $montoImpuesto);
         
         $detInvoice->monto = $montoImponible;
@@ -542,9 +544,17 @@ class FacturasController extends Controller
         $detInvoice->mtoimpuesto = $montoImpuesto;
         $detInvoice->mtototal = $totalFactura;
         $detInvoice->save();
-    
         return view('invoice.totalinvoice', ['totalFact' => $totalFact],compact('montoImponible','montoImpuesto','totalFactura','idfact'));
     }
     
+    public function deleteInvoice($idfact){
+        $conceptInvoice = DescripcionFactura::where('idfact',$idfact)->delete();
+        $detInvoice = DetFact::where('idfact',$idfact)->delete();
+        $invoice = Factura::where('idfact',$idfact)->delete();
+        $conceptFact = ConceptoFact::orderBy('created_at','desc')
+                                    ->take(1)
+                                    ->forceDelete();
+        return redirect()->route('createinvoiceing');
+    }
     
 }

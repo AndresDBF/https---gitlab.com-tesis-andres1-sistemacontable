@@ -3,19 +3,15 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1 class="fw-bolder">Comprobante de Ingreso</h1>
+    <h1>Creación de Ingreso</h1>
 @stop
 
 @section('content')
-<div class="container">
-    @if(session('error'))
-    <div class="alert alert-danger" role="alert">
-        {{ session('error') }}
-    </div>
-    @endif
     <div class="card">
         <div class="card-body pl-6">
         <h3 class="text-center fw-bolder pb-4">Ingresa la Identificación del Beneficiario de la Factura</h3>
+        <form action="{{route('findIncome')}}" method="POST">
+            @csrf
             <div class="well">
                 <div class="row">
                     <div class="col-xs-3 col-sm-6 col-md-4">
@@ -51,45 +47,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+            <div class="well pb-3 mt-3">
+                <a href="/home" class="btn btn-secondary" tabindex="5">Cancelar</a>
+                <button type="submit" class="btn btn-primary" tabindex="6">Siguiente</button>
+              </div> 
+        </form>
     </div>
-</div>
-
-<div class="card">
-    <div class="card-body pl-6">
-        <h3 class="text-center fw-bolder pb-2">Facturas Pendientes</h3>
-        <table id="invoice" class="table table-striped table-bordered shadow-lg mt-4" style="width: 100%">
-
-            <thead class="bd-primary text-dark">
-                <tr>
-                    <th scope="col">Fecha de Emision</th>
-                    <th scope="col">Cliente</th>
-                    <th scope="col">Identificacion</th>
-                    <th scope="col">Forma de Pago</th>
-                    <th scope="col">Monto Total de Factura</th>
-                    <th scope="col">Seleccionar</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($findInvoice as $invoice)
-                    @foreach ($findDetInvoice as $det)
-                            <tr>
-                              
-                                <th>{{$det->fec_emi}}</th>
-                                <th>{{$invoice->nomacre}}</th>
-                                <th>{{$invoice->identificacion}}</th>
-                                <th>{{$invoice->tip_pago}}</th>
-                                <th>{{$det->mtototal}}</th> 
-                                <th>
-                                    <a href="{{route('createIncome',['idfact'=>$invoice->idfact,'idcli'=>$nameCli->idcli])}}">
-                                    <button type="button" class="btn btn-success">Ir</button>
-                                </th>
-                            </tr>
-                    @endforeach
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
-
 @stop
