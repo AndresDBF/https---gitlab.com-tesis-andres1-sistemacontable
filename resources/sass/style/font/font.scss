@@ -1,0 +1,48 @@
+@font-face {
+    font-family: "mon-black";
+    src: url("Montserrat-Black.ttf");
+}
+
+@font-face {
+    font-family: "mon-bold";
+    src: url("Montserrat-Bold.ttf");
+}
+
+@font-face {
+    font-family: "mon-light";
+    src: url("Montserrat-Light.ttf");
+}
+
+@font-face {
+    font-family: "mon-medium";
+    src: url("Montserrat-Medium.ttf");
+}
+
+@font-face {
+    font-family: "mon-regular";
+    src: url("Montserrat-Regular.ttf");
+}
+
+.mon-bold {
+    font-family: 'mon-bold';
+}
+
+.mon-black {
+    font-family: 'mon-black';
+}
+
+.mon-light {
+    font-family: 'mon-light';
+}
+
+.mon-medium {
+    font-family: 'mon-medium';
+}
+
+.mon-regular {
+    font-family: 'mon-regular';
+}
+
+.fs-7 {
+    font-size: 10px !important;
+}

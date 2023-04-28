@@ -1,0 +1,18 @@
+.px-sm {
+    padding: 0px 0px !important;
+}
+
+.fs-sm {
+    font-size: 10px !important;
+}
+
+.circle {
+    width: 60px !important;
+    height: 60px !important;
+}
+
+@media (min-width: 768px){
+    .px-sm {
+        padding: 1px !important;
+    }
+}
