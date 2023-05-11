@@ -27,17 +27,17 @@ class CreateIngresosTable extends Migration
             $table->foreign('iddfact')
                   ->references('iddfact')
                   ->on('det_facts');
-            $table->unsignedBigInteger('id');
-            $table->foreign('id')
+            $table->unsignedBigInteger('coduser');
+            $table->foreign('coduser')
                   ->references('id')
                   ->on('users');
-            $table->unsignedBigInteger('idcta');
-            $table->foreign('idcta')
-                  ->references('idcta')
-                  ->on('cat_cuentas');    
+            $table->unsignedBigInteger('idasi');
+            $table->foreign('idasi')
+                  ->references('idasi')
+                  ->on('asientos');    
             $table->string('concepto_ing');
             $table->string('moneda',3);
-            $table->float('stsing',3);
+            $table->string('stsing',3);
             $table->date('fec_ing')->format('d-y-m');
             $table->timestamps();
         });

@@ -172,8 +172,8 @@
                                 <br>
                             @endfor
                         </div>
-                        <div class="col-xs-2 col-sm-2 col-md-2">
-                            <label for="" class="form-label">Precio del Bien</label>
+                        <div class="col-xs-3 col-sm-3 col-md-3">
+                            <label for="" class="form-label">Precio del Bien o Servicio</label>
                             @for ($i = 0; $i < $cantConcept; $i++)
                                 <input type="number" name="total-amount{{$i}}" id="total-amount{{$i}}" class="form-control text-decoration-none total-amount" tabindex="7" readonly>
                                 <br>

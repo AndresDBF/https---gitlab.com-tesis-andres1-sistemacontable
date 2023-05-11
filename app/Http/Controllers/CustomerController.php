@@ -36,7 +36,7 @@ class CustomerController extends Controller
     public function index()
     {
         $customer = Cliente::join('contr_clis','clientes.idcli','=','contr_clis.idcli')
-        ->select('contr_clis.idcta','clientes.idcli','clientes.nombre','clientes.rif_cedula','clientes.telefono',
+        ->select('contr_clis.idasi','clientes.idcli','clientes.nombre','clientes.identificacion','clientes.telefono',
         'clientes.email','contr_clis.stscontr','contr_clis.tip_pag')
         ->orderBy('clientes.nombre')
         ->get();
@@ -93,11 +93,46 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $this->validate($request,[
+            
+            'name' => 'required|regex:/^[A-Z][A-Z,a-z, ,á,é,í,ó,ú]+$/',
+            'tipid' => 'required',
+            'identification' => 'required|numeric',
+            'phone' => 'required',
+            'direction'=>'required', 
+            'email' =>'required|email',
+            'stscontr' => 'required|in:ACT',
+            'tip_pag' => 'required',
+            'valuecont' => 'required',
+            'money' => 'required'
+        ]);
+
+        $idcta1 = CatgSubCuenta::select('idcta')
+                                ->where('idscu', $request->get('subaccountname1'))
+                                ->first();
+        $idcta2 = CatgSubCuenta::where('idscu', $request->get('subaccountname2'))
+                                ->first();
+        $seat = new Asiento();
+        $seat->fec_asi = Carbon::now();
+        $seat->observacion = $request->get('observartion');
+        $seat->idcta1 = $idcta1->idcta;
+        $seat->idcta2 = $idcta2->idcta;
+        $seat->descripcion = $request->get('description');
+        $seat->monto_deb = - $request->get('valuecont');
+        $seat->monto_hab = 0;
+        $seat->save();
+
         $customer = new Cliente();
         $customer->idcli = $request->code;
         $customer->nombre = $request->get('name');
-        $customer->rif_cedula = $request->get('identification');
+        $customer->tipid = $request->get('tipid');
+        $customer->identificacion = $request->get('identification');
+        if ($request->get('tiprif')== "Seleccionar Numero"){
+            $customer->tiprif = null;
+        }
+        else{
+            $customer->tiprif = $request->get('tiprif'); 
+        }
         $customer->telefono = $request->get('phone');
         $customer->email = $request->get('email');
         $customer->direccion = $request->get('direction');
@@ -109,61 +144,9 @@ class CustomerController extends Controller
         $contrCustomer->tip_pag = $request->get('tip_pag');
         $contrCustomer->monto_pag = $request->get('valuecont');
         $contrCustomer->moneda = $request->get('money');
-        $contrCustomer->idcta = "12";
+        $contrCustomer->idasi = $seat->idasi;
         $contrCustomer->save();
-        $seatDeb = new Asiento();
-        $consulta = Asiento::orderBy('idasi','desc')
-                               ->take(1)
-                               ->get();
-                               
-            $cuantos = count($consulta);
-            if ($cuantos == 0){
-                $idesigue = 1;
-    
-            }
-            else{
-                $idesigue = $consulta[0]->idasi+1;
-            }
-        $seatDeb->idasi = $idesigue;
-        $seatDeb->fec_asi = Carbon::now();
-        $seatDeb->observacion = $request->get('observartion');
-        $seatDeb->idcta = "9";
-        $seatDeb->descripcion = $request->get('description');
-        $seatDeb->monto_deb = - $request->get('valuecont');
-        $seatDeb->monto_hab = 0;
-        $seatDeb->save();
-
-        $seatHab = new Asiento();
-        $consulta = Asiento::orderBy('idasi','desc')
-                               ->take(1)
-                               ->get();
-                               
-            $cuantos = count($consulta);
-            if ($cuantos == 0){
-                $idesigue = 1;
-    
-            }
-            else{
-                $idesigue = $consulta[0]->idasi+1;
-            }
-        $seatHab->idasi = $idesigue;
-        $seatHab->fec_asi = Carbon::now();
-        $seatHab->observacion = $request->get('observartion');
-        $seatHab->idcta = "17";
-        $seatHab->descripcion = $request->get('description');
-        $seatHab->monto_deb = 0;
-        $seatHab->monto_hab = $request->get('valuecont');
-        $seatHab->save();
-
-
-
-        /* if($request->get('subaccountname')){
-            $value4 = CatgSubCuenta::select('idcta')
-                                    ->where('idscu',$request->get('subaccountname'))
-                                    ->get();
-            $contrCustomer->idcta = 
-        } */
-                                 
+                       
         Session::flash('mensaje',"Se ha registrado el Cliente $customer->nombre correctamente");
         return redirect('/clientes');
              
@@ -189,52 +172,7 @@ class CustomerController extends Controller
     public function edit($idcli)
     {        
         
-        $dateCustom = Cliente::join('contr_clis','clientes.idcli','=','contr_clis.idcli')
-                             ->select('clientes.idcli','clientes.nombre','clientes.rif_cedula','clientes.telefono','clientes.email',
-                                      'clientes.direccion','contr_clis.stscontr','contr_clis.tip_pag','contr_clis.monto_pag','contr_clis.moneda',
-                                      'contr_clis.idcta')
-                             ->where('clientes.idcli',$idcli)
-                             ->get();   
-                             
-        $accounts = CatCuenta::join('contr_clis','contr_clis.idcta','=','cat_cuentas.idcta')
-                             ->select('cat_cuentas.idcta','cat_cuentas.tipcta','cat_cuentas.tipmov','cat_cuentas.nombre_cuenta')
-                             ->whereNotIn('contr_clis.idcli',$idcli)
-                             ->get();
-                             
-
-        $accounttip = CatCuenta::join('contr_clis','contr_clis.idcta','=','cat_cuentas.idcta')
-                                ->select('cat_cuentas.idcta','cat_cuentas.tipcta')
-                                ->distinct()
-                                ->whereNotIn('cat_cuentas.tipcta',[$idcli->idcta])
-                                ->get();
-        $accountList = CatCuenta::WhereNotIn('idcta',$accounts)                   
-                                ->get();
-                                
-        /* if ($accounts->tipcta = 'Activo') {
-            
-            $accounts = CatCuenta::join('contr_clis','contr_clis.idcta','=','cat_cuentas.idcta')
-                             ->select('cat_cuentas.idcta','cat_cuentas.tipcta','cat_cuentas.tipmov','cat_cuentas.nombre_cuenta')
-                             ->distinct()
-                             ->get();  
-                             dd($accounts);
-                             
-        }         */    
-        $status = ReglaStatus::where('nomtabla','contr_clis')
-                                ->WhereNotIn('sts',$dateCustom)
-                                ->get();         
-       /*  $methodpag = lvalue::where('tipvalue','tippago')
-                            ->get();
-
-        $money = lvalue::where('tipvalue','moneda')
-                        ->get(); */
         
-        return view('clientes.edit')
-             ->with('datecustom',$dateCustom[0])
-             ->with('accounts',$accounts[0])
-             ->with('accountlist',$accountList)
-             ->with('status',$status);
-             /* ->with('money',$money)
-             ->with('methodpag',$methodpag); */
     }
 
     /**
@@ -247,24 +185,7 @@ class CustomerController extends Controller
     public function update(Request $request, $id)
     {
 
-        $customer = Cliente::find($request->idcli);
-
-        $customer->nombre = $request->get('name');
-        $customer->rif_cedula = $request->get('identification');
-        $customer->telefono = $request->get('phone');
-        $customer->email = $request->get('email');
-        $customer->direccion = $request->get('direction');
-        $customer->save();
-
-        $contrCustomer = ContrCli::find($id);
-        $contrCustomer->stscontr = $request->get('stscontr');
-        $contrCustomer->tip_pag = $request->get('tip_pag');
-        $contrCustomer->monto_pag = $request->get('valuecont');
-        $contrCustomer->moneda = $request->get('money');
-        $contrCustomer->idcta = $request->get('account');
-        $contrCustomer->save();
-
-        return redirect('/clientes');
+       
     }
 
     /**
@@ -282,19 +203,36 @@ class CustomerController extends Controller
         
         return redirect('/clientes');
     }
-    public function groupaccount()
+    public function groupaccount1()
     {
         return CatGrupo::all();
     }
-    public function subgroupaccount(Request $request)
+    public function subgroupaccount1(Request $request)
     {
         return CatSubGru::where("idgru",$request->idgru)->get();
     }
-    public function accountname(Request $request)
+    public function accountname1(Request $request)
     {
         return CatgCuenta::where("idsgr",$request->idsgr)->get();
     }
-    public function subaccountname(Request $request)
+    public function subaccountname1(Request $request)
+    {
+        return CatgSubCuenta::where('idgcu',$request->idgcu)->get();
+    }
+
+    public function groupaccount2()
+    {
+        return CatGrupo::all();
+    }
+    public function subgroupaccount2(Request $request)
+    {
+        return CatSubGru::where("idgru",$request->idgru)->get();
+    }
+    public function accountname2(Request $request)
+    {
+        return CatgCuenta::where("idsgr",$request->idsgr)->get();
+    }
+    public function subaccountname2(Request $request)
     {
         return CatgSubCuenta::where('idgcu',$request->idgcu)->get();
     }

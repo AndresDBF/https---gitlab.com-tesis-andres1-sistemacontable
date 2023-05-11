@@ -39,10 +39,16 @@
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Nombre y Apellido o Razon Social</label>
+                        @error('stscontr')
+                            <div class="alert alert-danger">{{ "Estatus Invalido" }}</div>
+                        @enderror
                         <input type="text" name="name" id="name" class="form-control" tabindex="4">
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Direccion de Factura</label>
+                        @error('stscontr')
+                            <div class="alert alert-danger">{{ "Estatus Invalido" }}</div>
+                        @enderror
                         <input type="text" name="direction" id="direction" class="form-control" tabindex="5">
                     </div>
                     <div class="well">
@@ -56,10 +62,16 @@
                                         <option value="J">J</option>
                                         <option value="E">E</option>
                                     </select>
+                                    @error('stscontr')
+                            <div class="alert alert-danger">{{ "Estatus Invalido" }}</div>
+                        @enderror
                                 </div>
                             </div>
                             <div class="col-xs-3 col-sm-6 col-md-4">
                                 <label for="" class="form-label">Rif o Cedula del Cliente</label>
+                                @error('stscontr')
+                            <div class="alert alert-danger">{{ "Estatus Invalido" }}</div>
+                        @enderror
                                 <input type="number" name="identification" id="identification" class="form-control text-decoration-none" tabindex="6">
                             </div>
                             <div class="col-xs-3 col-sm-6 col-md-4">
@@ -95,6 +107,9 @@
                                           <option value="{{$tip->tippago}}">{{$tip->descripcion}}</option>
                                       @endforeach
                                   </select>
+                                  @error('stscontr')
+                            <div class="alert alert-danger">{{ "Estatus Invalido" }}</div>
+                        @enderror
                                 </div>
                             </div>
                             <div class="col-xs-6 col-sm-6">

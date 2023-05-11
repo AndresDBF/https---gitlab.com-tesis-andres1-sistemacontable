@@ -44,8 +44,9 @@
 
         {{-- Password field --}}
         <div class="input-group mb-3">
-            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
+            <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror"
                    placeholder="{{ __('adminlte::adminlte.password') }}">
+            <button type="button" onclick="mostrarcontrasena()"><i class="fa-light fa-eye"></i></button>
 
             <div class="input-group-append">
                 <div class="input-group-text">
@@ -95,3 +96,21 @@
         </p>
     @endif
 @stop
+
+@section('css')
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+@endsection
+
+@section('js')
+<script src="https://kit.fontawesome.com/d2c478c6c0.js" crossorigin="anonymous"></script>
+<script>
+    function mostrarcontrasena() {
+      var passwordInput = document.getElementById("password");
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+      } else {
+        passwordInput.type = "password";
+      }
+    }
+    </script>
+@endsection

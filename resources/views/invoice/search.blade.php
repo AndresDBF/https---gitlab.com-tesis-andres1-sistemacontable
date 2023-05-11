@@ -16,7 +16,7 @@
     <div class="card">
         <div class="card-body pl-6">
         <h3 class="text-center fw-bolder pb-4">Ingresa la Identificación del Beneficiario de la Factura</h3>
-        <form action="{{route('findIncome')}}" method="POST">
+        <form action="{{route('findinvoiceing')}}" method="POST">
             @csrf
             <div class="well">
                 <div class="row">

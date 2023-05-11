@@ -19,8 +19,12 @@ class CreateAsientosTable extends Migration
             $table->string('observacion')->nullable();
 /*             $table->string('contacto_acre',50);
             $table->string('contacto_benf',50); */
-            $table->unsignedBigInteger('idcta')->unsigned();
-            $table->foreign('idcta')
+            $table->unsignedBigInteger('idcta1')->unsigned();
+            $table->foreign('idcta1')
+                  ->references('idcta')
+                  ->on('cat_cuentas');
+            $table->unsignedBigInteger('idcta2')->unsigned();
+            $table->foreign('idcta2')
                   ->references('idcta')
                   ->on('cat_cuentas');
             $table->string('descripcion');

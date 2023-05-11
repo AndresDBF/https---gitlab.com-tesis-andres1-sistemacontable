@@ -23,10 +23,10 @@ class CreateContrClisTable extends Migration
             $table->string('tip_pag');
             $table->float('monto_pag',14,2);
             $table->string('moneda',3);
-            $table->unsignedBigInteger('idcta')->nullable();
-            $table->foreign('idcta')
-                    ->references('idcta')
-                    ->on('cat_cuentas');
+            $table->unsignedBigInteger('idasi')->nullable();
+            $table->foreign('idasi')
+                    ->references('idasi')
+                    ->on('asientos');
             $table->timestamps();
         });
     }

@@ -318,6 +318,12 @@ return [
             'label'       => 4,
             'label_color' => 'success',
         ],
+        [
+            'text'        => 'Proveedores',
+            'url'         => 'supplier',
+            'icon'        => 'fas fa-fw fa-wallet',
+            'label_color' => 'success',
+        ],
         /* [
             'text'        => 'Asiento',
             'url'         => 'asiento',
@@ -356,6 +362,43 @@ return [
                     'url'  => '#',
                 ],
 
+            ],
+        ],
+        [
+            'text'        => 'Pagos',
+            'url'         => 'seat',
+            'icon'        => 'fas fa-fw fa-dollar-sign',
+            'label_color' => 'success',
+            'submenu' => [
+                [
+                    'text' => 'Impuestos',
+                    'url'  => 'searchInvoice',
+                ],
+                [
+                    'text' => 'Retenciones',
+                    'url'  => 'searchIncome',
+                ],
+                [
+                    'text' => 'Nomina',
+                    'url'  => 'searchIncome',
+                ],
+
+            ],
+        ],
+        [
+            'text'        => 'Gastos Operativos',
+            'url'         => 'seat',
+            'icon'        => 'fas fa-fw fa-dollar-sign',
+            'label_color' => 'success',
+            'submenu' => [
+                [
+                    'text' => 'Registro de Gastos',
+                    'url'  => 'searchInvoice',
+                ],
+                [
+                    'text' => 'Proyección de Gastos',
+                    'url'  => 'searchIncome',
+                ],
             ],
         ],
         [

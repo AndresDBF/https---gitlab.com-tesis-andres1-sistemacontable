@@ -50,6 +50,17 @@ class FacturasController extends Controller
 
     public function storeinvoiceing(Request $request){
 
+        $this->validate($request,[
+            
+            'name' => 'required|regex:/^[A-Z][A-Z,a-z, ,á,é,í,ó,ú]+$/',
+            'tipid' => 'required',
+            'identification' => 'required|numeric',
+            'phone' => 'required',
+            'direction'=>'required',             
+            'tip_pag' => 'required',
+            'numconcept' => 'required'
+        ]);
+        
        $query = Factura::orderBy('idfact','desc')
                         ->take(1)
                         ->get();
@@ -365,7 +376,7 @@ class FacturasController extends Controller
                 $conceptFact->idfact = $queryFact[0]->idfact;
                 $conceptFact->descripcion = $request->get("concept_0");
                 $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                $conceptFact->monto_bien = $request->get("amountService_0");
+                $conceptFact->monto_bien = $request->get("total-amount0");
                 $conceptFact->save();
             }
             if ($request->get('numconcept')==2){

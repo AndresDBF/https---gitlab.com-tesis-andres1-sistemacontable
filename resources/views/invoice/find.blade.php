@@ -3,21 +3,19 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>Creación de Ingreso</h1>
+    <h1>Ingreso</h1>
 @stop
 
 @section('content')
 <div class="container">
-    @if(session('mensaje'))
+    @if(session('error'))
     <div class="alert alert-danger" role="alert">
-        {{ session('mensaje') }}
+        {{ session('error') }}
     </div>
     @endif
     <div class="card">
         <div class="card-body pl-6">
         <h3 class="text-center fw-bolder pb-4">Ingresa la Identificación del Beneficiario de la Factura</h3>
-        <form action="{{route('findIncome')}}" method="POST">
-            @csrf
             <div class="well">
                 <div class="row">
                     <div class="col-xs-3 col-sm-6 col-md-4">
@@ -53,11 +51,44 @@
                     </div>
                 </div>
             </div>
-            <div class="well pb-3 mt-3">
-                <a href="/home" class="btn btn-secondary" tabindex="5">Cancelar</a>
-                <button type="submit" class="btn btn-primary" tabindex="6">Siguiente</button>
-              </div> 
-        </form>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body pl-6">
+        <h3 class="text-center fw-bolder pb-2">Facturas Pendientes</h3>
+        <table id="invoice" class="table table-striped table-bordered shadow-lg mt-4" style="width: 100%">
+
+            <thead class="bd-primary text-dark">
+                <tr>
+                    <th scope="col">Nombre del Cliente</th>
+                    <th scope="col">Identificacion</th>
+                    <th scope="col">Telefono</th>
+                    <th scope="col">Monto del Contrato</th>
+                    <th scope="col">Moneda</th>
+                    <th scope="col">Seleccionar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($customer as $cus)
+                    @foreach ($contrCli as $contr)
+                    <tr>
+                    
+                        <th class="text-center">{{$cus->nombre}}</th>
+                        <th class="text-center">{{$cus->identificacion}}</th>
+                        <th class="text-center">{{$cus->telefono}}</th> 
+                        <th class="text-center">{{$contr->monto_pag}}</th>
+                        <th class="text-center">{{$contr->moneda}}</th> 
+                        <th>
+                            <a href="{{route('createinvoiceing',['idcli'=>$customer->nombre,'idcli'=>$contrCli->idcont])}}">
+                            <button type="button" class="btn btn-success">Ir</button>
+                        </th>
+                    </tr>
+                    @endforeach
+                @endforeach
+            </tbody>
+        </table>
     </div>
 </div>
 @stop

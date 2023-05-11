@@ -36,7 +36,7 @@ class ComprIngController extends Controller
                                    ->where('stsfact','ACT')
                                    ->get();      
         $nameCli =  Cliente::select('idcli','nombre')
-                           ->where('rif_cedula',$identification)
+                           ->where('identificacion',$identification)
                            ->get();
         $valueInvoice = count($nameCli);
         $valueCli = count($nameCli);    

@@ -239,6 +239,7 @@ sup {
   top: -0.5em;
 }
 
+
 a {
   color: var(--bs-link-color);
   text-decoration: underline;
@@ -486,6 +487,9 @@ progress {
   font-weight: 300;
 }
 
+.ancho {
+  width: 80%;
+}
 .display-1 {
   font-size: calc(1.625rem + 4.5vw);
   font-weight: 300;
