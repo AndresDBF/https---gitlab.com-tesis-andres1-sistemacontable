@@ -16,13 +16,35 @@
                 <th scope="col">ID</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Identificación</th>
-                <th scope="col">Status de Contrato</th>
-                <th scope="col">Tipo de Contrato</th>
-                <th scope="col">Acciones</th>
+                <th scope="col">Telefono</th>
+                <th scope="col">Dirección</th>
+                <th scope="col">Categoria</th>
             </tr>
         </thead>
         <tbody>
-           
+            @foreach ($registerSupplier as $supplier)
+                <tr>
+                    <th>{{$supplier->idprov}}</th>
+                    <th>{{$supplier->nombre}}</th>
+                    <th>{{$supplier->identificacion}}</th>
+                    <th>{{$supplier->telefono}}</th>
+                    <th>{{$supplier->direccion}}</th>
+                    @foreach ($tipCategory as $tip)
+                        @if ($supplier->categoria == $tip->tip_prove)
+                            <th>{{$tip->descripcion}}</th>
+                        @endif
+                    @endforeach
+                    <td>
+                        <a href="/supplier/{{$supplier->idprov}}/edit" class="btn btn-info">Editar</a>
+                        <form action="{{route('supplier.destroy',$supplier->idprov)}}" method="POST">
+                            
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger pt-2">Borrar</button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 @stop

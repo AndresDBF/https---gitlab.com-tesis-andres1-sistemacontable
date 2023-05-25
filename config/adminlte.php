@@ -348,18 +348,35 @@ return [
             ],
         ],
         [
-            'text'        => 'Factura',
+            'text'        => 'Facturación',
             'url'         => 'factura',
             'icon'        => 'fas fa-fw fa-file-invoice-dollar',
             'label_color' => 'success',
             'submenu' => [
                 [
-                    'text' => 'Ingreso',
+                    'text' => 'Factura de Ingreso',
                     'url'  => 'createinvoiceing',
                 ],
                 [
-                    'text' => 'Egreso',
+                    'text' => 'Orden de Pago',
                     'url'  => '#',
+                ],
+
+            ],
+        ],
+        [
+            'text'        => 'Orden de Compra',
+            'url'         => 'reportorder',
+            'icon'        => 'fas fa-fw fa-dollar-sign',
+            'label_color' => 'success',
+            'submenu' => [
+                [
+                    'text' => 'Autorizaciones',
+                    'url'  => 'reportorder',
+                ],
+                [
+                    'text' => 'Crear Orden de Compra',
+                    'url'  => 'findsupplier',
                 ],
 
             ],

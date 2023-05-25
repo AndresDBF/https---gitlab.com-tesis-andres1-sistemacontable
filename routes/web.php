@@ -7,6 +7,7 @@ use App\Http\Controllers\Importexcel;
 use App\Http\Controllers\FacturasController;
 use App\Http\Controllers\ComprIngController;
 use App\Http\Controllers\IncomeController;
+use App\Http\Controllers\PurchaseOrderController;
 //use App\Http\Controllers\ClientesController;
 
 
@@ -62,6 +63,19 @@ Route::post('subaccountname2/{idgcu}', [IncomeController::class, 'subaccountname
 
 //Proveedores
 Route::resource('supplier','App\Http\Controllers\SupplierController');
+
+//Orden de compra
+Route::get('reportorder',[PurchaseOrderController::class,'reportorder'])->name('reportorder');
+Route::get('findsupplier',[PurchaseOrderController::class,'findsupplier'])->name('findsupplier');
+Route::post('create',[PurchaseOrderController::class,'create'])->name('create');
+Route::post('storeorder',[PurchaseOrderController::class,'storeorder'])->name('storeorder');
+Route::get('createdetorder/{numConcept}',[PurchaseOrderController::class,'createdetorder'])->name('createdetorder');
+Route::post('storedetorder',[PurchaseOrderController::class,'storedetorder'])->name('storedetorder');
+Route::get('totalorder/{idorco}',[PurchaseOrderController::class,'totalorder'])->name('totalorder');
+Route::get('deleteorder/{idorco}',[PurchaseOrderController::class,'deleteorder'])->name('deleteorder');
+Route::get('/autorizar/{idorco}',[PurchaseOrderController::class,'autorizar'])->name('autorizar');
+
+
 
 Route::get('/excel/importar', [Importexcel::class, 'impportar'])->name('/excel/importar');
 Route::post('/excel/importarexcel', [Importexcel::class, 'importarexcel'])->name('/excel/importarexcel');

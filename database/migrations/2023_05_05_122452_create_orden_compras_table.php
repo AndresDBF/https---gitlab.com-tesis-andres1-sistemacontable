@@ -21,11 +21,9 @@ class CreateOrdenComprasTable extends Migration
                    ->on('proveedors');
             $table->integer('numorden');
             $table->string('stsorden');
-            $table->float('monto',14,2);
-            $table->float('monto_unit',14,2);
-            $table->float('monto_iva',14,2);
-            $table->float('monto_total',14,2);
-            
+            $table->string('tiempo_pago');
+            $table->string('autorizacion')->nullable();
+            $table->date('fec_autoriza')->format('d/y/m')->nullable();
             $table->timestamps();
         });
     }

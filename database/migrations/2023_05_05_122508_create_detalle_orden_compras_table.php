@@ -19,10 +19,13 @@ class CreateDetalleOrdenComprasTable extends Migration
             $table->foreign('idorco')
                    ->references('idorco')
                    ->on('orden_compras');
-            $table->string('tiempo_pago');
-            $table->string('autorizacion');
             $table->string('descripcion');
-            $table->date('fec_autoriza')->format('d/y/m');
+            $table->float('monto_unit',14,2);
+            $table->float('monto_bien',14,2);
+            $table->float('monto_iva',14,2);
+            $table->float('monto_total',14,2);
+            
+            
             
             $table->timestamps();
         });

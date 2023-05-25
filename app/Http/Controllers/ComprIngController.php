@@ -31,6 +31,7 @@ class ComprIngController extends Controller
                               ->where('identificacion',$identification)
                               ->where('tiprif',$numCheck)
                               ->get();
+                              
         $invoiceId = $findInvoice->pluck('idfact');
         $findDetInvoice = DetFact::whereIn('idfact', $invoiceId)
                                    ->where('stsfact','ACT')
@@ -40,8 +41,7 @@ class ComprIngController extends Controller
                            ->get();
         $valueInvoice = count($nameCli);
         $valueCli = count($nameCli);    
-        
-        if ($valueCli > 0 && $valueCli > 0){
+        if ($valueCli > 0 && $valueInvoice > 0){
             return view('proof.proofincome',compact('findDetInvoice','findInvoice'))
                         ->with('nameCli',$nameCli[0]);//['detFact' => $detFact,'findInvoice' => $findInvoice, 'reling' => $reling]);
                     
