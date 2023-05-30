@@ -1,3 +1,3 @@
-require('./bootstrap');
-
-window.Swal = require('sweetalert2');
+require('./src/utils/bootstrap');
+require("./comp.js");
+require("./src/Web");

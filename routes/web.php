@@ -1,49 +1,52 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AsientoController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\Importexcel;
-use App\Http\Controllers\FacturasController;
-use App\Http\Controllers\ComprIngController;
-use App\Http\Controllers\IncomeController;
-//use App\Http\Controllers\ClientesController;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
 
-Route::get('/', function () {
-    return view('auth.login');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+/*
+Route::group(['prefix' => 'cotizador'], function () 
+{
+    
+    Route::get('/{route?}/{route2?}/{route3?}/{route4?}', [App\Http\Controllers\CotisegurosController::class, 'index'])->name('home');
 });
+*/
+ Route::group(['prefix' => 'cotizador'], function () {
+     Route::get('/auto', [App\Http\Controllers\CotizadorController::class, 'auto'])->name('cotizador.auto');
+     Route::get('/hogar', [App\Http\Controllers\CotizadorController::class, 'hogar'])->name('cotizador.hogar');
+     Route::get('/salud', [App\Http\Controllers\CotizadorController::class, 'salud'])->name('cotizador.salud');
+     Route::post('/salud/cotizacion', [App\Http\Controllers\CotizadorController::class, 'addCotizacion']);
+     Route::get('/salud/cotizacion/{phone}', [App\Http\Controllers\CotizadorController::class, 'getCotizacion']);
+     Route::get('/salud/cotizacionpersonal/{phone}', [App\Http\Controllers\CotizadorController::class, 'getCotizacion2']);
+     Route::get('/cotizacion/exitosa', [App\Http\Controllers\CotizadorController::class, 'cotizacionExitosa']);
+     Route::get('/pdf', [App\Http\Controllers\CotizadorController::class, 'pdf']);
+ });
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-//clientes
-Route::resource('clientes','App\Http\Controllers\CustomerController');
-Route::get('groupaccount', [CustomerController::class, 'groupaccount']);
-Route::post('subgroupaccount/{idgru}', [CustomerController::class, 'subgroupaccount']);
-Route::post('accountname/{idsgr}', [CustomerController::class, 'accountname']);
-Route::post('subaccountname/{idgcu}', [CustomerController::class, 'subaccountname']);
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-//Facturas de ingreso
-Route::get('createinvoiceing',[FacturasController::class,'createinvoiceing'])->name('createinvoiceing');
-Route::post('storeinvoiceing',[FacturasController::class,'storeinvoiceing'])->name('storeinvoiceing');
-Route::get('createdetinvoiceing/{numConcept}',[FacturasController::class,'createdetinvoiceing'])->name('createdetinvoiceing');
-Route::post('storedetinvoiceing',[FacturasController::class,'storedetinvoiceing'])->name('storedetinvoiceing');
-Route::get('totalinvoice/{idfact}',[FacturasController::class,'totalinvoice'])->name('totalinvoice');
-Route::get('deleteInvoice/{idfact}',[FacturasController::class,'deleteInvoice'])->name('deleteInvoice');
 
-//Comprobante de ingreso
-Route::get('searchInvoice',[ComprIngController::class,'searchInvoice'])->name('searchInvoice');
-Route::post('findInvoice',[ComprIngController::class,'findInvoice'])->name('findInvoice');
-Route::get('createIncome/{idfact}/{idcli}',[ComprIngController::class,'createIncome'])->name('createIncome');
-Route::post('storeproof',[ComprIngController::class,'storeproof'])->name('storeproof');
+Route::get('listado/', [App\Http\Controllers\CotizadorController::class, 'listado'])->name('home');
+Route::get('listartabla/', [App\Http\Controllers\CotizadorController::class, 'listartabla'])->name('home');
 
-//Ingreso
-Route::get('searchIncome',[IncomeController::class,'searchIncome'])->name('searchIncome');
-Route::post('findIncome',[IncomeController::class,'findIncome'])->name('findIncome');
-Route::get('createIng/{idfact}/{idcli}',[IncomeController::class,'createIng'])->name('createIng');
-Route::post('storeIncome',[IncomeController::class,'storeIncome'])->name('storeIncome');
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('/excel', [App\Http\Controllers\CotizadorController::class, "insurerExcel" ]);
+    Route::post('/excel', [App\Http\Controllers\CotizadorController::class, 'importExcel']);
+    
+    Route::get('/listar-cotizaciones/{page}', [App\Http\Controllers\CotizadorController::class, "listarCotizaciones" ]);
 
-Route::get('/excel/importar', [Importexcel::class, 'impportar'])->name('/excel/importar');
-Route::post('/excel/importarexcel', [Importexcel::class, 'importarexcel'])->name('/excel/importarexcel');
-
+    Voyager::routes();
+});
