@@ -8,7 +8,7 @@
 
 @section('content')
 <div class="container"> 
-  <form action="{{route('storedetorder')}}" method="POST">
+  <form action="{{route('storedetpurchase')}}" method="POST">
     <div class="card">
       <div class="card-body pl-6">
           @csrf
@@ -97,7 +97,7 @@
                     <div class="col-xs-2 col-sm-2 col-md-2">
                         <label for="" class="form-label">Precio Unitario</label>
                         @for ($i = 0; $i < $cantConcept; $i++)
-                            <input type="number" name="amountUnit_{{$i}}" id="amountUnit_{{$i}}" class="form-control text-decoration-none price-input" tabindex="7">
+                            <input type="text" name="amountUnit_{{$i}}" id="amountUnit_{{$i}}" class="form-control text-decoration-none price-input" tabindex="7" step="0.01" pattern="^\d+(\.\d{1,2})?$">
                             <br>
                         @endfor
                     </div>

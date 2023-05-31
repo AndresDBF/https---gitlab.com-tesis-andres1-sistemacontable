@@ -31,7 +31,7 @@
                 <td>
                     <a href="#" class="btn btn-info mb-2" onclick="confirmAutorizar('{{ route('autorizar', ['idorco' => $purchase->idorco]) }}')">Autorizar</a>
                     <br>
-                    <a href="#" class="btn btn-danger mb-2" onclick="confirmDelete('{{ route('deleteorder', ['idorco' => $purchase->idorco]) }}')">Eliminar</a>
+                    <a href="#" class="btn btn-danger mb-2" onclick="confirmDelete('{{ route('deleteorderco', ['idorco' => $purchase->idorco]) }}')">Eliminar</a>
                  
                     
                 </td>

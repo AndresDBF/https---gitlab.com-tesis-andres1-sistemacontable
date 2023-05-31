@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class ConceptoOrden extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'idcon';
+    protected $fillable  = [
+        'idorpa',	
+        'descripcion',	
+        'monto_unitario',	
+        'monto_bien',	
+    ];
 }

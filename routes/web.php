@@ -8,6 +8,8 @@ use App\Http\Controllers\FacturasController;
 use App\Http\Controllers\ComprIngController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\PurchaseOrderController;
+use App\Http\Controllers\PayOrderController;
+use App\Http\Controllers\PayController;
 //use App\Http\Controllers\ClientesController;
 
 
@@ -70,11 +72,23 @@ Route::get('findsupplier',[PurchaseOrderController::class,'findsupplier'])->name
 Route::post('create',[PurchaseOrderController::class,'create'])->name('create');
 Route::post('storeorder',[PurchaseOrderController::class,'storeorder'])->name('storeorder');
 Route::get('createdetorder/{numConcept}',[PurchaseOrderController::class,'createdetorder'])->name('createdetorder');
-Route::post('storedetorder',[PurchaseOrderController::class,'storedetorder'])->name('storedetorder');
+Route::post('storedetpurchase',[PurchaseOrderController::class,'storedetpurchase'])->name('storedetpurchase');
 Route::get('totalorder/{idorco}',[PurchaseOrderController::class,'totalorder'])->name('totalorder');
-Route::get('deleteorder/{idorco}',[PurchaseOrderController::class,'deleteorder'])->name('deleteorder');
+Route::get('deleteorderco/{idorco}',[PurchaseOrderController::class,'deleteorderco'])->name('deleteorderco');
 Route::get('/autorizar/{idorco}',[PurchaseOrderController::class,'autorizar'])->name('autorizar');
 
+//Orden de Pago 
+Route::get('registerorder',[PayOrderController::class,'index'])->name('registerorder');
+Route::get('createpayorder/{idprov}/{idorco}',[PayOrderController::class,'createpayorder'])->name('createpayorder');
+Route::post('storeord',[PayOrderController::class,'store'])->name('storeord');
+Route::get('detorder/{numConcept}',[PayOrderController::class,'detorder'])->name('detorder');
+Route::post('storedet',[PayOrderController::class,'storedetorder'])->name('storedetorder');
+Route::get('totalorderpa/{idorpa}',[PayOrderController::class,'totalorder'])->name('totalorderpa');
+Route::get('deleteorderpa/{idprov}/{idorco}',[PayOrderController::class,'deleteorderpa'])->name('deleteorderpa');
+Route::get('deletedetorderpa/{idorpa}',[PayOrderController::class,'deletedetorderpa'])->name('deletedetorderpa');
+
+//Registro de pago
+Route::get('registerpay',[PayController::class,'index'])->name('registerpay');
 
 
 Route::get('/excel/importar', [Importexcel::class, 'impportar'])->name('/excel/importar');

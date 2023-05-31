@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 3',
+    'title' => 'Sistema Administrativo Contable',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -63,8 +63,8 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo' => '<b>Sistema</b>Contable',
+    'logo_img' => 'icons/logo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -109,7 +109,7 @@ return [
     'preloader' => [
         'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+            'path' => 'icons/puntos.png',
             'alt' => 'AdminLTE Preloader Image',
             'effect' => 'animation__shake',
             'width' => 60,
@@ -333,7 +333,7 @@ return [
         [
             'text'        => 'Ingresos',
             'url'         => 'seat',
-            'icon'        => 'fas fa-fw fa-dollar-sign',
+            'icon'        => 'fas fad fa-hand-holding-usd',
             'label_color' => 'success',
             'submenu' => [
                 [
@@ -347,6 +347,7 @@ return [
 
             ],
         ],
+        
         [
             'text'        => 'Facturación',
             'url'         => 'factura',
@@ -359,7 +360,7 @@ return [
                 ],
                 [
                     'text' => 'Orden de Pago',
-                    'url'  => '#',
+                    'url'  => 'registerorder',
                 ],
 
             ],
@@ -367,7 +368,7 @@ return [
         [
             'text'        => 'Orden de Compra',
             'url'         => 'reportorder',
-            'icon'        => 'fas fa-fw fa-dollar-sign',
+            'icon'        => 'fas fa-shopping-cart',
             'label_color' => 'success',
             'submenu' => [
                 [
@@ -389,32 +390,37 @@ return [
             'submenu' => [
                 [
                     'text' => 'Impuestos',
-                    'url'  => 'searchInvoice',
-                ],
-                [
-                    'text' => 'Retenciones',
-                    'url'  => 'searchIncome',
+                    'url'  => '#',
                 ],
                 [
                     'text' => 'Nomina',
-                    'url'  => 'searchIncome',
+                    'url'  => '#',
                 ],
+                [
+                    'text' => 'Registrar Pago',
+                    'url'  => 'registerpay',
+                ],
+                [
+                    'text' => 'Retenciones',
+                    'url'  => '#',
+                ],
+                
 
             ],
         ],
         [
             'text'        => 'Gastos Operativos',
             'url'         => 'seat',
-            'icon'        => 'fas fa-fw fa-dollar-sign',
+            'icon'        => 'fas fad fa-credit-card',
             'label_color' => 'success',
             'submenu' => [
                 [
                     'text' => 'Registro de Gastos',
-                    'url'  => 'searchInvoice',
+                    'url'  => '#',
                 ],
                 [
                     'text' => 'Proyección de Gastos',
-                    'url'  => 'searchIncome',
+                    'url'  => '#',
                 ],
             ],
         ],

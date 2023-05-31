@@ -7,12 +7,19 @@ use Illuminate\Http\Request;
 use App\Models\Proveedor;
 use App\Models\OrdenCompra;
 use App\Models\DetalleOrdenCompra;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 
 class PurchaseOrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function reportorder(){
         $registerPurchase = Proveedor::join('orden_compras','proveedors.idprov','=','orden_compras.idprov')
                                      ->select('orden_compras.idorco','orden_compras.numorden','proveedors.nombre','proveedors.identificacion',
@@ -89,8 +96,7 @@ class PurchaseOrderController extends Controller
                 ->with('purchase',$purchase[0]);
     }
 
-    public function storedetorder(Request $request){
-        
+    public function storedetpurchase(Request $request){
         $numConcept = intval($request->get('numconcept'));
         $taxes = 0;
         $amountTot = 0;
@@ -156,7 +162,7 @@ class PurchaseOrderController extends Controller
         return view('purchase.total',['detailPurchase' => $detailPurchase],compact('amountPurchase','idorco','sumAmount'));
     }
 
-    public function deleteorder($idorco){
+    public function deleteorderco($idorco){
         $conceptPurchase = DetalleOrdenCompra::where('idorco',$idorco)->delete();
         $Purchase = OrdenCompra::where('idorco',$idorco)->delete();
         
@@ -164,8 +170,14 @@ class PurchaseOrderController extends Controller
     }
 
     public function autorizar($idorco){
+        $fecAuthorize = Carbon::now()->format('d/m/y');
+        $user = Auth::user();
+        $username = $user->name;
+    
         OrdenCompra::where('idorco', $idorco)->update([
-            'stsorden' => 'AUT'
+            'stsorden' => 'AUT',
+            'fec_autoriza' => $fecAuthorize,
+            'autorizacion' => $username
         ]);
 
         return redirect()->route('reportorder');

@@ -46,7 +46,8 @@
         <div class="input-group mb-3">
             <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror"
                    placeholder="{{ __('adminlte::adminlte.password') }}">
-            <button type="button" onclick="mostrarcontrasena()"><i class="fa-light fa-eye"></i></button>
+                   <button type="button" onclick="mostrarcontrasena()"><i class="fa fa-eye"></i></button>
+
 
             <div class="input-group-append">
                 <div class="input-group-text">

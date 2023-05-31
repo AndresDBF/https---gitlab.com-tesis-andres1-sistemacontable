@@ -68,6 +68,7 @@ class SupplierController extends Controller
         $supplier->correo = $request->get('email');
         $supplier->categoria = $request->get('category');
         $supplier->save();
+        return redirect('/supplier');
     }
 
     /**

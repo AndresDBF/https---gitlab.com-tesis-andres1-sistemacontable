@@ -22,8 +22,8 @@ class CreateDetalleOrdenComprasTable extends Migration
             $table->string('descripcion');
             $table->float('monto_unit',14,2);
             $table->float('monto_bien',14,2);
-            $table->float('monto_iva',14,2);
-            $table->float('monto_total',14,2);
+            $table->float('monto_iva',14,2)->nullable();
+            $table->float('monto_total',14,2)->nullable();
             
             
             

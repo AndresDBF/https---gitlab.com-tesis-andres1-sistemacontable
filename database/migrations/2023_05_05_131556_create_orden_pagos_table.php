@@ -23,6 +23,7 @@ class CreateOrdenPagosTable extends Migration
             $table->foreign('idprov')
                   ->references('idprov')
                   ->on('proveedors');
+            $table->integer('num_egre');
             $table->string('stsorpa',3);
             $table->string('numfact');
             $table->string('numctrl');
