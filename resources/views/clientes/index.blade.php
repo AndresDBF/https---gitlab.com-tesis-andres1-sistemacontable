@@ -7,7 +7,11 @@
 @stop
 
 @section('content')
-   
+    @if(session('mensaje'))
+    <div class="alert alert-success" role="alert">
+        {{ session('mensaje') }}
+    </div>
+    @endif
     <a href="clientes/create" class="btn btn-primary mb-3">CREAR</a>
     <table id="clientes" class="table table-striped table-bordered shadow-lg mt-4" style="width: 100%">
 
@@ -26,7 +30,7 @@
                 <tr>
                     <th>{{$cli->idcli}}</th>
                     <th>{{$cli->nombre}}</th>
-                    <th>{{$cli->rif_cedula}}</th>
+                    <th>{{$cli->identificacion}}</th>
                     <th>{{$cli->stscontr}}</th>
                     <th>{{$cli->tip_pag}}</th>
                     <td>

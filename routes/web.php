@@ -89,6 +89,17 @@ Route::get('deletedetorderpa/{idorpa}',[PayOrderController::class,'deletedetorde
 
 //Registro de pago
 Route::get('registerpay',[PayController::class,'index'])->name('registerpay');
+Route::get('createpay/{idprov}/{idorpa}',[PayController::class,'create'])->name('createpay');
+Route::post('storepay',[PayController::class,'store'])->name('storepay');
+Route::get('deletepay/{idorpa}',[PayController::class,'destroy'])->name('deletepay');
+Route::get('groupaccount1', [PayController::class, 'groupaccount1']);
+Route::post('subgroupaccount1/{idgru}', [PayController::class, 'subgroupaccount1']);
+Route::post('accountname1/{idsgr}', [PayController::class, 'accountname1']);
+Route::post('subaccountname1/{idgcu}', [PayController::class, 'subaccountname1']);
+Route::get('groupaccount2', [PayController::class, 'groupaccount2']);
+Route::post('subgroupaccount2/{idgru}', [PayController::class, 'subgroupaccount2']);
+Route::post('accountname2/{idsgr}', [PayController::class, 'accountname2']);
+Route::post('subaccountname2/{idgcu}', [PayController::class, 'subaccountname2']);
 
 
 Route::get('/excel/importar', [Importexcel::class, 'impportar'])->name('/excel/importar');

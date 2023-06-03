@@ -21,7 +21,8 @@ class CreateContrClisTable extends Migration
                   ->on('clientes');
             $table->string('stscontr',3);
             $table->string('tip_pag');
-            $table->float('monto_pag',14,2);
+            $table->float('montopaglocal',14,2);
+            $table->float('montopagmoneda',14,2);
             $table->string('moneda',3);
             $table->unsignedBigInteger('idasi')->nullable();
             $table->foreign('idasi')

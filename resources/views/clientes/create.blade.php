@@ -10,7 +10,7 @@
 <div class="container"> 
   <div class="card">
     <div class="card-body pl-6">
-      <form action="/clientes" method="POST">
+      <form action="/clientes" method="POST" id="myform">
         @csrf
           <div class="mb-3">
             <label for="" class="form-label">Codigo Cliente</label>
@@ -48,9 +48,9 @@
                       <p class="text-danger">{{$errors->first('identification')}}</p>
                     @endif
                 </div>
-                <div class="col-xs-3 col-sm-6 col-md-4">
+                <div class="col-xs-3 col-sm-6 col-md-4" id="div-off">
                     <label for="" class="form-label">Digito Verificador</label>
-                    <select name = 'tiprif' class="custom-select">
+                    <select name = 'tiprif' class="custom-select" >
                         <option selected="">Seleccionar Numero</option>
                         <option value="0">0</option>
                         <option value="1">1</option>
@@ -98,11 +98,11 @@
               <div class="col-xs-6 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="dni">Estatus de Contrato</label>
-                  <select name = 'stscontr' class="custom-select">
-                    <option selected="">Selecciona el Estatus de contrato</option>
-                      @foreach ($status as $sts)
-                        <option value="{{$sts->sts}}">{{$sts->sts}}</option>
-                      @endforeach
+                  <select name="stscontr" class="custom-select" id="stscontr-select" onchange="checkStatus(this)">
+                    <option selected>Selecciona el Estatus de contrato</option>
+                    @foreach ($status as $sts)
+                      <option value="{{$sts->sts}}">{{$sts->sts}}</option>
+                    @endforeach
                   </select>
                   @error('stscontr')
                     <div class="alert alert-danger">{{ "Estatus Invalido" }}</div>
@@ -130,7 +130,7 @@
                 <div class="col-xs-6 col-sm-6 col-md-6">
                   <div class="form-group">
                     <label for="dni">Moneda</label>
-                    <select name = 'money' class="custom-select">
+                    <select name = 'money' class="custom-select" id="money-select">
                       <option selected="">Selecciona una Moneda</option>
                         @foreach ($money as $mon)
                           <option value="{{$mon->tipmoneda}}">{{$mon->descripcion}}</option>
@@ -138,6 +138,8 @@
                     </select>
                   </div>
                 </div>
+                <input type="hidden" name="tasa_cambio" value="">
+
               </div>
             </div>
           </div>
@@ -225,8 +227,9 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-primary">Guardar</button>
-        </div>
+          <button type="button" class="btn btn-primary" onclick="confirmAsi('{{ route('clientes.store') }}')">Guardar</button>
+
+      </div>
       </div>
     </div>
   </div>
@@ -236,6 +239,7 @@
   
 @stop
 @section('js')
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <script>
     var myModal = document.getElementById('myModal')
@@ -251,129 +255,164 @@
       crossorigin="anonymous">
   </script>
   <script>
-  $( document ).ready(function() 
-  {
-      cargartipocuenta1()
-      $( "#groupaccount1" ).change(function() /* el # busca el id del div html */
-      {
-          var groupaccount = $('#groupaccount1').val();
-          $.ajax(
-          {
-            url: "/subgroupaccount1/"+groupaccount,
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            dataType: 'json', // what to expect back from the server                                                                  
-            data: {},
-            processData: false,
-            cache: false,
-            contentType: false,
-            type: 'post',
-            success: function(data) 
-            {
-                if (data)
-                {
-                  var $subgroupaccount = $('#subgroupaccount1');
-                  $subgroupaccount.empty();
-                  var $accountname = $('#accountname1');
-                  $accountname.empty();
-                  $subgroupaccount.append('<option selected="">Seleccionar SubGrupo</option>')
-                  data.forEach(element=>
-                  {
-                      $subgroupaccount.append('<option value=' + element.idsgr + '>' + element.descripcion + '</option>')
-                  });
-                }
-            }
-          });
-      });
-      $( "#subgroupaccount1" ).change(function() 
-      {
-          var subgroupaccount = $('#subgroupaccount1').val();
-          $.ajax(
-          {
-            url: "/accountname1/"+subgroupaccount,
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            dataType: 'json', // what to expect back from the server                                                                  
-            data: {},
-            processData: false,
-            cache: false,
-            contentType: false,
-            type: 'post',
-            success: function(data) 
-            {
-                if (data)
-                {
-                  var $accountname = $('#accountname1');
-                  $accountname.empty();
-                  var $subaccountname = $('#subaccountname1');
-                  $subaccountname.empty();
-                  $accountname.append('<option selected="">Seleccionar Cuenta</option>')
-                  data.forEach(element=>
-                  {
-                      $accountname.append('<option value=' + element.idgcu + '>' + element.descripcion + '</option>')
-                  });
-                }
-            }
-          });
-      });
-      $( "#accountname1" ).change(function() /* el # busca el id del div html */
-      {
-          var accountname = $('#accountname1').val();
-          $.ajax(
-          {
-            url: "/subaccountname1/"+accountname,
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            dataType: 'json', // what to expect back from the server                                                                  
-            data: {},
-            processData: false,
-            cache: false,
-            contentType: false,
-            type: 'post',
-            success: function(data) 
-            {
-                if (data)
-                {
-                  var $subaccountname = $('#subaccountname1');
-                  $subaccountname.empty();
-                  $subaccountname.append('<option selected="">Seleccionar SubCuenta</option>')
-                  data.forEach(element=>
-                  {
-                      $subaccountname.append('<option value=' + element.idscu + '>' + element.descripcion + '</option>')
-                  });
-                }
-            }
-          });
-      });
-  });
-  function cargartipocuenta1()
-  {
-    var datas = new FormData();  
-    $.ajax({
-        url: "/groupaccount1",
-        dataType: 'json', // what to expect back from the server                                                                  
-        data: {},
-        processData: false,
-        cache: false,
-        contentType: false,
-        type: 'get',
-        success: function(data) 
-        {
-            if (data) 
-            {
-              var $groupaccount = $('#groupaccount1');
-              $groupaccount.empty();
-              $groupaccount.append('<option selected="">Seleccionar Grupo</option>');
-              data.forEach(element=>
-              {
-                  $groupaccount.append('<option value=' + element.idgru + '>' + element.descripcion + '</option>')
-              });
-            }
-            else
-            {
-              
-            }
+    $(document).ready(function() {
+      
+       $("#div-off").hide();
+ 
+       
+       $("select[name='tipid']").change(function() {
+          if ($(this).val() == "J") {
+             
+             $("#div-off").show();
+          } else {
             
+             $("#div-off").hide();
+          }
+       });
+    });
+  </script>
+  <script>
+    document.getElementById('money-select').addEventListener('change', function() {
+        var selectedOption = this.value;
+        if (selectedOption !== 'BS') {
+            var tasaCambio = prompt('Ingrese la tasa de cambio:');
+            document.querySelector('input[name="tasa_cambio"]').value = tasaCambio;
         }
     });
-  }
+</script>
+  <script>
+    function checkStatus(selectElement) {
+      var selectedValue = selectElement.value;
+      if (selectedValue === 'ANU' || selectedValue === 'RET') {
+        alert('El estatus seleccionado es incorrecto para este proceso.');
+        selectElement.value = "";
+      }
+    }
+  </script>
+  <script>
+    $( document ).ready(function() 
+    {
+        cargartipocuenta1()
+        $( "#groupaccount1" ).change(function() /* el # busca el id del div html */
+        {
+            var groupaccount = $('#groupaccount1').val();
+            $.ajax(
+            {
+              url: "/subgroupaccount1/"+groupaccount,
+              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+              dataType: 'json', // what to expect back from the server                                                                  
+              data: {},
+              processData: false,
+              cache: false,
+              contentType: false,
+              type: 'post',
+              success: function(data) 
+              {
+                  if (data)
+                  {
+                    var $subgroupaccount = $('#subgroupaccount1');
+                    $subgroupaccount.empty();
+                    var $accountname = $('#accountname1');
+                    $accountname.empty();
+                    $subgroupaccount.append('<option selected="">Seleccionar SubGrupo</option>')
+                    data.forEach(element=>
+                    {
+                        $subgroupaccount.append('<option value=' + element.idsgr + '>' + element.descripcion + '</option>')
+                    });
+                  }
+              }
+            });
+        });
+        $( "#subgroupaccount1" ).change(function() 
+        {
+            var subgroupaccount = $('#subgroupaccount1').val();
+            $.ajax(
+            {
+              url: "/accountname1/"+subgroupaccount,
+              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+              dataType: 'json', // what to expect back from the server                                                                  
+              data: {},
+              processData: false,
+              cache: false,
+              contentType: false,
+              type: 'post',
+              success: function(data) 
+              {
+                  if (data)
+                  {
+                    var $accountname = $('#accountname1');
+                    $accountname.empty();
+                    var $subaccountname = $('#subaccountname1');
+                    $subaccountname.empty();
+                    $accountname.append('<option selected="">Seleccionar Cuenta</option>')
+                    data.forEach(element=>
+                    {
+                        $accountname.append('<option value=' + element.idgcu + '>' + element.descripcion + '</option>')
+                    });
+                  }
+              }
+            });
+        });
+        $( "#accountname1" ).change(function() /* el # busca el id del div html */
+        {
+            var accountname = $('#accountname1').val();
+            $.ajax(
+            {
+              url: "/subaccountname1/"+accountname,
+              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+              dataType: 'json', // what to expect back from the server                                                                  
+              data: {},
+              processData: false,
+              cache: false,
+              contentType: false,
+              type: 'post',
+              success: function(data) 
+              {
+                  if (data)
+                  {
+                    var $subaccountname = $('#subaccountname1');
+                    $subaccountname.empty();
+                    $subaccountname.append('<option selected="">Seleccionar SubCuenta</option>')
+                    data.forEach(element=>
+                    {
+                        $subaccountname.append('<option value=' + element.idscu + '>' + element.descripcion + '</option>')
+                    });
+                  }
+              }
+            });
+        });
+    });
+    function cargartipocuenta1()
+    {
+      var datas = new FormData();  
+      $.ajax({
+          url: "/groupaccount1",
+          dataType: 'json', // what to expect back from the server                                                                  
+          data: {},
+          processData: false,
+          cache: false,
+          contentType: false,
+          type: 'get',
+          success: function(data) 
+          {
+              if (data) 
+              {
+                var $groupaccount = $('#groupaccount1');
+                $groupaccount.empty();
+                $groupaccount.append('<option selected="">Seleccionar Grupo</option>');
+                data.forEach(element=>
+                {
+                    $groupaccount.append('<option value=' + element.idgru + '>' + element.descripcion + '</option>')
+                });
+              }
+              else
+              {
+                
+              }
+              
+          }
+      });
+    }
   </script>
   <script>
     $( document ).ready(function() 
@@ -499,5 +538,23 @@
           }
       });
     }
-    </script>
+  </script>
+  <script>
+    function confirmAsi(url) {
+        Swal.fire({
+            title: 'Confirmación',
+            text: '¿Estás seguro de crear Asiento Contable?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('myform').submit(); // Envía el formulario
+            }
+        });
+    }
+</script>
 @stop

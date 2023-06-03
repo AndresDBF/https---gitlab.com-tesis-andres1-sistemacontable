@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class DetalleComprobantePago extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'iddpag';
+    protected $fillable = [
+        'idpag'	,
+        'idprov'	,
+        'fec_trans'	,
+        'formpago'	,
+        'descripcion',	
+    ];
 }

@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class ComprobantePago extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'idpag';
+    protected $fillable = [
+        'idorpa',	
+        'idasi',	
+        'numconfirm',
+        'moneda',	
+        'montolocal',	
+        'montomoneda',
+        'cantidad_escr',
+    ];
 }

@@ -24,9 +24,9 @@ class CreateComprobantePagosTable extends Migration
                   ->references('idasi')
                   ->on('asientos');
             $table->integer('numconfirm');
-            $table->string('numfact');
             $table->string('moneda',3);
-            $table->float('cantidad',14,2);
+            $table->float('montolocal',14,2);
+            $table->float('montomoneda',14,2);
             $table->string('cantidad_escr');
             $table->timestamps();
         });

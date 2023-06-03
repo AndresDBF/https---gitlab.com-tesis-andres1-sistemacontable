@@ -118,7 +118,16 @@ class CustomerController extends Controller
         $seat->idcta1 = $idcta1->idcta;
         $seat->idcta2 = $idcta2->idcta;
         $seat->descripcion = $request->get('description');
-        $seat->monto_deb = - $request->get('valuecont');
+        if ($request->get('money') == 'USD' || $request->get('money') == 'EUR'){
+            $seat->monto_deb = - ($request->get('valuecont') * $request->get('tasa_cambio'));
+        }
+        elseif ($request->get('money') == 'COP'){
+            $seat->monto_deb = - ($request->get('valuecont') / $request->get('tasa_cambio'));
+        }
+        elseif ($request->get('money') == 'BS') {
+            $seat->monto_deb = - $request->get('valuecont');
+        }
+        
         $seat->monto_hab = 0;
         $seat->save();
 
@@ -142,7 +151,19 @@ class CustomerController extends Controller
         $contrCustomer->idcli = $customer->idcli;
         $contrCustomer->stscontr = $request->get('stscontr');
         $contrCustomer->tip_pag = $request->get('tip_pag');
-        $contrCustomer->monto_pag = $request->get('valuecont');
+        
+        if ($request->get('money') == 'USD' || $request->get('money') == 'EUR') {
+            $contrCustomer->montopaglocal = $request->get('valuecont') * $request->get('tasa_cambio');
+            $contrCustomer->montopagmoneda = $request->get('valuecont');
+        }
+        elseif ($request->get('money') == 'COP' ) {
+            $contrCustomer->montopaglocal = $request->get('valuecont') / $request->get('tasa_cambio');
+            $contrCustomer->montopagmoneda = $request->get('valuecont');
+        }
+        elseif ($request->get('money') != 'BS'){
+            $contrCustomer->montopaglocal = 0;
+            $contrCustomer->montopagmoneda = $request->get('valuecont');
+        }
         $contrCustomer->moneda = $request->get('money');
         $contrCustomer->idasi = $seat->idasi;
         $contrCustomer->save();
