@@ -35,13 +35,17 @@ Route::post('accountname2/{idsgr}', [CustomerController::class, 'accountname2'])
 Route::post('subaccountname2/{idgcu}', [CustomerController::class, 'subaccountname2']);
 
 //Facturas de ingreso
-
-Route::get('createinvoiceing',[FacturasController::class,'createinvoiceing'])->name('createinvoiceing');
+Route::get('findcustomer', [FacturasController::class,'index'])->name('findcustomer');
+Route::get('createinvoiceing/{idcli}',[FacturasController::class,'createinvoiceing'])->name('createinvoiceing');
 Route::post('storeinvoiceing',[FacturasController::class,'storeinvoiceing'])->name('storeinvoiceing');
 Route::get('createdetinvoiceing/{numConcept}',[FacturasController::class,'createdetinvoiceing'])->name('createdetinvoiceing');
 Route::post('storedetinvoiceing',[FacturasController::class,'storedetinvoiceing'])->name('storedetinvoiceing');
 Route::get('totalinvoice/{idfact}',[FacturasController::class,'totalinvoice'])->name('totalinvoice');
 Route::get('deleteInvoice/{idfact}',[FacturasController::class,'deleteInvoice'])->name('deleteInvoice');
+Route::get('deletefact/{idfact}',[FacturasController::class,'deletefact'])->name('deletefact');
+
+
+
 
 //Comprobante de ingreso
 Route::get('searchInvoice',[ComprIngController::class,'searchInvoice'])->name('searchInvoice');

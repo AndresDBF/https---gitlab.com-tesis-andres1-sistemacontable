@@ -356,7 +356,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'Factura de Ingreso',
-                    'url'  => 'createinvoiceing',
+                    'url'  => 'findcustomer',
                 ],
                 [
                     'text' => 'Orden de Pago',

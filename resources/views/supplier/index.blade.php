@@ -47,6 +47,40 @@
             @endforeach
         </tbody>
     </table>
+    <!-- Mostrar enlaces de paginación -->
+    @if ($registerSupplier->hasPages())
+    <tr>
+        <td colspan="6" class="text-center">
+           
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    
+                    @if ($registerSupplier->onFirstPage())
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                    @else
+                        <li class="page-item"><a class="page-link" href="{{ $registerSupplier->previousPageUrl() }}" rel="prev">&laquo;</a></li>
+                    @endif
+
+                   
+                    @foreach ($registerSupplier->getUrlRange(1, $registerSupplier->lastPage()) as $page => $url)
+                        @if ($page == $registerSupplier->currentPage())
+                            <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+                        @else
+                            <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+                        @endif
+                    @endforeach
+
+                   
+                    @if ($registerSupplier->hasMorePages())
+                        <li class="page-item"><a class="page-link" href="{{ $registerSupplier->nextPageUrl() }}" rel="next">&raquo;</a></li>
+                    @else
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    @endif
+                </ul>
+            </nav>
+        </td>
+    </tr>
+    @endif
 @stop
 
 @section('js')

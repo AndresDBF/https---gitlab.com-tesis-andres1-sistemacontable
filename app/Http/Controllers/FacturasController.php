@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 use App\Models\ConceptoFact;
 use App\Models\TipPago;
@@ -13,7 +14,18 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
 
 class FacturasController extends Controller
 {
-    public function createinvoiceing(){
+    public function index(){
+        $customer = Cliente::join('contr_clis','clientes.idcli','=','contr_clis.idcli')
+        ->select('contr_clis.idasi','clientes.idcli','clientes.nombre','clientes.identificacion','clientes.telefono',
+        'clientes.email','contr_clis.stscontr','contr_clis.tip_pag')
+        ->orderBy('clientes.nombre')
+        ->paginate(10);
+        
+        return view('invoice.index')
+             ->with('customer',$customer);
+
+    }
+    public function createinvoiceing($idcli){
         $query = ConceptoFact::orderBy('idcfact','desc')
                                ->take(1)
                                ->get();
@@ -36,13 +48,13 @@ class FacturasController extends Controller
                 
             }
            // $numing = $conceptoFact->idcfact;
-           $tippag = TipPago::where('tip_proceso','contr_cli')
+           $tippag = TipPago::where('tip_proceso','comprobante_ingreso')
                             ->orderBy('descripcion')
                             ->get();
             $fecemi = Carbon::now()
                             ->format('d/m/y');
-
-        return view('invoice/create',compact('numing','fecemi','tippag','numfact','numctrl'));
+        $customer = Cliente::where('idcli',$idcli)->first();
+        return view('invoice/create',compact('numing','fecemi','tippag','numfact','numctrl','customer'));
               /*->with('numing',$conceptoFact->idcfact)
                 ->with('fecemi',$fecemi)
                 ->with('tippag',$tippag); */
@@ -52,102 +64,40 @@ class FacturasController extends Controller
 
         $this->validate($request,[
             
-            'name' => 'required|regex:/^[A-Z][A-Z,a-z, ,á,é,í,ó,ú]+$/',
-            'tipid' => 'required',
-            'identification' => 'required|numeric',
-            'phone' => 'required',
-            'direction'=>'required',             
-            'tip_pag' => 'required',
-            'numconcept' => 'required'
+            'numfact' => 'required',
+            'numctrl' => 'required',
         ]);
-        
-       $query = Factura::orderBy('idfact','desc')
-                        ->take(1)
-                        ->get();
-        $values = count($query);
-            if ($values == 0){
-                $idfact = 1;
+       
+         $conceptFact = new ConceptoFact();
+        $conceptFact->num_ing = $request->get('numreling');
+        $conceptFact->num_egre = null;
+        $conceptFact->save();
 
-                $conceptFact = new ConceptoFact();
-                $conceptFact->idcfact = 1;
-                $conceptFact->num_ing = $request->get('numreling');
-                $conceptFact->num_egre = null;
-                $conceptFact->save();
-
-                $invoice = new Factura();
-                $invoice->idfact = $idfact;
-                $invoice->idcfact = $conceptFact->idcfact;
-                $invoice->nomacre = $request->get('name');
-                $invoice->dirfact = $request->get('direction');
-                $invoice->tipid = $request->get('tipid');
-                $invoice->identificacion = $request->get('identification');
-                if ($request->get('tiprif')== "Seleccionar Numero"){
-                    $invoice->tiprif = null;
-                }
-                else{
-                    $invoice->tiprif = $request->get('tiprif'); 
-                }
-                $invoice->telefono = $request->get('phone');
-                $invoice->tip_pago = $request->get('tip_pag');
-                $invoice->save();
-                //insert in table det_fact
-                $detInvoice = new DetFact();
-                $detInvoice->iddfact = $idfact;
-                $detInvoice->idfact = $invoice->idfact;
-                $detInvoice->numfact = $request->get('numfact');
-                $detInvoice->numctrl = $request->get('numctrl');
-                $detInvoice->stsfact = 'ACT';
-                $detInvoice->fec_emi = $request->get('fecemi');
-                $detInvoice->save();
-                $numConcept = $request->get('numconcept');
-                return redirect()->route('createdetinvoiceing',$numConcept);
-            }
-            else{
-
-                $idfact = $query[0]->idfact+1;
-
-                $conceptFact = new ConceptoFact();
-                $idfact = $query[0]->idfact+1;
-                $conceptFact->num_ing = $request->get('numreling');
-                $conceptFact->num_egre = null;
-                $conceptFact->save();
-
-                $invoice = new Factura();
-                $invoice->idfact = $idfact;
-                $invoice->idcfact = $conceptFact->idcfact;
-                $invoice->nomacre = $request->get('name');
-                $invoice->dirfact = $request->get('direction');
-                $invoice->tipid = $request->get('tipid');
-                $invoice->identificacion = $request->get('identification');
-                if ($request->get('tiprif')== "Seleccionar Numero"){
-                    $invoice->tiprif = null;
-                }
-                else{
-                    $invoice->tiprif = $request->get('tiprif'); 
-                }
-                $invoice->telefono = $request->get('phone');
-                $invoice->tip_pago = $request->get('tip_pag');
-                $invoice->save();
-
-                //insert in table det_fact
-                $detInvoice = new DetFact();
-                $detInvoice->iddfact = $idfact;
-                $detInvoice->idfact = $invoice->idcfact;
-                $detInvoice->numfact = $request->get('numfact');
-                $detInvoice->numctrl = $request->get('numctrl');
-                $detInvoice->stsfact = 'ACT';
-                $detInvoice->fec_emi = $request->get('fecemi');
-                $detInvoice->save();
-                $numConcept = $request->get('numconcept');
-                
-                
-                return redirect()->route('createdetinvoiceing',$numConcept);
-
-            }                        
-            
-
-        
-
+        $invoice = new Factura();
+        $invoice->idcfact = $conceptFact->idcfact;
+        $invoice->nomacre = $request->get('name');
+        $invoice->dirfact = $request->get('direction');
+        $invoice->tipid = $request->get('tipid');
+        $invoice->identificacion = $request->get('identification');
+        if ($request->get('tiprif')== "Seleccionar Numero"){
+            $invoice->tiprif = null;
+        }
+        else{
+            $invoice->tiprif = $request->get('tiprif'); 
+        }
+        $invoice->telefono = $request->get('phone');
+        $invoice->tip_pago = $request->get('tip_pag');
+        $invoice->save();
+        //insert in table det_fact
+        $detInvoice = new DetFact();
+        $detInvoice->idfact = $invoice->idfact;
+        $detInvoice->numfact = $request->get('numfact');
+        $detInvoice->numctrl = $request->get('numctrl');
+        $detInvoice->stsfact = 'ACT';
+        $detInvoice->fec_emi = $request->get('fecemi');
+        $detInvoice->save();
+        $numConcept = $request->get('numconcept');
+        return redirect()->route('createdetinvoiceing',$numConcept);
     }
     public function createdetinvoiceing($numConcept){
         $query = ConceptoFact::join('facturas','concepto_facts.idcfact','=','facturas.idcfact')
@@ -165,7 +115,7 @@ class FacturasController extends Controller
         $detInvoice = DetFact::orderBy('iddfact','desc')
                              ->take(1)
                              ->get();    
-        $tippag = TipPago::where('tip_proceso','contr_cli')
+        $tippag = TipPago::where('tip_proceso','comprobante_ingreso')
                              ->orderBy('descripcion')
                              ->get();
         return view('invoice.detinvoice',compact('tippag','cantConcept'))
@@ -177,385 +127,56 @@ class FacturasController extends Controller
     }
 
     public function storedetinvoiceing(Request $request){
-       
         $numconcept = intval($request->get('numconcept'));
         
-        $query = DescripcionFactura::orderBy('iddfact','desc')
-                                    ->take(1)
-                                    ->get();  
         
-        
-        
-        $queryFact = Factura::orderBy('idfact','desc')
-                            ->take(1)
-                            ->get();
-        
-        $values = count($query);
-        
-        if ($values == 0){
-            $iddfact = 1;
-            //condition for number conceptFact
-           /*  foreach ($request->get('numconcept') as $concept ) {
+        if ($request->get('numconcept') == 1){
+            $conceptFact = new DescripcionFactura();
+            $conceptFact->idfact = $request->get('idfact');
+            $conceptFact->descripcion = $request->get("concept_0");
+            $conceptFact->monto_unitario = $request->get("amountUnit_0");
+            $conceptFact->monto_bien = $request->get("total-amount0");
+            $conceptFact->save();
+        }else{
+            for ($i=0; $i < $numconcept; $i++) { 
                 $conceptFact = new DescripcionFactura();
-                $conceptFact->idfact = $request->get('numreling');
-                $conceptFact->descripcion = $request->get("concept_");
-                $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                $conceptFact->monto_bien = $request->get("amountService_0");
-                if($request->get('numconcept') == 2){
-                    $conceptFact->monto_unitario = $request->get("amountUnit_1");
-                    $conceptFact->monto_bien = $request->get("amountService_1");
-                }
-                $conceptFact->save();
-            } */
-            if ($request->get('numconcept')==1){
-                $conceptFact = new DescripcionFactura();
-                $conceptFact->iddfact =  $iddfact;
-                $conceptFact->idfact = $queryFact[0]->idfact;
-                $conceptFact->descripcion = $request->get("concept_0");
-                $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                $conceptFact->monto_bien = $request->get("total-amount0");
+                $conceptFact->idfact = $request->get('idfact');
+                $conceptFact->descripcion = $request->get("concept_" . $i);
+                $conceptFact->monto_unitario = $request->get("amountUnit_" . $i);
+                $conceptFact->monto_bien = $request->get("total-amount" . $i);
                 $conceptFact->save();
             }
-            if ($request->get('numconcept')==2){
-                for ($i=0; $i <= 1 ; $i++) { 
-                    if ($i == 0){
-
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact;
-                        
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_0");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                        $conceptFact->monto_bien = $request->get("total-amount0");
-                        $conceptFact->save();
-                    }
-                    if ($i == 1){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact+1;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_1");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_1");
-                        $conceptFact->monto_bien = $request->get("total-amount0");
-                        $conceptFact->save();
-                    }
-                }     
-            } 
-            if ($request->get('numconcept')==3){
-                for ($i=0; $i < 3; $i++) { 
-                    if ($i == 0){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_0");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                        $conceptFact->monto_bien = $request->get("total-amount0");
-                        $conceptFact->save();
-                    }
-                    if ($i == 1){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact+1;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_1");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_1");
-                        $conceptFact->monto_bien = $request->get("total-amount1");
-                        $conceptFact->save();
-                    }
-                    if ($i == 2){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact+1;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_2");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_2");
-                        $conceptFact->monto_bien = $request->get("total-amount2");
-                        $conceptFact->save();
-                    }
-                }
-            }
-            if ($request->get('numconcept')==4){
-                for ($i=0; $i < 3; $i++) { 
-                    if ($i == 0){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_0");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                        $conceptFact->monto_bien = $request->get("total-amount0");
-                        $conceptFact->save();
-                    }
-                    if ($i == 1){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact+1;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_1");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_1");
-                        $conceptFact->monto_bien = $request->get("total-amount1");
-                        $conceptFact->save();
-                    }
-                    if ($i == 2){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact+1;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_2");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_2");
-                        $conceptFact->monto_bien = $request->get("total-amount2");
-                        $conceptFact->save();
-                    }
-                    if ($i == 3){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact+1;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_3");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_3");
-                        $conceptFact->monto_bien = $request->get("total-amount3");
-                        $conceptFact->save();
-                    }
-                }
-                
-            }
-            if ($request->get('numconcept')==5){
-                
-                if ($i == 0){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_0");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                    $conceptFact->monto_bien = $request->get("amountService_0");
-                    $conceptFact->save();
-                }
-                if ($i == 1){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact+1;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_1");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_1");
-                    $conceptFact->monto_bien = $request->get("amountService_1");
-                    $conceptFact->save();
-                }
-                if ($i == 2){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact+1;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_2");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_2");
-                    $conceptFact->monto_bien = $request->get("amountService_2");
-                    $conceptFact->save();
-                }
-                if ($i == 3){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact+1;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_3");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_3");
-                    $conceptFact->monto_bien = $request->get("amountService_3");
-                    $conceptFact->save();
-                }
-                if ($i == 4){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact+1;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_4");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_4");
-                    $conceptFact->monto_bien = $request->get("amountService_4");
-                    $conceptFact->save();
-                }
-               
-            }      
-            $idfact = $conceptFact->idfact;
-            
-            return redirect()->route('totalinvoice', ['idfact' => $idfact, 'numconcept' => $numconcept]);
-        
         }
-        else{
-            $iddfact = $query[0]->iddfact+1;
+        $idfact = $conceptFact->idfact; 
             
-            //condition for number conceptFact
-            if ($request->get('numconcept')==1){
-                $conceptFact = new DescripcionFactura();
-                $conceptFact->iddfact = $iddfact;
-                $conceptFact->idfact = $queryFact[0]->idfact;
-                $conceptFact->descripcion = $request->get("concept_0");
-                $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                $conceptFact->monto_bien = $request->get("total-amount0");
-                $conceptFact->save();
-            }
-            if ($request->get('numconcept')==2){
-                for ($i=0; $i < 2 ; $i++){ 
-                    if ($i == 0){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_0");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                        $conceptFact->monto_bien = $request->get("total-amount0");
-                        $conceptFact->save();
-                    }
-                    if ($i == 1){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact+1;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_1");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_1");
-                        $conceptFact->monto_bien = $request->get("total-amount1");
-                        $conceptFact->save();
-                    }
-                }
-            }
-            if ($request->get('numconcept')==3){
-                for ($i=0; $i < 3; $i++) { 
-                    
-
-                    if ($i == 0){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_0");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                        $conceptFact->monto_bien = $request->get("amountService_0");
-                        $conceptFact->save();
-                    }
-                    if ($i == 1){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact+1;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_1");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_1");
-                        $conceptFact->monto_bien = $request->get("amountService_1");
-                        $conceptFact->save();
-                    }
-                    if ($i == 2){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact+1;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_2");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_2");
-                        $conceptFact->monto_bien = $request->get("amountService_2");
-                        $conceptFact->save();
-                    }
-                }
-                $conceptFact->save();
-            }
-            if ($request->get('numconcept')==4){
-                for ($i=0; $i < 1; $i++) { 
-                    if ($i == 0){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_0");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                        $conceptFact->monto_bien = $request->get("total-amount0");
-                        $conceptFact->save();
-                    }
-                    if ($i == 1){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact+1;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_1");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_1");
-                        $conceptFact->monto_bien = $request->get("total-amount1");
-                        $conceptFact->save();
-                    }
-                    if ($i == 2){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact+1;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_2");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_2");
-                        $conceptFact->monto_bien = $request->get("total-amount2");
-                        $conceptFact->save();
-                    }
-                    if ($i == 3){
-                        $conceptFact = new DescripcionFactura();
-                        $conceptFact->iddfact = $iddfact+1;
-                        $conceptFact->idfact = $queryFact[0]->idfact;
-                        $conceptFact->descripcion = $request->get("concept_3");
-                        $conceptFact->monto_unitario = $request->get("amountUnit_3");
-                        $conceptFact->monto_bien = $request->get("total-amount3");
-                        $conceptFact->save();
-                    } 
-                }
-            }
-            if ($request->get('numconcept')==5){
-                if ($i == 0){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_0");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_0");
-                    $conceptFact->monto_bien = $request->get("amountService_0");
-                    $conceptFact->save();
-                }
-                if ($i == 1){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact+1;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_1");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_1");
-                    $conceptFact->monto_bien = $request->get("amountService_1");
-                    $conceptFact->save();
-                }
-                if ($i == 2){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact+1;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_2");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_2");
-                    $conceptFact->monto_bien = $request->get("amountService_2");
-                    $conceptFact->save();
-                }
-                if ($i == 3){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact+1;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_3");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_3");
-                    $conceptFact->monto_bien = $request->get("amountService_3");
-                    $conceptFact->save();
-                }
-                if ($i == 4){
-                    $conceptFact = new DescripcionFactura();
-                    $conceptFact->iddfact = $iddfact+1;
-                    $conceptFact->idfact = $queryFact[0]->idfact;
-                    $conceptFact->descripcion = $request->get("concept_4");
-                    $conceptFact->monto_unitario = $request->get("amountUnit_4");
-                    $conceptFact->monto_bien = $request->get("amountService_4");
-                    $conceptFact->save();
-                }
-                
-            }
-            $idfact = $conceptFact->idfact;
-            
-            return redirect()->route('totalinvoice', ['idfact' => $idfact]);
-        }
+        return redirect()->route('totalinvoice', ['idfact' => $idfact]);
+        
     }
 
     public function totalinvoice($idfact) {
         $detInvoice = DetFact::find($idfact);
-        $detInvoice->monto = null;
-        $detInvoice->mtoimponible = null;
-        $detInvoice->mtoimpuesto = null;
-        $detInvoice->mtototal = null;
-        $detInvoice->save();
         $idfact = intval($idfact);
-        $montoImponible = 0;
-        $montoImpuesto = 0;
 
-        $totalFact = DescripcionFactura::where('idfact', $idfact)->get();
+        $baseImponible = DescripcionFactura::where('idfact', $idfact)->sum('monto_bien');
+        
+        $descFact = DescripcionFactura::where('idfact', $idfact)->get();
         $detInvoice = DetFact::find($idfact);
 
-        foreach ($totalFact as $detalle) {
-            $montoImponible += $detalle->monto_bien;
-        } 
-
         //$montoImpuesto = $montoImponible;
-        $totalFactura = floatval($montoImponible + $montoImpuesto);
-        
-        $detInvoice->monto = $montoImponible;
-        $detInvoice->mtoimponible = $montoImponible;
-        $detInvoice->mtoimpuesto = $montoImpuesto;
-        $detInvoice->mtototal = $totalFactura;
-        $detInvoice->save();
-        return view('invoice.totalinvoice', ['totalFact' => $totalFact],compact('montoImponible','montoImpuesto','totalFactura','idfact'));
+        $totalImpuesto = floatval($baseImponible * 0.16);
+        $totalFact = $baseImponible + $totalImpuesto;
+        DetFact::where('idfact',$idfact)->update([
+            'monto' => $baseImponible,
+            'mtoimponible' => $baseImponible,
+            'mtoimpuesto' => $totalImpuesto,
+            'mtototal' => $totalFact
+        ]);
+        /* $detInvoice->monto = $baseImponible;
+        $detInvoice->mtoimponible = $baseImponible;
+        $detInvoice->mtoimpuesto = $totalImpuesto;
+        $detInvoice->mtototal = $totalFact;
+        $detInvoice->save(); */
+        return view('invoice.totalinvoice', ['totalFact' => $totalFact],compact('baseImponible','totalImpuesto','descFact','idfact'));
     }
     
     public function deleteInvoice($idfact){
@@ -566,6 +187,12 @@ class FacturasController extends Controller
                                     ->take(1)
                                     ->forceDelete();
         return redirect()->route('createinvoiceing');
+    }
+    public function deletefact($idfact){
+        $conceptInvoice = DescripcionFactura::where('idfact',$idfact)->delete();
+        $detInvoice = DetFact::where('idfact',$idfact)->delete();
+        $invoice = Factura::where('idfact',$idfact)->delete();
+        return redirect()->route('findcustomer');
     }
     
 }

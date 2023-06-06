@@ -9,5 +9,16 @@ use Illuminate\Database\Eloquent\Model;
 class Cliente extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'idcli';
+    protected $fillable = [
+        'idcli',
+        'nombre',
+        'tipid',
+        'identificacion',
+        'tiprif',
+        'telefono',
+        'email',
+        'direccion',
+    ];
 
 }

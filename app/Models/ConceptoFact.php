@@ -9,5 +9,10 @@ class ConceptoFact extends Model
 {
     use HasFactory;
     protected $primaryKey = 'idcfact';
+    protected $fillable = [
+        'idcfact',
+        'num_ing',
+        'num_egre'
+    ];
     
 }

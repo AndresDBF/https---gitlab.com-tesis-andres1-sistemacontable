@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Facturacion')
+@section('title', 'Facturación')
 
 @section('content_header')
-    <h1>Facturacion </h1>
+    <h1>Facturación </h1>
 @stop
 
 @section('content')
@@ -16,11 +16,11 @@
                         <div class="row">
                             <div class="col-xs-3 col-sm-6 col-md-6">
                                 <label for="" class="form-label">Numero de Relacion de ingreso</label>
-                                <input type="text" name="numreling" id="code" class="form-control" readonly="readonly" value="{{$numing}}" tabindex="1">
+                                <input type="text" name="numreling" id="code" class="form-control" readonly="readonly" value="{{$numing}}">
                             </div>
                             <div class="col-xs-3 col-sm-6 col-md-6">
                                 <label for="" class="form-label">fecha de emision</label>
-                                <input type="text" name="fecemi" id="fecemi"  class="form-control" tabindex="4" value="{{$fecemi}}" readonly="readonly">
+                                <input type="text" name="fecemi" id="fecemi"  class="form-control" tabindex="1" value="{{$fecemi}}" readonly="readonly">
                             </div>
                         </div>
                     </div>
@@ -39,62 +39,42 @@
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Nombre y Apellido o Razon Social</label>
-                        @error('stscontr')
-                            <div class="alert alert-danger">{{ "Estatus Invalido" }}</div>
-                        @enderror
-                        <input type="text" name="name" id="name" class="form-control" tabindex="4">
+                        <input type="text" name="name" id="name" value="{{$customer->nombre}}" class="form-control" readonly="readonly">
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Direccion de Factura</label>
                         @error('stscontr')
                             <div class="alert alert-danger">{{ "Estatus Invalido" }}</div>
                         @enderror
-                        <input type="text" name="direction" id="direction" class="form-control" tabindex="5">
+                        <input type="text" name="direction" id="direction" value="{{$customer->direccion}}" class="form-control" readonly="readonly">
                     </div>
                     <div class="well">
                         <div class="row">
                             <div class="col-xs-3 col-sm-6 col-md-4">
                                 <div class="form-label">
                                     <label for="dni">Tipo de Identificación</label>
-                                    <select name = 'tipid' class="custom-select">
-                                        <option selected="">Seleccionar Identificación</option>
-                                        <option value="V">V</option>
-                                        <option value="J">J</option>
-                                        <option value="E">E</option>
-                                    </select>
-                                    @error('stscontr')
-                            <div class="alert alert-danger">{{ "Estatus Invalido" }}</div>
-                        @enderror
+                                    <input type="text" name="tipid" id="direction" value="{{$customer->tipid}}" class="form-control" readonly="readonly">
                                 </div>
                             </div>
                             <div class="col-xs-3 col-sm-6 col-md-4">
                                 <label for="" class="form-label">Rif o Cedula del Cliente</label>
                                 @error('stscontr')
-                            <div class="alert alert-danger">{{ "Estatus Invalido" }}</div>
-                        @enderror
-                                <input type="number" name="identification" id="identification" class="form-control text-decoration-none" tabindex="6">
+                                    <div class="alert alert-danger">{{ "Estatus Invalido" }}</div>
+                                @enderror
+                                <input type="number" name="identification" id="identification" value="{{$customer->identificacion}}" class="form-control text-decoration-none" readonly="readonly">
                             </div>
-                            <div class="col-xs-3 col-sm-6 col-md-4">
-                                <label for="" class="form-label">Numero de Chequeo</label>
-                                <select name = 'tiprif' class="custom-select">
-                                    <option selected="">Seleccionar Numero</option>
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                </select>
-                            </div>
+                            @if ($customer->tiprif != null)
+                                <div class="col-xs-3 col-sm-6 col-md-4">
+                                    <label for="" class="form-label">Digito Verificador</label>
+                                    <input type="number" name="tiprif" id="tiprif" value="{{$customer->tiprif}}" class="form-control text-decoration-none" readonly="readonly">
+                                </div>
+                            @endif
+                            
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Telefono</label>
-                        <input type="number" name="phone" id="phone" class="form-control text-decoration-none" tabindex="7">
+                        <input type="number" name="phone" id="phone" value="{{$customer->telefono}}" class="form-control text-decoration-none" readonly="readonly">
                     </div>
                     <div class="well">
                         <div class="row">
@@ -126,8 +106,8 @@
                     </div>
                     
                     <div class="well pb-3 mt-3">
-                        <a href="/home" class="btn btn-secondary" tabindex="5">Cancelar</a>
-                        <button type="submit" class="btn btn-primary" tabindex="6">Siguiente</button>
+                        <a href="/home" class="btn btn-secondary" tabindex="4">Cancelar</a>
+                        <button type="submit" class="btn btn-primary" tabindex="5">Siguiente</button>
                     </div> 
                 </form> 
             </div>

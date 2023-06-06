@@ -16,6 +16,7 @@ use App\Models\TipPago;
 use App\Models\Asiento;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Pagination\Paginator;
 /* use App\Models\Tipocuenta;
 use App\Models\Tipomovimiento; 
 use App\Models\Nombrecuenta; */
@@ -36,10 +37,11 @@ class CustomerController extends Controller
     public function index()
     {
         $customer = Cliente::join('contr_clis','clientes.idcli','=','contr_clis.idcli')
-        ->select('contr_clis.idasi','clientes.idcli','clientes.nombre','clientes.identificacion','clientes.telefono',
+        ->select('contr_clis.idasi','clientes.idcli','clientes.nombre','clientes.tipid','clientes.identificacion','clientes.tiprif','clientes.telefono',
         'clientes.email','contr_clis.stscontr','contr_clis.tip_pag')
         ->orderBy('clientes.nombre')
-        ->get();
+        ->paginate(10);
+        
         return view('clientes.index')
              ->with('customer',$customer);
 
@@ -71,9 +73,9 @@ class CustomerController extends Controller
                              ->orderBy('descripcion')
                              ->get();
             $money = Moneda::all();
-            $status = ReglaStatus::all();
-                    
-            
+            $status = ReglaStatus::where('tipsts','contrato')
+                                 ->get();
+                                
         return view('clientes/create')
                 ->with('idsigue',$idesigue)
                 ->with('tippag',$tippag)
@@ -193,7 +195,15 @@ class CustomerController extends Controller
     public function edit($idcli)
     {        
         
-        
+        $customer = Cliente::find($idcli);
+        $contrCli = ContrCli::where('idcli',$customer->idcli)->first();
+        $tippag = TipPago::where('tip_proceso','contr_cli')
+                         ->get();
+        $money = Moneda::all();
+        $status = ReglaStatus::where('tipsts','contrato')
+                             ->get();
+
+        return view('clientes.edit',compact('customer','tippag','money','status','contrCli'));        
     }
 
     /**
@@ -205,8 +215,27 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $customer = Cliente::find($id);
+        $customer->nombre = $request->get('name');
+        $customer->tipid = $request->get('tipid');
+        $customer->identificacion = $request->get('identification');
+        if ($request->get('tipid') != 'J') {
+            $customer->tiprif = null;
+        }
+        else{
+            $customer->tiprif = $request->get('tiprif');
+        }
+        $customer->telefono = $request->get('phone');
+        $customer->email = $request->get('email');
+        $customer->direccion = $request->get('direction');
+        $customer->save();
 
+        ContrCli::where('idcli',$id)->update([
+            'stscontr' => $request->get('stscontr'),
+            'tip_pag' => $request->get('tip_pag')
+        ]);
        
+        return redirect('/clientes');
     }
 
     /**
@@ -217,6 +246,7 @@ class CustomerController extends Controller
      */
     public function destroy($idcli)
     {
+
         $contrcli = ContrCli::where('idcli',$idcli);
         $contrcli->delete();
         $cliente = Cliente::where('idcli',$idcli);

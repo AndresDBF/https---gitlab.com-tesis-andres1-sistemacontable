@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CategoriaProveedor;
 use App\Models\Proveedor;
-
+use Illuminate\Pagination\Paginator;
 class SupplierController extends Controller
 {
     /**
@@ -17,7 +17,7 @@ class SupplierController extends Controller
     {
         $registerSupplier = Proveedor::select('idprov','nombre','identificacion','telefono','direccion','categoria')
                                      ->orderBy('nombre','asc')
-                                     ->get();
+                                     ->paginate(10);
         $tipCategory = CategoriaProveedor::all();
         return view('supplier.index',compact('registerSupplier','tipCategory'));
     }

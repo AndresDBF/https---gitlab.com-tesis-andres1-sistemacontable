@@ -71,21 +71,21 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($findInvoice as $invoice)
-                    @foreach ($findDetInvoice as $det)
+                @foreach ($findInvoice as $index => $invoice)
+                   
                             <tr>
                               
-                                <th>{{$det->fec_emi}}</th>
+                                <th>{{$findDetInvoice[$index]->fec_emi}}</th>
                                 <th>{{$invoice->nomacre}}</th>
                                 <th>{{$invoice->identificacion}}</th>
                                 <th>{{$invoice->tip_pago}}</th>
-                                <th>{{$det->mtototal}}</th> 
+                                <th>{{$findDetInvoice[$index]->mtototal}}</th> 
                                 <th>
                                     <a href="{{route('createIncome',['idfact'=>$invoice->idfact,'idcli'=>$nameCli->idcli])}}">
                                     <button type="button" class="btn btn-success">Ir</button>
                                 </th>
                             </tr>
-                    @endforeach
+                   
                 @endforeach
             </tbody>
         </table>

@@ -1,107 +1,77 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Facturación')
 
 @section('content_header')
-    <h1>Dashboard</h1>
+    <h1>Lista de Clientes</h1>
 @stop
 
 @section('content')
-    <div class="container"> 
-        <div class="card">
-            <div class="card-body pl-6">
-                <form action="{{route('invoiceing')}}" method="POST">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="" class="form-label">Numero de Relacion de ingreso</label>
-                        <input type="text" name="numreling" id="code" class="form-control" readonly="readonly" value="{{$idcfact}}" tabindex="1">
-                    </div>
-                    <div class="well">
-                        <div class="row">
-                            <div class="col-xs-3 col-sm-6 col-md-6">
-                                <label for="" class="form-label">Numero de Factura</label>
-                                <input type="text" name="numfact" id="numfact" class="form-control" tabindex="2">
-                            </div>
-                            <div class="col-xs-3 col-sm-6 col-md-6">
-                                <label for="" class="form-label">Control de Factura</label>
-                                <input type="text" name="numctrl" id="numctrl" class="form-control" tabindex="3">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="" class="form-label">Nombre y Apellido o Razon Social</label>
-                        <input type="text" name="name" id="name" class="form-control" tabindex="4">
-                    </div>
-                    <div class="mb-3">
-                        <label for="" class="form-label">Direccion de Factura</label>
-                        <input type="text" name="direction" id="direction" class="form-control" tabindex="5">
-                    </div>
-                    <div class="well">
-                        <div class="row">
-                            <div class="col-xs-3 col-sm-6">
-                                <label for="" class="form-label">Rif o Cedula del Cliente</label>
-                                <input type="number" name="identification" id="identification" class="form-control text-decoration-none" tabindex="6">
-                            </div>
-                            <div class="col-xs-3 col-sm-6">
-                                <label for="" class="form-label">Telefono</label>
-                                <input type="number" name="phone" id="phone" class="form-control text-decoration-none" tabindex="7">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="" class="form-label">Forma de Pago</label>
-                        <input type="text" name="waytopay" id="waytopay" class="form-control" tabindex="8">
-                    </div>
-                </form> 
-            </div>
-        </div>   
+    <table id="invoice" class="table table-striped table-bordered shadow-lg mt-4" style="width: 100%">
 
-        <div class="card">
-            <div class="card-body pl-6">
-                <form action="{{route('cinvoiceing')}}" method="POST">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="" class="form-label">Numero de Relacion de ingreso</label>
-                        <input type="text" name="numreling" id="code" class="form-control" readonly="readonly" value="" tabindex="1">
-                    </div>
-                    <div class="well">
-                        <div class="row">
-                            <div class="col-xs-3 col-sm-6 col-md-6">
-                                <label for="" class="form-label">Numero de Factura</label>
-                                <input type="text" name="numfact" id="numfact" class="form-control" tabindex="2">
-                            </div>
-                            <div class="col-xs-3 col-sm-6 col-md-6">
-                                <label for="" class="form-label">Control de Factura</label>
-                                <input type="text" name="numctrl" id="numctrl" class="form-control" tabindex="3">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="" class="form-label">Nombre y Apellido o Razon Social</label>
-                        <input type="text" name="name" id="name" class="form-control" tabindex="4">
-                    </div>
-                    <div class="mb-3">
-                        <label for="" class="form-label">Direccion de Factura</label>
-                        <input type="text" name="direction" id="direction" class="form-control" tabindex="5">
-                    </div>
-                    <div class="well">
-                        <div class="row">
-                            <div class="col-xs-3 col-sm-6">
-                                <label for="" class="form-label">Rif o Cedula del Cliente</label>
-                                <input type="number" name="identification" id="identification" class="form-control text-decoration-none" tabindex="6">
-                            </div>
-                            <div class="col-xs-3 col-sm-6">
-                                <label for="" class="form-label">Telefono</label>
-                                <input type="number" name="phone" id="phone" class="form-control text-decoration-none" tabindex="7">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="" class="form-label">Forma de Pago</label>
-                        <input type="text" name="waytopay" id="waytopay" class="form-control" tabindex="8">
-                    </div>
-                </form> 
-            </div>
-        </div>     
-    </div>
+        <thead class="bd-primary text-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Identificación</th>
+                <th scope="col">Status de Contrato</th>
+                <th scope="col">Tipo de Contrato</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($customer as $cli)
+                <tr>
+                    <th>{{$cli->idcli}}</th>
+                    <th>{{$cli->nombre}}</th>
+                    <th>{{$cli->identificacion}}</th>
+                    <th>{{$cli->stscontr}}</th>
+                    @if ($cli->tip_pag == 'ANU')
+                        <th>ANUAL</th>
+                    @elseif($cli->tip_pag =='MEN')
+                        <th>MENSUAL</th>
+                    @elseif ($cli->tip_pag == 'SEM')
+                        <th>SEMESTRAL</th>
+                    @else 
+                        <th>TRIMESTRAL</th>
+                    @endif
+                    <td>
+                        <a href="{{ route('createinvoiceing', ['idcli' => $cli->idcli]) }}" class="btn btn-info mb-2" onclick="confirmCreate(event, '{{ route('createinvoiceing', ['idcli' => $cli->idcli]) }}')"><i class="fas fa-check"></i></a>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6" class="text-center">
+                    {{ $customer->links() }}
+                </td>
+            </tr>
+        </tfoot>
+    </table>
 @stop
+
+@section('js')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function confirmCreate(event, editUrl) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: '¿Confirmación?',
+                text: 'Crear la factura de ingreso?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, editar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = editUrl;
+                }
+            });
+        }
+    </script>
+@endsection

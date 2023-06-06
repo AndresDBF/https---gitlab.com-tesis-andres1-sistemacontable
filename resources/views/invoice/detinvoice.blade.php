@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Facturación')
 
 @section('content_header')
-    <h1>Dashboard</h1>
+    <h1>Facturación</h1>
 @stop
 
 @section('content')
@@ -12,6 +12,7 @@
             <div class="card-body pl-6">
                 <form action="{{route('storedetinvoiceing')}}" method="POST">
                     @csrf
+                    <input type="hidden" name="idfact" id="idfact" value="{{$invoice->idfact}}">
                     <div class="well">
                         <div class="row">
                             <div class="col-xs-3 col-sm-6 col-md-6">
@@ -115,25 +116,21 @@
                                 <div class="form-group">
                                   <label for="dni">Tipo de Pago</label>
                                   <select name = 'tip_pag' class="custom-select">
-                                    @if ($invoice->tip_pago == 'ANU')
-                                        <option value="{{$invoice->tip_pago}}">ANUAL</option>
+                                    @if ($invoice->tip_pago == 'EFE')
+                                        <option value="{{$invoice->tip_pago}}">EFECTIVO</option>
                                     @endif
-                                    @if ($invoice->tip_pago == 'MEN')
-                                        <option value="{{$invoice->tip_pago}}">MENSUAL</option>
+                                    @if ($invoice->tip_pago == 'PMO')
+                                        <option value="{{$invoice->tip_pago}}">PAGO MOVIL</option>
                                     @endif
-                                    @if ($invoice->tip_pago == 'SEM')
-                                        <option value="{{$invoice->tip_pago}}">SEMESTRAL</option>
+                                    @if ($invoice->tip_pago == 'TRA')
+                                        <option value="{{$invoice->tip_pago}}">TRANSFERENCIA BANCARIA</option>
                                     @endif
-                                    @if ($invoice->tip_pago == 'TRI')
-                                        <option value="{{$invoice->tip_pago}}">TRIMESTRAL</option>
+                                    @if ($invoice->tip_pago == 'TDE')
+                                        <option value="{{$invoice->tip_pago}}">TARJETA DE DEBITO</option>
                                     @endif
-                                    
-                                    @foreach ($tippag as $tip)
-                                        @if ($invoice->tip_pago == $tip->tippago)
-                                        @continue
-                                        @endif
-                                        <option value="{{$tip->tippago}}">{{$tip->descripcion}}</option>
-                                    @endforeach
+                                    @if ($invoice->tip_pago == 'TCR')
+                                        <option value="{{$invoice->tip_pago}}">TARJETA DE CREDITO</option>
+                                    @endif
                                   </select>
                                 </div>
                             </div>
@@ -184,7 +181,7 @@
             </div>
         </div> 
         <div class="well pb-3 mt-3">
-            <a href="/home" class="btn btn-secondary" tabindex="5">Cancelar</a>
+            <a href="{{route('deletefact',['idfact' => $invoice->idfact])}}" class="btn btn-secondary" tabindex="5">Cancelar</a>
             <button type="submit" class="btn btn-primary" tabindex="6">Siguiente</button>
         </div> 
         </form>      
