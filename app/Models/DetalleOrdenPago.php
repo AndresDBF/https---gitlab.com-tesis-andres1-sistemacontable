@@ -12,8 +12,12 @@ class DetalleOrdenPago extends Model
     protected $fillable = [ 
         'idorpa',	
         'idcon'	,
-        'baseimponible'	,
-        'monto_iva'	,
-        'monto_total',	
+        'baseimponiblelocal',
+        'baseimponiblemoneda',
+        'montoivalocal',
+        'montoivamoneda',
+        'montototallocal',
+        'montototalmoneda',
+        'tasa_cambio'
     ];
 }

@@ -30,7 +30,11 @@
                 <tr>
                     <th>{{$cli->idcli}}</th>
                     <th>{{$cli->nombre}}</th>
-                    <th>{{$cli->tipid}}-{{$cli->identificacion}}-{{$cli->tiprif}}</th>
+                    @if ($cli->tiprif != null)
+                        <th>{{$cli->tipid}}-{{ $cli->identificacion}}-{{$cli->tiprif}}</th>
+                    @else
+                        <th>{{$cli->tipid}}-{{ $cli->identificacion}}</th>
+                    @endif
                     <th>{{$cli->stscontr}}</th>
                     @if ($cli->tip_pag == 'ANU')
                         <th>ANUAL</th>

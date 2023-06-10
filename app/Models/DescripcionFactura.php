@@ -12,8 +12,10 @@ class DescripcionFactura extends Model
     protected $fillable = [
         'idfact',	
         'descripcion',	
-        'monto_unitario	',
-        'monto_bien',
+        'montounitariolocal',
+        'monto_unitariomoneda',
+        'montobienlocal',
+        'monto_bienmoneda',
     ];
 
 }

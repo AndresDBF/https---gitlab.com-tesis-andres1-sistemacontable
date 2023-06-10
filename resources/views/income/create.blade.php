@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Ingreso')
 
 @section('content_header')
     <h1>Creació de Ingreso</h1>
@@ -22,15 +22,15 @@
                         <div class="form-label">
                             <label for="dni">Tipo de Identificación</label>
                             <select name = 'tipid' class="custom-select">
-                                @if ($tipId == 'V')
+                                @if ($customer->tipid == 'V')
                                     <option value="V">V</option>
                                     <option value="J">J</option>
                                     <option value="E">E</option>
-                                @elseif(tipId == 'J')
+                                @elseif($customer->tipid == 'J')
                                     <option value="J">J</option>
                                     <option value="V">V</option>
                                     <option value="E">E</option>
-                                @elseif($tipId == 'E')
+                                @elseif($customer->tipid == 'E')
                                 <option value="E">E</option>
                                 <option value="V">V</option>
                                 <option value="E">E</option>
@@ -45,12 +45,12 @@
                     </div>
                     <div class="col-xs-3 col-sm-6 col-md-4">
                         <label for="" class="form-label">Rif o Cedula del Cliente</label>
-                        <input type="number" name="identification" value="{{$identification}}" id="identification" class="form-control text-decoration-none">
+                        <input type="number" name="identification" value="{{$customer->identificacion}}" id="identification" class="form-control text-decoration-none">
                     </div>
                     <div class="col-xs-3 col-sm-6 col-md-4">
                         <label for="" class="form-label">Numero de Chequeo</label>
                         <select name = 'numcheck' class="custom-select">
-                            @if ($numCheck == null)
+                            @if ($customer->tiprif == null)
                                 <option selected="">Seleccionar Numero</option>
                                 <option value="0">0</option>
                                 <option value="1">1</option>
@@ -64,7 +64,7 @@
                                 <option value="9">9</option>                               
                             @else
                                 @for ($i = 0; $i < 10; $i++)
-                                    @if ($i == $numCheck)
+                                    @if ($i == $customer->tiprif)
                                         <option value="{{$i}}" selected readonly = "readonly">{{$i}}</option>
                                     @endif
                                     <option value="{{$i}}">{{$i}}</option>
@@ -87,19 +87,19 @@
             @csrf
             <div class="well">
                 <div class="row">
-                    <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div class="col-xs-3 col-sm-3 col-md-3">
                         <label for="" class="form-label">Fecha de Transacción</label>
                         <input type="text" name="fecTransiction" value="{{$detProof->fec_trans}}" id="fecTransiction" readonly="readonly" class="form-control text-decoration-none text-center">
                     </div>
-                    <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div class="col-xs-3 col-sm-3 col-md-3">
                         <label for="" class="form-label">Fecha de Ingreso</label>
                         <input type="text" name="fecIncome" value="{{$fecRegister}}" id="fecTransiction" readonly="readonly" class="form-control text-decoration-none text-center">
                     </div>
-                    <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div class="col-xs-3 col-sm-3 col-md-3">
                         <label for="" class="form-label">Numero de Confirmación</label>
                         <input type="text" name="numconfirm" value="{{$proofIncome->numconfirm}}" id="numconfirm" class="form-control text-decoration-none" tabindex="1">
                     </div>
-                    <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div class="col-xs-3 col-sm-3 col-md-3">
                         <label for="" class="form-label">Numero de factura</label>
                         <input type="text" name="numfact" value="{{$detInvoice->numfact}}" id="numfact" readonly="readonly" class="form-control text-decoration-none">
                     </div>
@@ -107,7 +107,7 @@
             </div>
             <div class="mb-3">
                 <label for="" class="form-label">Nombre y Apellido o Razon Social</label>
-                <input type="text" name="name" id="name" value="{{$invoice->nomacre}}" class="form-control" readonly="readonly">
+                <input type="text" name="name" id="name" value="{{$customer->nombre}}" class="form-control" readonly="readonly">
             </div>
             <div class="well">
                 <div class="row">
@@ -144,9 +144,16 @@
                           
                         </select>
                     </div>
+
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <label for="" class="form-label">Cantidad</label>
-                        <input type="text" name="amount" value="{{$proofIncome->cantidad}}" id="amount" class="form-control" tabindex="4" readonly="readonly">
+                        @if ($contrCli->moneda != 'BS')
+                            <input type="text" name="amount" value="{{$proofIncome->mtomoneda}}" id="amount" class="form-control" tabindex="4" readonly="readonly">
+                        @else
+                        <input type="text" name="amount" value="{{$proofIncome->mtolocal}}" id="amount" class="form-control" tabindex="4" readonly="readonly">
+                        @endif
+                        <input type="hidden" name="finalamount" value="{{$proofIncome->mtomoneda}}" id="amount" class="form-control" tabindex="4" readonly="readonly">
+                        
                     </div>
                 </div>
             </div>
@@ -250,31 +257,6 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="well">
-                <div class="row">
-                    <div class="col-xs-3 col-sm-3 col-md-3">
-                        <label for="" class="form-label">Codigo</label>
-                        <input type="text" name="account1" id="account1" value="" readonly="readonly" class="form-control text-decoration-none">
-                        <input type="text" name="account2" id="account2" value="" readonly="readonly" class="form-control text-decoration-none">
-                    </div>
-                    <div class="col-xs-5 col-sm-5 col-md-5">
-                        <label for="" class="form-label">Nombre de cuenta</label>
-                        <input type="text" name="nameaccount1" id="nameaccount1" value="" readonly="readonly" class="form-control text-decoration-none">
-                        <input type="text" name="nameaccount2" id="nameaccount2" value="" readonly="readonly" class="form-control text-decoration-none">
-                        
-                    </div>
-                    <div class="col-xs-2 col-sm-2 col-md-2">
-                        <label for="" class="form-label">Debito</label>
-                        <input type="text" name="debit1" id="debit1" value="" readonly="readonly" class="form-control text-decoration-none">
-                        <input type="text" name="debit2" id="debit2" value="" readonly="readonly" class="form-control text-decoration-none">
-                    </div>
-                    <div class="col-xs-2 col-sm-2 col-md-2">
-                        <label for="" class="form-label">Credito</label>
-                        <input type="text" name="credit1" id="credit1" value="" readonly="readonly" class="form-control text-decoration-none">
-                        <input type="text" name="credit2" id="credit2" value="" readonly="readonly" class="form-control text-decoration-none">
-                    </div>
-                </div>
-            </div> --}}
             <div class="mb-3">
               <label for="recipient-name" class="col-form-label">Observacion</label>
               <input type="text" class="form-control" name="observation" id="observation">
@@ -305,271 +287,8 @@
     })
   </script>
   {{-- scripts js --}}
-  <script>$( document ).ready(function() 
-    {
-        cargartipocuenta1()
-        $( "#groupaccount1" ).change(function() /* el # busca el id del div html */
-        {
-            var groupaccount = $('#groupaccount1').val();
-            $.ajax(
-            {
-              url: "/subgroupaccount1/"+groupaccount,
-              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-              dataType: 'json', // what to expect back from the server                                                                  
-              data: {},
-              processData: false,
-              cache: false,
-              contentType: false,
-              type: 'post',
-              success: function(data) 
-              {
-                  if (data)
-                  {
-                    var $subgroupaccount = $('#subgroupaccount1');
-                    $subgroupaccount.empty();
-                    var $accountname = $('#accountname1');
-                    $accountname.empty();
-                    $subgroupaccount.append('<option selected="">Seleccionar SubGrupo</option>')
-                    data.forEach(element=>
-                    {
-                        $subgroupaccount.append('<option value=' + element.idsgr + '>' + element.descripcion + '</option>')
-                    });
-                  }
-              }
-            });
-        });
-        $( "#subgroupaccount1" ).change(function() 
-        {
-            var subgroupaccount = $('#subgroupaccount1').val();
-            $.ajax(
-            {
-              url: "/accountname1/"+subgroupaccount,
-              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-              dataType: 'json', // what to expect back from the server                                                                  
-              data: {},
-              processData: false,
-              cache: false,
-              contentType: false,
-              type: 'post',
-              success: function(data) 
-              {
-                  if (data)
-                  {
-                    var $accountname = $('#accountname1');
-                    $accountname.empty();
-                    var $subaccountname = $('#subaccountname1');
-                    $subaccountname.empty();
-                    $accountname.append('<option selected="">Seleccionar Cuenta</option>')
-                    data.forEach(element=>
-                    {
-                        $accountname.append('<option value=' + element.idgcu + '>' + element.descripcion + '</option>')
-                    });
-                  }
-              }
-            });
-        });
-        $( "#accountname1" ).change(function() /* el # busca el id del div html */
-        {
-            var accountname = $('#accountname1').val();
-            $.ajax(
-            {
-              url: "/subaccountname1/"+accountname,
-              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-              dataType: 'json', // what to expect back from the server                                                                  
-              data: {},
-              processData: false,
-              cache: false,
-              contentType: false,
-              type: 'post',
-              success: function(data) 
-              {
-                  if (data)
-                  {
-                    var $subaccountname = $('#subaccountname1');
-                    $subaccountname.empty();
-                    $subaccountname.append('<option selected="">Seleccionar SubCuenta</option>')
-                    data.forEach(element=>
-                    {
-                        $subaccountname.append('<option value=' + element.idscu + '>' + element.descripcion + '</option>')
-                    });
+  <script src="{{asset('js/seat.js')}}">
   
-                    var values = { 
-                        tipsubcta: data[0].tipsubcta,
-                        descripcion: data[0].descripcion
-                    };
-
-                    // Actualizar valores de los inputs
-                    $('#subaccount_tipsubcta1').val(values.tipsubcta);
-                    $('#subaccount_descripcion1').val(values.descripcion);
-                  }
-              }
-            });
-        });
-    });
-    function cargartipocuenta1()
-    {
-      var datas = new FormData();  
-      $.ajax({
-          url: "/groupaccount1",
-          dataType: 'json', // what to expect back from the server                                                                  
-          data: {},
-          processData: false,
-          cache: false,
-          contentType: false,
-          type: 'get',
-          success: function(data) 
-          {
-              if (data) 
-              {
-                var $groupaccount = $('#groupaccount1');
-                $groupaccount.empty();
-                $groupaccount.append('<option selected="">Seleccionar Grupo</option>');
-                data.forEach(element=>
-                {
-                    $groupaccount.append('<option value=' + element.idgru + '>' + element.descripcion + '</option>')
-                });
-              }
-              else
-              {
-                
-              }
-              
-          }
-      });
-  }
-  </script>
-  <script>$( document ).ready(function() 
-    {
-        cargartipocuenta2()
-        $( "#groupaccount2" ).change(function() /* el # busca el id del div html */
-        {
-            var groupaccount = $('#groupaccount2').val();
-            $.ajax(
-            {
-              url: "/subgroupaccount2/"+groupaccount,
-              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-              dataType: 'json', // what to expect back from the server                                                                  
-              data: {},
-              processData: false,
-              cache: false,
-              contentType: false,
-              type: 'post',
-              success: function(data) 
-              {
-                  if (data)
-                  {
-                    var $subgroupaccount = $('#subgroupaccount2');
-                    $subgroupaccount.empty();
-                    var $accountname = $('#accountname2');
-                    $accountname.empty();
-                    $subgroupaccount.append('<option selected="">Seleccionar SubGrupo</option>')
-                    data.forEach(element=>
-                    {
-                        $subgroupaccount.append('<option value=' + element.idsgr + '>' + element.descripcion + '</option>')
-                    });
-                  }
-              }
-            });
-        });
-        $( "#subgroupaccount2" ).change(function() 
-        {
-            var subgroupaccount = $('#subgroupaccount2').val();
-            $.ajax(
-            {
-              url: "/accountname2/"+subgroupaccount,
-              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-              dataType: 'json', // what to expect back from the server                                                                  
-              data: {},
-              processData: false,
-              cache: false,
-              contentType: false,
-              type: 'post',
-              success: function(data) 
-              {
-                  if (data)
-                  {
-                    var $accountname = $('#accountname2');
-                    $accountname.empty();
-                    var $subaccountname = $('#subaccountname2');
-                    $subaccountname.empty();
-                    $accountname.append('<option selected="">Seleccionar Cuenta</option>')
-                    data.forEach(element=>
-                    {
-                        $accountname.append('<option value=' + element.idgcu + '>' + element.descripcion + '</option>')
-                    });
-                  }
-              }
-            });
-        });
-        $( "#accountname2" ).change(function() /* el # busca el id del div html */
-        {
-            var accountname = $('#accountname2').val();
-            $.ajax(
-            {
-              url: "/subaccountname2/"+accountname,
-              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-              dataType: 'json', // what to expect back from the server                                                                  
-              data: {},
-              processData: false,
-              cache: false,
-              contentType: false,
-              type: 'post',
-              success: function(data) 
-              {
-                  if (data)
-                  {
-                    var $subaccountname = $('#subaccountname2');
-                    $subaccountname.empty();
-                    $subaccountname.append('<option selected="">Seleccionar SubCuenta</option>')
-                    data.forEach(element=>
-                    {
-                        $subaccountname.append('<option value=' + element.idscu + '>' + element.descripcion + '</option>')
-                    });
-                    var values = { 
-                        tipsubcta: data[0].tipsubcta,
-                        descripcion: data[0].descripcion
-                    };
-
-                    // Actualizar valores de los inputs
-                    $('#subaccount_tipsubcta2').val(values.tipsubcta);
-                    $('#subaccount_descripcion2').val(values.descripcion);
-
-                  }
-              }
-            });
-        });
-    });
-    function cargartipocuenta2()
-    {
-      var datas = new FormData();  
-      $.ajax({
-          url: "/groupaccount2",
-          dataType: 'json', // what to expect back from the server                                                                  
-          data: {},
-          processData: false,
-          cache: false,
-          contentType: false,
-          type: 'get',
-          success: function(data) 
-          {
-              if (data) 
-              {
-                var $groupaccount = $('#groupaccount2');
-                $groupaccount.empty();
-                $groupaccount.append('<option selected="">Seleccionar Grupo</option>');
-                data.forEach(element=>
-                {
-                    $groupaccount.append('<option value=' + element.idgru + '>' + element.descripcion + '</option>')
-                });
-              }
-              else
-              {
-                
-              }
-              
-          }
-      });
-    }
   </script>
   <script>// Obtener los elementos select y input
     var subaccount_tipsubcta1 = document.getElementById("subaccount_tipsubcta1");

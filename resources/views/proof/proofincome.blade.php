@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Comprobante de Ingreso')
 
 @section('content_header')
     <h1 class="fw-bolder">Comprobante de Ingreso</h1>
@@ -22,31 +22,20 @@
                         <div class="form-label">
                             <label for="dni">Tipo de Identificación</label>
                             <select name = 'tipid' class="custom-select">
-                                <option selected="">Seleccionar Identificación</option>
-                                <option value="V">V</option>
-                                <option value="J">J</option>
-                                <option value="E">E</option>
+                                <option value="{{$nameCli->tipid}}">{{$nameCli->tipid}}</option>
+                                
                             </select>
                         </div>
                     </div>
                     <div class="col-xs-3 col-sm-6 col-md-4">
                         <label for="" class="form-label">Rif o Cedula del Cliente</label>
-                        <input type="number" name="identification" id="identification" class="form-control text-decoration-none" tabindex="6">
+                        <input type="number" name="identification" id="identification" value="{{$nameCli->identificacion}}" class="form-control text-decoration-none" tabindex="6" readonly="readonly">
                     </div>
                     <div class="col-xs-3 col-sm-6 col-md-4">
                         <label for="" class="form-label">Numero de Chequeo</label>
                         <select name = 'numcheck' class="custom-select">
-                            <option selected="">Seleccionar Numero</option>
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
+                            <option value="{{$nameCli->tiprif}}">{{$nameCli->tiprif}}</option>
+                           
                         </select>
                     </div>
                 </div>
@@ -71,25 +60,62 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($findInvoice as $index => $invoice)
-                   
-                            <tr>
-                              
-                                <th>{{$findDetInvoice[$index]->fec_emi}}</th>
-                                <th>{{$invoice->nomacre}}</th>
-                                <th>{{$invoice->identificacion}}</th>
-                                <th>{{$invoice->tip_pago}}</th>
-                                <th>{{$findDetInvoice[$index]->mtototal}}</th> 
-                                <th>
-                                    <a href="{{route('createIncome',['idfact'=>$invoice->idfact,'idcli'=>$nameCli->idcli])}}">
-                                    <button type="button" class="btn btn-success">Ir</button>
-                                </th>
-                            </tr>
-                   
+                @foreach ($findDetInvoice as $index => $detInvoice)
+                    <tr>
+                        <th>{{ $detInvoice->fec_emi }}</th>
+                        <th>{{ $nameCli->nombre }}</th>
+                        <th>{{ $nameCli->tipid }}-{{ $nameCli->identificacion }}-{{ $nameCli->tiprif }}</th>
+                        @if ($findInvoice[$index]->tip_pago == 'EFE')
+                            <th>EFECTIVO</th>
+                        @elseif ($findInvoice[$index]->tip_pago == 'TRA')
+                            <th>TRANSFERENCIA BANCARIA</th>
+                        @elseif ($findInvoice[$index]->tip_pago == 'PMO')
+                            <th>PAGO MOVIL</th>
+                        @elseif ($findInvoice[$index]->tip_pago == 'TDE')
+                            <th>TARJETA DE DEBITO</th>
+                        @else
+                            <th>TARJETA DE CREDITO</th>
+                        @endif
+
+                        @if ($detInvoice->moneda != 'BS')
+                            <th>{{ $detInvoice->mtototalmoneda }}</th> 
+                        @else
+                            <th>{{ $detInvoice->mtototallocal }}</th> 
+                        @endif
+
+                        <th class="text-center">
+                            <a href="#" class="btn btn-info mb-2" onclick="confirmCreate('{{ route('createIncome', ['idfact' => $findInvoice[$index]->idfact, 'idcli' => $nameCli->idcli]) }}')">
+                                <i class="fas fa-plus-circle"></i>
+                            </a>
+                        </th>
+                    </tr>
                 @endforeach
+
+
             </tbody>
         </table>
     </div>
 </div>
-
 @stop
+
+@section('js')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmCreate(url) {
+            Swal.fire({
+                title: 'Confirmación',
+                text: '¿Crear Comprobante de Ingreso?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        }
+    </script>
+@endsection

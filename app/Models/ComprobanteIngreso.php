@@ -14,8 +14,9 @@ class ComprobanteIngreso extends Model
         'idfact',
         'numconfirm',
         'numfact',
-        'moneda',
-        'cantidad',
+        'mtolocal',
+        'mtomoneda',
+        'tasa_cambio',
     	'cantidad_escr',
     ];
 }

@@ -27,6 +27,7 @@ class CreateComprobantePagosTable extends Migration
             $table->string('moneda',3);
             $table->float('montolocal',14,2);
             $table->float('montomoneda',14,2);
+            $table->float('tasa_cambio',14,2)->nullable();
             $table->string('cantidad_escr');
             $table->timestamps();
         });

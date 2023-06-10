@@ -25,7 +25,11 @@
             <tr>
                 <th>{{ $purchase->numorden }}</th>
                 <th>{{ $purchase->nombre }}</th>
-                <th>{{ $purchase->identificacion }}</th>
+                @if ($purchase->tiprif != null)
+                    <th>{{$purchase->tipid}}-{{ $purchase->identificacion}}-{{$purchase->tiprif}}</th>
+                @else
+                    <th>{{$purchase->tipid}}-{{ $purchase->identificacion}}</th>
+                @endif
                 <th>{{ $purchase->stsorden }}</th>
                 <th>{{ $purchase->tiempo_pago }} Dias</th>
                 <td>

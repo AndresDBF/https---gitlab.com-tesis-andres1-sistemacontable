@@ -18,8 +18,8 @@ class CreateProveedorsTable extends Migration
             $table->string('nombre');
             $table->string('tipid',1);
             $table->integer('identificacion');
+            $table->integer('tiprif',)->nullable();
             $table->string('direccion');
-            $table->integer('tiprif',1)->nullable();
             $table->string('telefono');
             $table->string('correo');
             $table->string('categoria');

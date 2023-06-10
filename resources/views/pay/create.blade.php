@@ -11,6 +11,7 @@
     @csrf
         <div class="card">
             <div class="card-header">
+                
                 <h3 class="text-center fw-bolder">Datos del Proveedor</h3>
                 @if($errors->first('descriptionseat'))
                     <p class="alert alert-danger" role="alert">{{$errors->first('descriptionseat')}}</p>
@@ -22,6 +23,7 @@
             <div class="card-body pl-6">
                     <input type="hidden" name="idorpa" value="{{$valueIdorpa}}">
                     <input type="hidden" name="idprov" value="{{$valueIdprov}}">
+                    <input type="hidden" name="tasa_cambio" value="{{$detPayOrder->tasa_cambio}}">
                     <div class="mb-3">
                         <label for="" class="form-label">Nombre del Proveedor</label>
                         <input type="text" name="name" id="name" value="{{$supplier->nombre}}" class="form-control" readonly="readonly">
@@ -113,7 +115,11 @@
 
                         <div class="col-xs-4 col-sm-4 col-md-4">
                             <label for="" class="form-label">Monto del Pago</label>
-                            <input type="text" name="amount" value="{{$detPayOrder->monto_total}}" id="amount" class="form-control" tabindex="4" readonly="readonly">
+                            @if ($payorder->moneda != 'BS')
+                                <input type="text" name="amount" value="{{$detPayOrder->montototallocal}}" id="amount" class="form-control" tabindex="4" readonly="readonly">
+                            @else
+                                <input type="text" name="amount" value="{{$detPayOrder->montototalmoneda}}" id="amount" class="form-control" tabindex="4" readonly="readonly">
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -511,20 +517,8 @@
               }
           });
         }
-      </script>
+    </script>
     <script>
-        /* document.getElementById('form-pay-select').addEventListener('change', function() {
-            var formPayValue = this.value;
-            var moneySelect = document.getElementById('money-select');
-    
-            if (formPayValue === 'PMO') {
-                moneySelect.disabled = false;
-                moneySelect.value = ''; // Reinicia el valor seleccionado en caso de ser diferente a 'BS'
-            } else {
-                moneySelect.disabled = true;
-                moneySelect.value = 'BS'; // Establece 'BS' como valor predeterminado si no es 'PMO'
-            }
-        }); */
     
         document.getElementById('money-select').addEventListener('change', function() {
             var formPayValue = document.getElementById('form-pay-select').value;

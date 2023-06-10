@@ -8,6 +8,10 @@ use App\Models\Proveedor;
 use Illuminate\Pagination\Paginator;
 class SupplierController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +19,7 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $registerSupplier = Proveedor::select('idprov','nombre','identificacion','telefono','direccion','categoria')
+        $registerSupplier = Proveedor::select('idprov','nombre','tipid','identificacion','tiprif','telefono','direccion','categoria')
                                      ->orderBy('nombre','asc')
                                      ->paginate(10);
         $tipCategory = CategoriaProveedor::all();

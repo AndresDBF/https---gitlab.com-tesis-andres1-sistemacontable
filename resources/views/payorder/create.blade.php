@@ -7,7 +7,10 @@
 @stop
 
 @section('content')
-    <div class="container"> 
+    <div class="container">
+        @if(Session::has('error'))
+            <div class="alert alert-danger">{{Session::get('error')}}</div>
+        @endif 
         <div class="card">
             <div class="card-body pl-6">
                 <form action="{{route('storeord')}}" method="POST">
@@ -133,7 +136,7 @@
                             <div class="col-xs-4 col-sm-4">
                                 <div class="form-group">
                                   <label for="dni">Tipo de Pago</label>
-                                  <select name = 'tip_pag' class="custom-select">
+                                  <select name = 'tip_pag' id="form-pay-select" class="custom-select">
                                     <option selected="">Selecciona un tipo de pago</option>
                                       @foreach ($tippag as $tip)
                                           <option value="{{$tip->tippago}}">{{$tip->descripcion}}</option>
@@ -147,7 +150,7 @@
                             <div class="col-xs-4 col-sm-4">
                                 <div class="form-group">
                                   <label for="dni">Tipo de Moneda</label>
-                                  <select name = 'money' class="custom-select">
+                                  <select name = 'money' id="money-select" class="custom-select">
                                     <option selected="">Selecciona el tipo de moneda</option>
                                       @foreach ($money as $tip)
                                           <option value="{{$tip->tipmoneda}}">{{$tip->descripcion}}</option>
@@ -158,6 +161,7 @@
                                   @endif
                                 </div>
                             </div>
+                            <input type="hidden" name="tasa_cambio" value="">
                             <div class="col-xs-4 col-sm-4">
                                 <label for="dni">Numero Total de descripcion de factura</label>
                                 <select name = 'numconcept' class="custom-select">
@@ -181,3 +185,24 @@
     </div>
 @stop
 
+@section('js')
+    <script>  
+    document.getElementById('money-select').addEventListener('change', function() {
+        var formPayValue = document.getElementById('form-pay-select').value;
+        var moneyValue = this.value;
+  
+        if (formPayValue === 'PMO' && moneyValue !== 'BS') {
+            alert('No se puede realizar pago móvil en moneda extranjera.');
+        }
+    });
+    </script>
+    <script>
+        document.getElementById('money-select').addEventListener('change', function() {
+            var selectedOption = this.value;
+            if (selectedOption != 'BS') {
+                var tasaCambio = prompt('Ingrese la tasa de cambio:');
+                document.querySelector('input[name="tasa_cambio"]').value = tasaCambio;
+            }
+        });
+    </script>
+@endsection

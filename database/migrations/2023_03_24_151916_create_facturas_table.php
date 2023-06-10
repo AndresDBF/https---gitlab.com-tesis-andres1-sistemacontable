@@ -19,13 +19,11 @@ class CreateFacturasTable extends Migration
             $table->foreign('idcfact')
                   ->references('idcfact')
                   ->on('concepto_facts');
-            $table->string('nomacre',50);
-            $table->string('dirfact');
-            $table->string('tipid',1);
-            $table->string('identificacion',10);
-            $table->integer('tiprif')->nullable();
-            $table->string('telefono',15);
-            $table->string('tip_pago',10);
+            $table->unsignedBigInteger('idcli');
+            $table->foreign('idcli')
+                        ->references('idcli')
+                        ->on('clientes');
+            $table->string('moneda',3);
             $table->timestamps();
         });
     }

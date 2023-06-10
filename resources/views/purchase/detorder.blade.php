@@ -64,18 +64,33 @@
 
       </div>
     </div>
+    @if(Session::has('error'))
+    <div class="alert alert-danger">{{Session::get('error')}}</div>
+    @endif
     <div class="card">
         <div class="card-body pl-6">
             <div class="well">
                 <div class="row">
-                    <div class="col-xs-3 col-sm-6 col-md-4">
+                    <div class="col-xs-6 col-sm-3 col-md-3">
                         <label for="" class="well-lg form-label">Dias de Plazo de Pago</label>
                         <input type="numeric" name="days" id="days" value="{{$purchase->tiempo_pago}}" class="form-control" readonly="readonly">
                     </div>
-                    <div class="col-xs-6 col-sm-6">
+                    <div class="col-xs-6 col-sm-4 col-md-4">
                         <label for="dni">Numero Total de Conceptos</label>
                         <input type="numeric" name="numconcept" id="numconcept" value="{{$cantConcept}}" class="form-control" readonly="readonly">
                     </div>
+                    <div class="col-xs-5 col-sm-5 col-md-5">
+                      <div class="form-group">
+                        <label for="dni">Moneda</label>
+                        <select name = 'money' id="money-select" class="custom-select">
+                          <option value="select">Selecciona un tipo de pago</option>
+                            @foreach ($money as $mon)
+                                <option value="{{$mon->tipmoneda}}">{{$mon->descripcion}}</option>
+                            @endforeach
+                        </select>
+                      </div>
+                    </div>
+                    <input type="hidden" name="tasa_cambio" value="">
                 </div>
             </div>
             <div class="well pt-4">
@@ -111,7 +126,10 @@
                 </div>
             </div>
             <div class="well pb-3 mt-3">
-                <button type="submit" class="btn btn-primary" tabindex="6">Siguiente</button>
+              <a href="{{route('deleteorderco',['idorco' => $idorco])}}">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Atras</button>
+              </a>
+              <button type="submit" class="btn btn-primary" tabindex="6">Siguiente</button>
             </div> 
         </div>
     </div>
@@ -131,5 +149,14 @@
         });
     });
 
+</script>
+<script>
+  document.getElementById('money-select').addEventListener('change', function() {
+      var selectedOption = this.value;
+      if (selectedOption != 'BS' && selectedOption != 'select') {
+          var tasaCambio = prompt('Ingrese la tasa de cambio:');
+          document.querySelector('input[name="tasa_cambio"]').value = tasaCambio;
+      }
+  });
 </script>
 @endsection

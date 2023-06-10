@@ -26,7 +26,11 @@
                 <tr>
                     <th>{{$supplier->idprov}}</th>
                     <th>{{$supplier->nombre}}</th>
-                    <th>{{$supplier->identificacion}}</th>
+                    @if ($supplier->tiprif != null)
+                    <th>{{$supplier->tipid}}-{{ $supplier->identificacion}}-{{$supplier->tiprif}}</th>
+                    @else
+                        <th>{{$supplier->tipid}}-{{ $supplier->identificacion}}</th>
+                    @endif
                     <th>{{$supplier->telefono}}</th>
                     <th>{{$supplier->direccion}}</th>
                     @foreach ($tipCategory as $tip)

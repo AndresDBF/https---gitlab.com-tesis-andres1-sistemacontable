@@ -16,9 +16,14 @@ class DetFact extends Model
         'numctrl',
         'stsfact',
         'fec_emi',
-        'monto',
-        'mtoimponible',
-        'mtoimpuesto',
-        'mtototal',
+        'mtolocal',
+        'mtomoneda',
+        'mtoimponiblelocal',
+        'mtoimponiblemoneda',
+        'mtoimpuestolocal',
+        'mtoimpuestomoneda',
+        'mtototallocal',
+        'mtototalmoneda',
+        'tasa_cambio'
     ];
 }

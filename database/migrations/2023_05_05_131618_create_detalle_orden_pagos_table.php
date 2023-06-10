@@ -23,9 +23,13 @@ class CreateDetalleOrdenPagosTable extends Migration
             $table->foreign('idcon')
                   ->references('idcon')
                   ->on('concepto_ordens');
-            $table->float('baseimponible',14,2);
-            $table->float('monto_iva',14,2);
-            $table->float('monto_total',14,2);
+            $table->float('baseimponiblelocal',14,2);
+            $table->float('baseimponiblemoneda',14,2);
+            $table->float('montoivalocal',14,2);
+            $table->float('montoivamoneda',14,2);
+            $table->float('montototallocal',14,2);
+            $table->float('montototalmoneda',14,2);
+            $table->float('tasa_cambio',14,2)->nullable();
             $table->timestamps();
         });
     }

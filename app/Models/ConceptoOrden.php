@@ -12,7 +12,9 @@ class ConceptoOrden extends Model
     protected $fillable  = [
         'idorpa',	
         'descripcion',	
-        'monto_unitario',	
-        'monto_bien',	
+        'montounitariolocal',
+        'montounitariomoneda',
+        'montobienlocal',
+        'montobienmoneda'
     ];
 }

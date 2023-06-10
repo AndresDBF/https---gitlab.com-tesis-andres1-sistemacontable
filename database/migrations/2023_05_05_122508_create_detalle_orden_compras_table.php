@@ -20,13 +20,15 @@ class CreateDetalleOrdenComprasTable extends Migration
                    ->references('idorco')
                    ->on('orden_compras');
             $table->string('descripcion');
-            $table->float('monto_unit',14,2);
-            $table->float('monto_bien',14,2);
-            $table->float('monto_iva',14,2)->nullable();
-            $table->float('monto_total',14,2)->nullable();
-            
-            
-            
+            $table->float('montounitlocal',14,2);
+            $table->float('montounitmoneda',14,2);
+            $table->float('montobienlocal',14,2);
+            $table->float('montobienmoneda',14,2);
+            $table->float('montoivalocal',14,2)->nullable();
+            $table->float('montoivamoneda',14,2)->nullable();
+            $table->float('montototallocal',14,2)->nullable();
+            $table->float('montototalmoneda',14,2)->nullable();
+            $table->float('tasa_cambio',14,2)->nullable();
             $table->timestamps();
         });
     }

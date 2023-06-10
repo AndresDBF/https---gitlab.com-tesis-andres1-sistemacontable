@@ -20,8 +20,10 @@ class CreateDescripcionFacturasTable extends Migration
                   ->references('idfact')
                   ->on('facturas');
             $table->string('descripcion');
-            $table->float('monto_unitario',14,2);
-            $table->float('monto_bien',14,2);
+            $table->float('montounitariolocal',14,2);
+            $table->float('monto_unitariomoneda',14,2);
+            $table->float('montobienlocal',14,2);
+            $table->float('monto_bienmoneda',14,2);
             $table->timestamps();
         });
     }

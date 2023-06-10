@@ -12,9 +12,14 @@ class DetalleOrdenCompra extends Model
     protected $fillable = [
         'idorco',
         'descripcion',
-        'monto_unit',
-        'monto_bien',
-        'monto_iva',
-        'monto_total',
+        'montounitlocal',
+        'montounitmoneda',
+        'montobienlocal',
+        'montobienmoneda',
+        'montoivalocal',
+        'montoivamoneda',
+        'montototallocal',
+        'montototalmoneda',
+        'tasa_cambio'
     ];
 }

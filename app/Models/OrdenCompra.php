@@ -13,9 +13,10 @@ class OrdenCompra extends Model
         'idprov',
         'numorden',
         'stsorden',
-        'monto_unit',
-        'monto_bien',
-        'monto_iva',
-        'monto_total',	
+        'stsorden',
+        'tiempo_pago',
+        'moneda',
+        'autorizacion',
+        'fec_autoriza'
     ];
 }

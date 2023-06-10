@@ -7,6 +7,11 @@
 @stop
 
 @section('content')
+    @if(session('error'))
+    <div class="alert alert-danger" role="alert">
+        {{ session('error') }}
+    </div>
+    @endif
     <table id="invoice" class="table table-striped table-bordered shadow-lg mt-4" style="width: 100%">
 
         <thead class="bd-primary text-dark">
@@ -24,7 +29,7 @@
                 <tr>
                     <th>{{$cli->idcli}}</th>
                     <th>{{$cli->nombre}}</th>
-                    <th>{{$cli->identificacion}}</th>
+                    <th>{{$cli->tipid}}-{{$cli->identificacion}}-{{$cli->tiprif}}</th>
                     <th>{{$cli->stscontr}}</th>
                     @if ($cli->tip_pag == 'ANU')
                         <th>ANUAL</th>

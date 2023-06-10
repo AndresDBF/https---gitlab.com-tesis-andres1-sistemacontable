@@ -15,15 +15,15 @@ class TipPagoSeeder extends Seeder
     public function run()
     {
         $data = [
-            array('tip_proceso'=>'contr_cli','tippago'=>'ANU','descripcion'=>'ANUAL'),
-            array('tip_proceso'=>'contr_cli','tippago'=>'MEN','descripcion'=>'MENSUAL'),
-            array('tip_proceso'=>'contr_cli','tippago'=>'SEM','descripcion'=>'SEMESTRAL'),
-            array('tip_proceso'=>'contr_cli','tippago'=>'TRI','descripcion'=>'TRIMESTRAL'),
-            array('tip_proceso'=>'comprobante_ingreso','tippago'=>'EFE','descripcion'=>'EFECTIVO'),
-            array('tip_proceso'=>'comprobante_ingreso','tippago'=>'TRA','descripcion'=>'TRANSFERENCIA BANCARIA'),
-            array('tip_proceso'=>'comprobante_ingreso','tippago'=>'PMO','descripcion'=>'PAGO MOVIL'),
-            array('tip_proceso'=>'comprobante_ingreso','tippago'=>'TDE','descripcion'=>'TARJETA DE DEBITO'),
-            array('tip_proceso'=>'comprobante_ingreso','tippago'=>'TCR','descripcion'=>'TARJETA DE CREDITO'),
+            array('tip_proceso'=>'contratos','tippago'=>'ANU','descripcion'=>'ANUAL'),
+            array('tip_proceso'=>'contratos','tippago'=>'MEN','descripcion'=>'MENSUAL'),
+            array('tip_proceso'=>'contratos','tippago'=>'SEM','descripcion'=>'SEMESTRAL'),
+            array('tip_proceso'=>'contratos','tippago'=>'TRI','descripcion'=>'TRIMESTRAL'),
+            array('tip_proceso'=>'ingresos_gastos','tippago'=>'EFE','descripcion'=>'EFECTIVO'),
+            array('tip_proceso'=>'ingresos_gastos','tippago'=>'TRA','descripcion'=>'TRANSFERENCIA BANCARIA'),
+            array('tip_proceso'=>'ingresos_gastos','tippago'=>'PMO','descripcion'=>'PAGO MOVIL'),
+            array('tip_proceso'=>'ingresos_gastos','tippago'=>'TDE','descripcion'=>'TARJETA DE DEBITO'),
+            array('tip_proceso'=>'ingresos_gastos','tippago'=>'TCR','descripcion'=>'TARJETA DE CREDITO'),
             
         ];
 

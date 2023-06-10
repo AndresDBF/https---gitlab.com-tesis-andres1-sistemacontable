@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Comprobante de Ingreso')
 
 @section('content_header')
     <h1 class="fw-bolder">Comprobante de Ingreso</h1>
@@ -22,15 +22,15 @@
                         <div class="form-label">
                             <label for="dni">Tipo de Identificación</label>
                             <select name = 'tipid' class="custom-select">
-                                @if ($invoice->tipid == 'V')
+                                @if ($nameCli->tipid == 'V')
                                     <option value="V">V</option>
                                     <option value="J">J</option>
                                     <option value="E">E</option>
-                                @elseif($invoice->tipid == 'J')
+                                @elseif($nameCli->tipid == 'J')
                                     <option value="J">J</option>
                                     <option value="V">V</option>
                                     <option value="E">E</option>
-                                @elseif($invoice->tipid == 'E')
+                                @elseif($nameCli->tipid == 'E')
                                 <option value="E">E</option>
                                 <option value="V">V</option>
                                 <option value="E">E</option>
@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-xs-3 col-sm-6 col-md-4">
                         <label for="" class="form-label">Rif o Cedula del Cliente</label>
-                        <input type="number" name="identification" value="{{$invoice->identificacion}}" id="identification" class="form-control text-decoration-none">
+                        <input type="number" name="identification" value="{{$nameCli->identificacion}}" id="identification" class="form-control text-decoration-none">
                     </div>
                     <div class="col-xs-3 col-sm-6 col-md-4">
                         <label for="" class="form-label">Numero de Chequeo</label>
@@ -64,7 +64,7 @@
                                 <option value="9">9</option>                               
                             @else
                                 @for ($i = 0; $i < 10; $i++)
-                                    @if ($i == $invoice->tiprif)
+                                    @if ($i == $nameCli->tiprif)
                                         <option value="{{$i}}" selected>{{$i}}</option>
                                     @endif
                                     <option value="{{$i}}">{{$i}}</option>
@@ -105,13 +105,13 @@
             </div>
             <div class="mb-3">
                 <label for="" class="form-label">Nombre y Apellido o Razon Social</label>
-                <input type="text" name="name" id="name" value="{{$invoice->nomacre}}" class="form-control" readonly="readonly">
+                <input type="text" name="name" id="name" value="{{$nameCli->nombre}}" class="form-control" readonly="readonly">
             </div>
             <div class="well">
                 <div class="row">
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <label for="" class="">Forma de Pago</label>
-                        <select name="formPay" class="custom-select">
+                        <select name="formPay" id="form-pay-select" class="custom-select">
                             <option value="" tabindex="2">Seleccionar Forma de Pago</option>
                             @foreach ($formPay as $pay)
                                 <option value="{{$pay->tippago}}">{{$pay->descripcion}}</option>
@@ -120,13 +120,14 @@
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <label for="" class="form-label">Moneda</label>
-                        <select name = 'money' class="custom-select">
+                        <select name = 'money' id="money-select" class="custom-select">
                            <option selected="" tabindex="3" >Seleccionar Moneda</option>
                            @foreach ($money as $tipmoney)
                                <option value="{{$tipmoney->tipmoneda}}">{{$tipmoney->descripcion}}</option>
                            @endforeach
                         </select>
                     </div>
+                    <input type="hidden" name="tasa_cambio" value="">
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <label for="" class="form-label">Cantidad</label>
                         <input type="text" name="amount" id="amount" class="form-control" tabindex="4">
@@ -141,6 +142,7 @@
                 <label for="" class="form-label">Descripción de Comprobante de Ingreso</label>
                 <textarea class="form-control" name="description" id="description" tabindex="6"></textarea>
             </div>
+            
             <div class="well pb-3 mt-3">
                 <a href="{{route('searchInvoice')}}">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Atras</button>
@@ -152,4 +154,42 @@
 </div>
 
 @stop
+
+@section('js')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+        document.getElementById('money-select').addEventListener('change', function() {
+            var selectedOption = this.value;
+            if (selectedOption !== 'BS') {
+                var tasaCambio = prompt('Ingrese la tasa de cambio:');
+                document.querySelector('input[name="tasa_cambio"]').value = tasaCambio;
+            }
+        });
+    </script>
+    <script>
+        /* document.getElementById('form-pay-select').addEventListener('change', function() {
+            var formPayValue = this.value;
+            var moneySelect = document.getElementById('money-select');
+      
+            if (formPayValue === 'PMO') {
+                moneySelect.disabled = false;
+                moneySelect.value = ''; // Reinicia el valor seleccionado en caso de ser diferente a 'BS'
+            } else {
+                moneySelect.disabled = true;
+                moneySelect.value = 'BS'; // Establece 'BS' como valor predeterminado si no es 'PMO'
+            }
+        }); */
+      
+        document.getElementById('money-select').addEventListener('change', function() {
+            var formPayValue = document.getElementById('form-pay-select').value;
+            var moneyValue = this.value;
+      
+            if (formPayValue === 'PMO' && moneyValue !== 'BS') {
+                alert('No se puede realizar pago móvil en moneda extranjera.');
+            }
+        });
+      </script>
+@endsection
+
 

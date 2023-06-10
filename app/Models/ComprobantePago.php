@@ -14,8 +14,9 @@ class ComprobantePago extends Model
         'idasi',	
         'numconfirm',
         'moneda',	
-        'montolocal',	
+        'montolocal',
         'montomoneda',
-        'cantidad_escr',
+        'tasa_cambio',
+        'cantidad_escr'
     ];
 }

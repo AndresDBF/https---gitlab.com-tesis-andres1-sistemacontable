@@ -22,6 +22,7 @@ class CreateOrdenComprasTable extends Migration
             $table->integer('numorden');
             $table->string('stsorden');
             $table->string('tiempo_pago');
+            $table->string('moneda',3)->nullable();
             $table->string('autorizacion')->nullable();
             $table->date('fec_autoriza')->format('d/y/m')->nullable();
             $table->timestamps();

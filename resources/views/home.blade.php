@@ -24,7 +24,7 @@
 
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
-    <script>
+   {{--  <script>
         var ctx = document.getElementById('myChart').getContext('2d');
         var myChart = new Chart(ctx, {
             type: 'pie',
@@ -58,7 +58,7 @@
                 }
             }
         });
-      </script>
+      </script> --}}
       
 
 @endsection

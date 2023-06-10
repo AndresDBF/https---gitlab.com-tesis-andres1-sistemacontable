@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Orden de Compra')
 
 @section('content_header')
-    <h1>Dashboard</h1>
+    <h1>Orden de Compra</h1>
 @stop
 
 @section('content')
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <div class="well pb-3 mt-3">
-                        <a href="{{route('reportorder')}}" class="btn btn-secondary" tabindex="5">Atras</a>
+                        <a href="/home" class="btn btn-secondary" tabindex="5">Atras</a>
                         <button type="submit" class="btn btn-primary" tabindex="6">Aceptar</button>
                     </div> 
                 </form>

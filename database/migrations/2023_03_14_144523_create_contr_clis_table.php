@@ -24,10 +24,10 @@ class CreateContrClisTable extends Migration
             $table->float('montopaglocal',14,2);
             $table->float('montopagmoneda',14,2);
             $table->string('moneda',3);
-            $table->unsignedBigInteger('idasi')->nullable();
-            $table->foreign('idasi')
+            $table->float('tasa_cambio',14,2)->nullable();
+            /* $table->foreign('idasi')
                     ->references('idasi')
-                    ->on('asientos');
+                    ->on('asientos'); */
             $table->timestamps();
         });
     }

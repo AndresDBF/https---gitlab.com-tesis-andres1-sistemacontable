@@ -19,7 +19,9 @@ use Carbon\Carbon;
 use App\Models\Asiento;
 use App\Models\ComprobantePago;
 use App\Models\DetalleComprobantePago;
+use App\Models\DetalleIngreso;
 use Illuminate\Support\Facades\Session;
+use PhpParser\Node\Stmt\Else_;
 
 class PayController extends Controller
 {
@@ -49,10 +51,10 @@ class PayController extends Controller
         $valueIdprov = $idprov;
         $valueIdorpa = $idorpa;
         $payorder = OrdenPago::where('idorpa',$idorpa)
-                          ->first();        
+                          ->first();   
         $fecTransaction =  Carbon::now()->format('d/m/y');
         $detPayOrder = DetalleOrdenPago::where('idorpa',$idorpa)
-                             ->first();
+                                        ->first();
         $supplier = Proveedor::where('idprov',$idprov)->first();
         $money = Moneda::all();
         $formPay = TipPago::where('tip_proceso','comprobante_ingreso')
@@ -71,29 +73,33 @@ class PayController extends Controller
             'observation' => 'required',
             'descriptionseat' => 'required',
         ]);
+        $payOrder = DetalleOrdenPago::where('idorpa',$request->get('idorpa'))->first();
         
         $idcta1 = CatgSubCuenta::select('idcta')
                                 ->where('idscu', $request->get('subaccountname1'))
                                 ->first();
         $idcta2 = CatgSubCuenta::where('idscu', $request->get('subaccountname2'))
                                 ->first();
+        $amount = floatval($request->get('amount'));
+        $tasa = $payOrder->tasa_cambio;
         $seat = new Asiento();
         $seat->fec_asi = $request->get('fecTransiction');
         $seat->observacion = $request->get('observartion');
         $seat->idcta1 = $idcta1->idcta;
         $seat->idcta2 = $idcta2->idcta;
         $seat->descripcion = $request->get('description');
-        if ($request->get('money') == 'USD' || $request->get('money') == 'EUR') {
-            $seat->monto_deb = ($request->get('amount') * $request->get('tasa_cambio'));
-            $seat->monto_hab = ($request->get('amount') * $request->get('tasa_cambio'));
+        if ($request->get('money') != 'BS') {
+            if ($request->get('money') == 'USD' || $request->get('money') == 'EUR') {
+                $seat->monto_deb = $amount * $tasa;
+                $seat->monto_hab = $amount * $tasa;
+            } else {
+                $seat->monto_deb = $amount / $tasa;
+                $seat->monto_hab = $amount / $tasa;
+            }
         }
-        elseif ($request->get('money') == 'COP'){
-            $seat->monto_deb = ($request->get('amount') / $request->get('tasa_cambio'));
-            $seat->monto_hab = ($request->get('amount') / $request->get('tasa_cambio'));
-        }
-        elseif ($request->get('money') == 'BS'){
-            $seat->monto_deb = $request->get('amount');
-            $seat->monto_hab = $request->get('amount');
+        else{
+            $seat->monto_deb = $amount;
+            $seat->monto_hab = $amount;
         }
         $seat->save();
 
@@ -103,18 +109,19 @@ class PayController extends Controller
         $proofPay->numconfirm = $request->get('numconfirm');
         $proofPay->moneda = $request->get('money');
         if ($request->get('money') == 'USD' || $request->get('money') == 'EUR') {
-            $proofPay->montolocal =  $request->get('amount') * $request->get('tasa_cambio');
-            $proofPay->montomoneda = $request->get('amount');
+            $proofPay->montolocal =  $amount;
+            $proofPay->montomoneda = $amount * $tasa;
         }
         elseif ($request->get('money') == 'COP' ){
-            $proofPay->montolocal =  $request->get('amount') / $request->get('tasa_cambio');
-            $proofPay->montomoneda = $request->get('amount');
+            $proofPay->montolocal =  $amount;
+            $proofPay->montomoneda = $amount / $tasa;
         }
         elseif($request->get('money') == 'BS'){
-            $proofPay->montolocal = $request->get('amount');
-            $proofPay->montomoneda = 0;
+            $proofPay->montolocal = 0;
+            $proofPay->montomoneda = $amount;
         }
         $proofPay->cantidad_escr = $request->get('conceptDesc');
+        $proofPay->tasa_cambio = $payOrder->tasa_cambio;
         $proofPay->save();
 
         $detProofPay = new DetalleComprobantePago();

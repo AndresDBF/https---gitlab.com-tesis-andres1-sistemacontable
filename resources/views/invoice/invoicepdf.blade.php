@@ -1,114 +1,133 @@
-<div class="card-body">
-    <div class="container mb-5 mt-3">
-      <div class="row d-flex align-items-baseline">
-        <div class="col-xl-9">
-          <p style="color: #7e8d9f;font-size: 20px;">Invoice >> <strong>ID: #123-123</strong></p>
-        </div>
-        <div class="col-xl-3 float-end">
-          <a class="btn btn-light text-capitalize border-0" data-mdb-ripple-color="dark"><i
-              class="fas fa-print text-primary"></i> Print</a>
-          <a class="btn btn-light text-capitalize" data-mdb-ripple-color="dark"><i
-              class="far fa-file-pdf text-danger"></i> Export</a>
-        </div>
-        <hr>
-      </div>
-
-      <div class="container">
-        <div class="col-md-12">
-          <div class="text-center">
-            <i class="fab fa-mdb fa-4x ms-0" style="color:#5d9fc5 ;"></i>
-            <p class="pt-0">MDBootstrap.com</p>
-          </div>
-
-        </div>
-
-
-        <div class="row">
-          <div class="col-xl-8">
-            <ul class="list-unstyled">
-              <li class="text-muted">To: <span style="color:#5d9fc5 ;">John Lorem</span></li>
-              <li class="text-muted">Street, City</li>
-              <li class="text-muted">State, Country</li>
-              <li class="text-muted"><i class="fas fa-phone"></i> 123-456-789</li>
-            </ul>
-          </div>
-          <div class="col-xl-4">
-            <p class="text-muted">Invoice</p>
-            <ul class="list-unstyled">
-              <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
-                  class="fw-bold">ID:</span>#123-456</li>
-              <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
-                  class="fw-bold">Creation Date: </span>Jun 23,2021</li>
-              <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
-                  class="me-1 fw-bold">Status:</span><span class="badge bg-warning text-black fw-bold">
-                  Unpaid</span></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="row my-2 mx-1 justify-content-center">
-          <table class="table table-striped table-borderless">
-            <thead style="background-color:#84B0CA ;" class="text-white">
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Description</th>
-                <th scope="col">Qty</th>
-                <th scope="col">Unit Price</th>
-                <th scope="col">Amount</th>
-              </tr>
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="factura.css">
+    <title>Factura</title>
+</head>
+<body>
+      <div class="border">
+            <h1 id="title">
+                <img id="img" src="../Trabajos en HTML/Imagenes/principal.img.jfif" height="100px" width="120px">
+                Nombre de la Empresa
+            </h1>
+             <div>
+                <div class="control"><p>N-control</p></div>
+            </div>
+            <div class="nom-empresa">
+                <div class="direccion"><p>Direccion</p></div>
+                <div class="telefono"><p>Telefono</p></div>
+                <div class="correo"><p>Correo</p></div>
+            </div>
+     </div>
+     <h3 class="datos">Factura</h3>
+        <br>
+     <div class="derecho">
+       <p>Nro.:</p> 
+       <p>Fecha:</p>
+     </div>   
+     <div class="formulario">
+        <form >
+            <label>Nombre y apellido o Razón social:</label>
+                <input class="nombre" name="nombre">
+        <br>    
+            <label>C.I./RIF o pasaporte:</label>
+                <input class="cedula" name="cedula">
+        <br>
+            <label>Oficina de Cobranza:</label>
+                <input class="oficina" name="oficina">
+        <br>
+            <label>Intermediario:</label>
+                <input class="inter" name="inter">
+        </form>
+     </div>
+     <div>
+        <br>
+        <table class="table">
+            <thead class="gris">
+                <th>Cantidad</th>
+                <th>Descripcion</th>
+                <th>Precio Unitario</th>
+                <th>Total</th>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Pro Package</td>
-                <td>4</td>
-                <td>$200</td>
-                <td>$800</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Web hosting</td>
-                <td>1</td>
-                <td>$10</td>
-                <td>$10</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Consulting</td>
-                <td>1 year</td>
-                <td>$300</td>
-                <td>$300</td>
-              </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    
+                </tr>
             </tbody>
-
-          </table>
+        </table>
+     </div>
+     <div class="borde-total"> 
+        <form >
+            <label>Base imponible</label>
+                <input id="base" name="base">
+    <br>
+            <label>IVA(16.00%)</label>
+                <input id="IVA" name="IVA">
+    <br>
+            <label><b>Total</b></label>
+                <input id="total" name="total">
+    <br>
+        </form>
+     </div>
+     <div class="formas">
+        <div class="los-input">
+            <label>Forma de pago:</label>
+                <input id="form-pago">
+            <label>Caja:</label>
+                <input id="caja">
+            <label>Cajero:</label>
+                <input id="cajero">
+                <label>Relación de Ingreso:</label>
+            <input id="relining">    
         </div>
-        <div class="row">
-          <div class="col-xl-8">
-            <p class="ms-3">Add additional notes and payment information</p>
-
-          </div>
-          <div class="col-xl-3">
-            <ul class="list-unstyled">
-              <li class="text-muted ms-3"><span class="text-black me-4">SubTotal</span>$1110</li>
-              <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Tax(15%)</span>$111</li>
-            </ul>
-            <p class="text-black float-start"><span class="text-black me-3"> Total Amount</span><span
-                style="font-size: 25px;">$1221</span></p>
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div class="col-xl-10">
-            <p>Thank you for your purchase</p>
-          </div>
-          <div class="col-xl-2">
-            <button type="button" class="btn btn-primary text-capitalize"
-              style="background-color:#60bdf3 ;">Pay Now</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
+     </div> 
+</body>
+</html>

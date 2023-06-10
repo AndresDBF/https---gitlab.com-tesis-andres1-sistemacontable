@@ -22,7 +22,11 @@ class CreateComprobanteIngresosTable extends Migration
             $table->string('numconfirm',20);
             $table->string('numfact');
             $table->string('moneda',3);
-            $table->float('cantidad',14,2);
+            $table->float('mtolocal',14,2);
+            $table->float('mtomoneda',14,2);
+            $table->float('tasa_cambio',14,2)->nullable();
+            $table->float('montoigtflocal',14,2)->nullable();
+            $table->float('montoigtfmoneda',14,2)->nullable();
             $table->string('cantidad_escr',100);
             $table->timestamps();
         });

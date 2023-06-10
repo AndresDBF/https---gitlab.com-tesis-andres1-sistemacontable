@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Orden de Pago')
 
 @section('content_header')
-    <h1>Dashboard</h1>
+    <h1 class="text-secondary fs-5 shadow-lg p-2 mb-5 bg-body rounded text-center">Orden de Pago</h1>
 @stop
 
 @section('content')
@@ -13,6 +13,7 @@
                 <form action="{{route('storedetorder')}}" method="POST">
                     @csrf
                     <input type="hidden" name="idorpa" id="idorpa" value="{{$idorpa}}">
+                    <input type="hidden" name="tasa" id="tasa" value="{{$tasa}}">
                     <div class="well">
                         <div class="row">
                             <div class="col-xs-3 col-sm-6 col-md-6">

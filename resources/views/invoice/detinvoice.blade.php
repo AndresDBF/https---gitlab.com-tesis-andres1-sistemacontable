@@ -13,6 +13,7 @@
                 <form action="{{route('storedetinvoiceing')}}" method="POST">
                     @csrf
                     <input type="hidden" name="idfact" id="idfact" value="{{$invoice->idfact}}">
+                    <input type="hidden" name="idcfact" id="idcfact" value="{{$query->idcfact}}">
                     <div class="well">
                         <div class="row">
                             <div class="col-xs-3 col-sm-6 col-md-6">
@@ -40,11 +41,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Nombre y Apellido o Razon Social</label>
-                        <input type="text" name="name" id="name" value="{{$invoice->nomacre}}" class="form-control" tabindex="4">
+                        <input type="text" name="name" id="name" value="{{$customer->nombre}}" class="form-control" tabindex="4">
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Direccion de Factura</label>
-                        <input type="text" name="direction" id="direction" value="{{$invoice->dirfact}}" class="form-control" tabindex="5">
+                        <input type="text" name="direction" id="direction" value="{{$customer->direccion}}" class="form-control" tabindex="5">
                     </div>
                     <div class="well">
                         <div class="row">
@@ -52,15 +53,15 @@
                                 <div class="form-label">
                                     <label for="dni">Tipo de Identificación</label>
                                     <select name = 'tipid' class="custom-select">
-                                        @if ($invoice->tipid == 'V')
+                                        @if ($customer->tipid == 'V')
                                             <option value="V">V</option>
                                             <option value="J">J</option>
                                             <option value="E">E</option>
-                                        @elseif($invoice->tipid == 'J')
+                                        @elseif($customer->tipid == 'J')
                                             <option value="J">J</option>
                                             <option value="V">V</option>
                                             <option value="E">E</option>
-                                        @elseif($invoice->tipid == 'E')
+                                        @elseif($customer->tipid == 'E')
                                          <option value="E">E</option>
                                          <option value="V">V</option>
                                          <option value="E">E</option>
@@ -75,12 +76,12 @@
                             </div>
                             <div class="col-xs-3 col-sm-6 col-md-4">
                                 <label for="" class="form-label">Rif o Cedula del Cliente</label>
-                                <input type="number" name="identification" id="identification" value="{{$invoice->identificacion}}" class="form-control text-decoration-none" tabindex="6">
+                                <input type="number" name="identification" id="identification" value="{{$customer->identificacion}}" class="form-control text-decoration-none" tabindex="6">
                             </div>
                             <div class="col-xs-3 col-sm-6 col-md-4">
                                 <label for="" class="form-label">Numero de Chequeo</label>
                                 <select name = 'numcheck' class="custom-select">
-                                    @if ($invoice->tiprif == null)
+                                    @if ($customer->tiprif == null)
                                         <option selected="">Seleccionar Numero</option>
                                         <option value="0">0</option>
                                         <option value="1">1</option>
@@ -94,7 +95,7 @@
                                         <option value="9">9</option>                               
                                     @else
                                         @for ($i = 0; $i < 10; $i++)
-                                            @if ($i == $invoice->tiprif)
+                                            @if ($i == $customer->tiprif)
                                                 <option value="{{$i}}" selected>{{$i}}</option>
                                             @endif
                                             <option value="{{$i}}">{{$i}}</option>
@@ -108,7 +109,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Telefono</label>
-                        <input type="number" name="phone" id="phone" value="{{$invoice->telefono}}" class="form-control text-decoration-none" tabindex="7">
+                        <input type="number" name="phone" id="phone" value="{{$customer->telefono}}" class="form-control text-decoration-none" tabindex="7">
                     </div>
                     <div class="well">
                         <div class="row">
@@ -176,12 +177,13 @@
                                 <br>
                             @endfor
                         </div>
+                        <input type="hidden" name="tasa_cambio" id="tasa_cambio" value="{{$tasa_cambio}}">
                     </div>
                 </div>                                                
             </div>
         </div> 
         <div class="well pb-3 mt-3">
-            <a href="{{route('deletefact',['idfact' => $invoice->idfact])}}" class="btn btn-secondary" tabindex="5">Cancelar</a>
+            <a href="{{route('deletefact',['idfact' => $invoice->idfact, 'idcfact' => $query->idcfact])}}" class="btn btn-secondary" tabindex="5">Cancelar</a>
             <button type="submit" class="btn btn-primary" tabindex="6">Siguiente</button>
         </div> 
         </form>      

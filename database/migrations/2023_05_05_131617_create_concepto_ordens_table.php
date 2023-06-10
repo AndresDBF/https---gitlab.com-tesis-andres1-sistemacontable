@@ -20,8 +20,10 @@ class CreateConceptoOrdensTable extends Migration
                   ->references('idorpa')
                   ->on('orden_pagos');
             $table->string('descripcion');
-            $table->float('monto_unitario',14,2);
-            $table->float('monto_bien',14,2);
+            $table->float('montounitariolocal',14,2);
+            $table->float('montounitariomoneda',14,2);
+            $table->float('montobienlocal',14,2);
+            $table->float('montobienmoneda',14,2);
             $table->timestamps();
         });
     }

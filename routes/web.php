@@ -38,11 +38,11 @@ Route::post('subaccountname2/{idgcu}', [CustomerController::class, 'subaccountna
 Route::get('findcustomer', [FacturasController::class,'index'])->name('findcustomer');
 Route::get('createinvoiceing/{idcli}',[FacturasController::class,'createinvoiceing'])->name('createinvoiceing');
 Route::post('storeinvoiceing',[FacturasController::class,'storeinvoiceing'])->name('storeinvoiceing');
-Route::get('createdetinvoiceing/{numConcept}',[FacturasController::class,'createdetinvoiceing'])->name('createdetinvoiceing');
+Route::get('createdetinvoiceing/{numConcept}/{idcli}/{tasa_cambio}',[FacturasController::class,'createdetinvoiceing'])->name('createdetinvoiceing');
 Route::post('storedetinvoiceing',[FacturasController::class,'storedetinvoiceing'])->name('storedetinvoiceing');
 Route::get('totalinvoice/{idfact}',[FacturasController::class,'totalinvoice'])->name('totalinvoice');
 Route::get('deleteInvoice/{idfact}',[FacturasController::class,'deleteInvoice'])->name('deleteInvoice');
-Route::get('deletefact/{idfact}',[FacturasController::class,'deletefact'])->name('deletefact');
+Route::get('deletefact/{idfact}/{idcfact}',[FacturasController::class,'deletefact'])->name('deletefact');
 
 
 
@@ -58,6 +58,7 @@ Route::get('searchIncome',[IncomeController::class,'searchIncome'])->name('searc
 Route::post('findIncome',[IncomeController::class,'findIncome'])->name('findIncome');
 Route::get('createIng/{idfact}/{idcli}',[IncomeController::class,'createIng'])->name('createIng');
 Route::post('storeIncome',[IncomeController::class,'storeIncome'])->name('storeIncome');
+Route::post('verifyaccount', 'IncomeController@verifyaccount')->name('verifyaccount');
 Route::get('groupaccount1', [IncomeController::class, 'groupaccount1']);
 Route::post('subgroupaccount1/{idgru}', [IncomeController::class, 'subgroupaccount1']);
 Route::post('accountname1/{idsgr}', [IncomeController::class, 'accountname1']);
@@ -79,13 +80,14 @@ Route::get('createdetorder/{numConcept}',[PurchaseOrderController::class,'create
 Route::post('storedetpurchase',[PurchaseOrderController::class,'storedetpurchase'])->name('storedetpurchase');
 Route::get('totalorder/{idorco}',[PurchaseOrderController::class,'totalorder'])->name('totalorder');
 Route::get('deleteorderco/{idorco}',[PurchaseOrderController::class,'deleteorderco'])->name('deleteorderco');
+Route::get('deleteordercom/{idorco}',[PurchaseOrderController::class,'deleteordercom'])->name('deleteordercom');
 Route::get('/autorizar/{idorco}',[PurchaseOrderController::class,'autorizar'])->name('autorizar');
 
 //Orden de Pago 
 Route::get('registerorder',[PayOrderController::class,'index'])->name('registerorder');
 Route::get('createpayorder/{idprov}/{idorco}',[PayOrderController::class,'createpayorder'])->name('createpayorder');
 Route::post('storeord',[PayOrderController::class,'store'])->name('storeord');
-Route::get('detorder/{numConcept}',[PayOrderController::class,'detorder'])->name('detorder');
+Route::get('detorder/{numConcept}/{tasa}',[PayOrderController::class,'detorder'])->name('detorder');
 Route::post('storedet',[PayOrderController::class,'storedetorder'])->name('storedetorder');
 Route::get('totalorderpa/{idorpa}',[PayOrderController::class,'totalorder'])->name('totalorderpa');
 Route::get('deleteorderpa/{idprov}/{idorco}',[PayOrderController::class,'deleteorderpa'])->name('deleteorderpa');

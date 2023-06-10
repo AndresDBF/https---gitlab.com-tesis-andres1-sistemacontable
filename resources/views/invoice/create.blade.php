@@ -12,6 +12,7 @@
             <div class="card-body pl-6">
                 <form action="{{route('storeinvoiceing')}}" method="POST">
                     @csrf
+                    <input type="hidden" name="idcli" value="{{$idcli}}">
                     <div class="well">
                         <div class="row">
                             <div class="col-xs-3 col-sm-6 col-md-6">
@@ -78,21 +79,33 @@
                     </div>
                     <div class="well">
                         <div class="row">
-                            <div class="col-xs-6 col-sm-6">
+                            <div class="col-xs-4 col-sm-4">
                                 <div class="form-group">
                                   <label for="dni">Tipo de Pago</label>
-                                  <select name = 'tip_pag' class="custom-select">
+                                  <select name = 'tip_pag' id="form-pay-select" class="custom-select">
                                     <option selected="">Selecciona un tipo de pago</option>
                                       @foreach ($tippag as $tip)
                                           <option value="{{$tip->tippago}}">{{$tip->descripcion}}</option>
                                       @endforeach
                                   </select>
                                   @error('stscontr')
-                            <div class="alert alert-danger">{{ "Estatus Invalido" }}</div>
-                        @enderror
+                                    <div class="alert alert-danger">{{ "Estatus Invalido" }}</div>
+                                  @enderror
                                 </div>
                             </div>
-                            <div class="col-xs-6 col-sm-6">
+                            <div class="col-xs-4 col-sm-4">
+                                <div class="form-group">
+                                    <label for="dni">Moneda</label>
+                                    <select name = 'money-select' id="money-select" class="custom-select">
+                                      <option selected="">Selecciona una Moneda</option>
+                                        @foreach ($money as $mon)
+                                            <option value="{{$mon->tipmoneda}}">{{$mon->descripcion}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <input type="hidden" name="tasa_cambio" value="">
+                            <div class="col-xs-4 col-sm-4">
                                 <label for="dni">Numero Total de descripcion de factura</label>
                                 <select name = 'numconcept' class="custom-select">
                                     <option value="1">1</option>
@@ -115,3 +128,26 @@
     </div>
 @stop
 
+@section('js')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+        document.getElementById('money-select').addEventListener('change', function() {
+            var selectedOption = this.value;
+            if (selectedOption !== 'BS') {
+                var tasaCambio = prompt('Ingrese la tasa de cambio:');
+                document.querySelector('input[name="tasa_cambio"]').value = tasaCambio;
+            }
+        });
+    </script>
+    <script>      
+        document.getElementById('money-select').addEventListener('change', function() {
+            var formPayValue = document.getElementById('form-pay-select').value;
+            var moneyValue = this.value;
+      
+            if (formPayValue === 'PMO' && moneyValue !== 'BS') {
+                alert('No se puede realizar pago móvil en moneda extranjera.');
+            }
+        });
+      </script>
+@endsection

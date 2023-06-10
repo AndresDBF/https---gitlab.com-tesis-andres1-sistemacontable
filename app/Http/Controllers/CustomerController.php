@@ -37,8 +37,8 @@ class CustomerController extends Controller
     public function index()
     {
         $customer = Cliente::join('contr_clis','clientes.idcli','=','contr_clis.idcli')
-        ->select('contr_clis.idasi','clientes.idcli','clientes.nombre','clientes.tipid','clientes.identificacion','clientes.tiprif','clientes.telefono',
-        'clientes.email','contr_clis.stscontr','contr_clis.tip_pag')
+        ->select('clientes.idcli','clientes.nombre','clientes.tipid','clientes.identificacion','clientes.tiprif','clientes.telefono',
+        'clientes.email','contr_clis.stscontr','contr_clis.tip_pag','contr_clis.tasa_cambio')
         ->orderBy('clientes.nombre')
         ->paginate(10);
         
@@ -114,7 +114,7 @@ class CustomerController extends Controller
                                 ->first();
         $idcta2 = CatgSubCuenta::where('idscu', $request->get('subaccountname2'))
                                 ->first();
-        $seat = new Asiento();
+        /* $seat = new Asiento();
         $seat->fec_asi = Carbon::now();
         $seat->observacion = $request->get('observartion');
         $seat->idcta1 = $idcta1->idcta;
@@ -131,7 +131,7 @@ class CustomerController extends Controller
         }
         
         $seat->monto_hab = 0;
-        $seat->save();
+        $seat->save(); */
 
         $customer = new Cliente();
         $customer->idcli = $request->code;
@@ -162,12 +162,13 @@ class CustomerController extends Controller
             $contrCustomer->montopaglocal = $request->get('valuecont') / $request->get('tasa_cambio');
             $contrCustomer->montopagmoneda = $request->get('valuecont');
         }
-        elseif ($request->get('money') != 'BS'){
-            $contrCustomer->montopaglocal = 0;
-            $contrCustomer->montopagmoneda = $request->get('valuecont');
+        elseif ($request->get('money') == 'BS'){
+            $contrCustomer->montopaglocal = $request->get('valuecont');
+            $contrCustomer->montopagmoneda =0;
         }
+        $contrCustomer->tasa_cambio = $request->get('tasa_cambio');
         $contrCustomer->moneda = $request->get('money');
-        $contrCustomer->idasi = $seat->idasi;
+        /* $contrCustomer->idasi = $seat->idasi; */
         $contrCustomer->save();
                        
         Session::flash('mensaje',"Se ha registrado el Cliente $customer->nombre correctamente");
@@ -197,7 +198,7 @@ class CustomerController extends Controller
         
         $customer = Cliente::find($idcli);
         $contrCli = ContrCli::where('idcli',$customer->idcli)->first();
-        $tippag = TipPago::where('tip_proceso','contr_cli')
+        $tippag = TipPago::where('tip_proceso','contratos')
                          ->get();
         $money = Moneda::all();
         $status = ReglaStatus::where('tipsts','contrato')

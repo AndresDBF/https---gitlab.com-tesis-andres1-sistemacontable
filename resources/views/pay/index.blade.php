@@ -46,7 +46,12 @@
                             <th>TARJETA DE CREDITO</th>
                             @break
                     @endswitch
-                    <th>{{ $detPayOrder[$index]->monto_total }}</th>
+                    @if ($pay->moneda != 'BS')
+                        <th>{{ $detPayOrder[$index]->montototallocal}}</th>
+                    @else
+                        <th>{{ $detPayOrder[$index]->montototalmoneda}}</th>
+                    @endif
+                    
                     <td>
                         
                         <a href="#" class="btn btn-success mb-2" onclick="confirmCrear('{{route('createpay',['idprov' => $pay->idprov , 'idorpa' => $pay->idorpa])}}')"><i class="fas fa-check"></i></a>

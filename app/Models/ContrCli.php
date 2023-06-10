@@ -17,7 +17,7 @@ class ContrCli extends Model
         'montopaglocal',
         'montolocalmoneda',
         'moneda',
-        'idasi',
+        'tasa_cambio'
 
     ];
 }
