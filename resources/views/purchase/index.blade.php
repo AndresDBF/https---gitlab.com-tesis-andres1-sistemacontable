@@ -7,7 +7,11 @@
 @stop
 
 @section('content')
+
     <a href="{{route('findsupplier')}}" class="btn btn-primary mb-3">CREAR</a>
+    @if(Session::has('error'))
+    <div class="alert alert-danger">{{Session::get('error')}}</div>
+    @endif
     <table id="purchase" class="table table-striped table-bordered shadow-lg mt-4" style="width: 100%">
 
         <thead class="bd-primary text-dark">

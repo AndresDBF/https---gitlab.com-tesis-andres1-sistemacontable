@@ -96,9 +96,30 @@
             </div>
             <div class="well pb-3 mt-3">
               <a href="/supplier" class="btn btn-secondary" tabindex="5">Atras</a>
-              <button type="submit" class="btn btn-primary" tabindex="6">Aceptar</button>
+              <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#seatmodal" tabindex="6">Aceptar</button>
             </div> 
-   
+            <div class="modal fade" id="seatmodal" tabindex="-1" aria-labelledby="seatmodalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header text-center">
+                    <h5 class="modal-title" id="seatmodalLabel">¿El Proveedor es Contribuyente especial?</h5>
+                  </div>
+                  <div class="modal-body">
+                    <div class="col-xs-3 col-sm-6 col-md-4 text-center">
+                      <select name = 'reten' id="reten" class="custom-select">
+                        <option value="N">NO</option>
+                        <option value="S">SI</option>
+                    </select>
+                    <input type="hidden" name="porcreten" id="porcreten">
+                    </div> {{-- CREAR LA OPCION DE CONTRIBUYENTE ESPECIAL PARA EL PROVEEDOR --}}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                  </div>
+                </div>
+              </div>
+          </div>
         </form>
       </div>
     </div>
@@ -106,24 +127,18 @@
 @stop
 
 @section('js')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+      var myModal = document.getElementById('myModal')
+      var myInput = document.getElementById('myInput')
+
+      myModal.addEventListener('shown.bs.modal', function () {
+        myInput.focus()
+      })
+    </script>
     <script src="https://kit.fontawesome.com/d2c478c6c0.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-      $(document).ready(function() {
-        
-         $("#div-off").hide();
-   
-         
-         $("select[name='tipid']").change(function() {
-            if ($(this).val() == "J") {
-               
-               $("#div-off").show();
-            } else {
-              
-               $("#div-off").hide();
-            }
-         });
-      });
-   </script>
+    <script src="{{asset('js/verifyidentification.js')}}"></script>
+   <script src="{{asset('js/contribuyente.js')}}"></script>
    
 @stop

@@ -36,7 +36,7 @@
                                 @if($errors->first('numfact'))
                                     <p class="text-danger">{{$errors->first('numfact')}}</p>
                                 @endif
-                                <input type="numeric" name="numfact" id="numfact"  class="form-control" tabindex="1">
+                                <input type="number" name="numfact" id="numfact" class="form-control" tabindex="1">
                             </div>
                             <div class="col-xs-3 col-sm-6 col-md-6">
                                 <label for="" class="form-label">Control de Factura</label>

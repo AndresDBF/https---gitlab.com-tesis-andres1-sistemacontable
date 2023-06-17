@@ -22,14 +22,14 @@
                     <div class="col-xs-4 col-sm-4 col-md-4 col-pb-2">
                         <label for="" class="form-label text-center">Precio Unitario</label>
                         @foreach ($descFact as $desc)
-                        <input type="number" name="amountUnit" id="amountUnit" value="{{$desc->monto_unitariomoneda}}" class="form-control text-decoration-none price-input text-center pb-2" readonly="readonly" tabindex="7">
+                        <input type="number" name="amountUnit" id="amountUnit" value="{{$desc->monto_unitariolocal}}" class="form-control text-decoration-none price-input text-center pb-2" readonly="readonly" tabindex="7">
                         <br>
                         @endforeach
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-pb-2">
                         <label for="" class="form-label text-center">Precio del Bien</label>
                         @foreach ($descFact as $desc)
-                        <input type="number" name="total-amount" id="total-amount" value="{{$desc->monto_bienmoneda}}" class="form-control text-decoration-none total-amount text-center pb-2" readonly="readonly" tabindex="7" readonly>
+                        <input type="number" name="total-amount" id="total-amount" value="{{$desc->monto_bienlocal}}" class="form-control text-decoration-none total-amount text-center pb-2" readonly="readonly" tabindex="7" readonly>
                         <br>
                         @endforeach
                     </div>
@@ -44,14 +44,14 @@
                     <div class="col-xs-4 col-sm-4 col-md-4 col-pb-2">
                         <label for="" class="form-label text-center">Precio Unitario</label>
                         @foreach ($descFact as $desc)
-                        <input type="number" name="amountUnit" id="amountUnit" value="{{$desc->montounitariolocal}}" class="form-control text-decoration-none price-input text-center pb-2" readonly="readonly" tabindex="7">
+                        <input type="number" name="amountUnit" id="amountUnit" value="{{$desc->monto_unitariomoneda}}" class="form-control text-decoration-none price-input text-center pb-2" readonly="readonly" tabindex="7">
                         <br>
                         @endforeach
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-pb-2">
                         <label for="" class="form-label text-center">Precio del Bien</label>
                         @foreach ($descFact as $desc)
-                        <input type="number" name="total-amount" id="total-amount" value="{{$desc->montobienlocal}}" class="form-control text-decoration-none total-amount text-center pb-2" readonly="readonly" tabindex="7" readonly>
+                        <input type="number" name="total-amount" id="total-amount" value="{{$desc->monto_bienmoneda}}" class="form-control text-decoration-none total-amount text-center pb-2" readonly="readonly" tabindex="7" readonly>
                         <br>
                         @endforeach
                     </div>
@@ -59,6 +59,19 @@
             </div>
         </div>  
         @if ($invoice->moneda == 'BS')
+            <div class="d-flex justify-content-between ml-3 mr-5 mt-3">
+                <label class="fw-bold fs-4 me-auto">Monto Total de la Base Imponible al Valor Agregado ({{$invoice->moneda}})</label>
+                <label class="fw-bold ms-auto fs-4">{{$baseImponiblelocal}}</label> 
+            </div>
+            <div class="d-flex justify-content-between ml-3 mr-5">
+                <label class="fw-bold fs-4 me-auto">Monto Total del Impuesto al Valor Agregado ({{$invoice->moneda}})</label>
+                <label class="fw-bold ms-auto fs-4">{{$totalImpuestolocal}}</label>
+            </div>
+            <div class="d-flex justify-content-between ml-3 mr-5">
+                <label class="fw-bold fs-4 me-auto">Valor Total de la Venta ({{$invoice->moneda}})</label>
+                <label class="fw-bold ms-auto fs-4">{{$totalFactlocal}}</label>
+            </div>       
+        @else
             <div class="d-flex justify-content-between ml-3 mr-5 mt-3">
                 <label class="fw-bold fs-4 me-auto">Monto Total de la Base Imponible al Valor Agregado ({{$invoice->moneda}})</label>
                 <label class="fw-bold ms-auto fs-4">{{$baseImponiblemoneda}}</label> 
@@ -70,19 +83,6 @@
             <div class="d-flex justify-content-between ml-3 mr-5">
                 <label class="fw-bold fs-4 me-auto">Valor Total de la Venta ({{$invoice->moneda}})</label>
                 <label class="fw-bold ms-auto fs-4">{{$totalFactmoneda}}</label>
-            </div>       
-        @else
-            <div class="d-flex justify-content-between ml-3 mr-5 mt-3">
-                <label class="fw-bold fs-4 me-auto">Monto Total de la Base Imponible al Valor Agregado ({{$invoice->moneda}})</label>
-                <label class="fw-bold ms-auto fs-4">{{$baseImponibleLocal}}</label> 
-            </div>
-            <div class="d-flex justify-content-between ml-3 mr-5">
-                <label class="fw-bold fs-4 me-auto">Monto Total del Impuesto al Valor Agregado ({{$invoice->moneda}})</label>
-                <label class="fw-bold ms-auto fs-4">{{$totalImpuestolocal}}</label>
-            </div>
-            <div class="d-flex justify-content-between ml-3 mr-5">
-                <label class="fw-bold fs-4 me-auto">Valor Total de la Venta ({{$invoice->moneda}})</label>
-                <label class="fw-bold ms-auto fs-4">{{$totalFactlocal}}</label>
             </div>    
         @endif 
                                  

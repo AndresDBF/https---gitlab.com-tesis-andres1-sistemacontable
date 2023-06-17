@@ -85,11 +85,18 @@ class IncomeController extends Controller
         $contrCli = ContrCli::where('idcli',$idcli)
                             ->first();
         $fecRegister = Carbon::now()
-                        ->format('d/m/y');
+                        ->format('Y-m-d');
         return view('income.create',compact('proofIncome','detProof','invoice','detInvoice','customer','contrCli','fecRegister','tipId','identification','numCheck'));
     }
 
     public function storeIncome(Request $request){
+        $this->validate($request, [
+            'numconfirm' => 'required|numeric',
+            'conceptDesc' => 'required',
+            'description' => 'required',
+            'observation' => 'required',
+            'descriptionseat' => 'required',
+        ]);
          $idcta1 = CatgSubCuenta::select('idcta')
                                 ->where('idscu', $request->get('subaccountname1'))
                                 ->first();
@@ -104,7 +111,7 @@ class IncomeController extends Controller
         $proofIncome = ComprobanteIngreso::where('idfact',$detInvoice->idfact)->first();
         $amountTaxes = floatval($detInvoice->mtoimpuestolocal);
         $difIgtf = floatval($proofIncome->montoigtflocal);
-
+ 
         $seatAmount = new Asiento();
         $seatAmount->fec_asi = $request->get('fecIncome');
         $seatAmount->observacion = $request->get('observation');
@@ -126,7 +133,6 @@ class IncomeController extends Controller
             $seatTaxes->monto_hab = $amountTaxes;
             $seatTaxes->save();
         }
-        
         if ($difIgtf > 0 ) {
             $seatIgtf = new Asiento();
             $seatIgtf->fec_asi = $request->get('fecIncome');

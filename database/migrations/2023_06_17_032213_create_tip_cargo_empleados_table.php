@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTipGastoOperativosTable extends Migration
+class CreateTipCargoEmpleadosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateTipGastoOperativosTable extends Migration
      */
     public function up()
     {
-        Schema::create('tip_gasto_operativos', function (Blueprint $table) {
-            $table->id('idtga');
-            $table->string('descripcion');
-            $table->string('tip_gast');
+        Schema::create('tip_cargo_empleados', function (Blueprint $table) {
+            $table->id('idcarg');
+            $table->string('concepto_cargo');
+            $table->string('tipcargo');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateTipGastoOperativosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tip_gasto_operativos');
+        Schema::dropIfExists('tip_cargo_empleados');
     }
 }

@@ -8,6 +8,9 @@
 
 @section('content')
 <div class="container"> 
+  @if(Session::has('error'))
+  <div class="alert alert-danger">{{Session::get('error')}}</div>
+  @endif
   <form action="{{route('storedetpurchase')}}" method="POST">
     <div class="card">
       <div class="card-body pl-6">
@@ -64,9 +67,6 @@
 
       </div>
     </div>
-    @if(Session::has('error'))
-    <div class="alert alert-danger">{{Session::get('error')}}</div>
-    @endif
     <div class="card">
         <div class="card-body pl-6">
             <div class="well">
@@ -79,18 +79,16 @@
                         <label for="dni">Numero Total de Conceptos</label>
                         <input type="numeric" name="numconcept" id="numconcept" value="{{$cantConcept}}" class="form-control" readonly="readonly">
                     </div>
-                    <div class="col-xs-5 col-sm-5 col-md-5">
+                    <div class="col-xs-3 col-sm-3 col-md-3">
                       <div class="form-group">
-                        <label for="dni">Moneda</label>
-                        <select name = 'money' id="money-select" class="custom-select">
-                          <option value="select">Selecciona un tipo de pago</option>
-                            @foreach ($money as $mon)
-                                <option value="{{$mon->tipmoneda}}">{{$mon->descripcion}}</option>
-                            @endforeach
+                        <label for="dni">Aplicar I.V.A</label>
+                        <select name = 'iva' id="money-select" class="custom-select">
+                          <option value="S">SI</option>
+                          <option value="N">NO</option>
                         </select>
                       </div>
                     </div>
-                    <input type="hidden" name="tasa_cambio" value="">
+                    <input type="hidden" name="tasa_cambio" value="{{$tasa_cambio}}">
                 </div>
             </div>
             <div class="well pt-4">
@@ -125,7 +123,7 @@
                     </div>
                 </div>
             </div>
-            <div class="well pb-3 mt-3">
+            <div class="well pb-3 mt-3">            
               <a href="{{route('deleteorderco',['idorco' => $idorco])}}">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Atras</button>
               </a>
@@ -149,14 +147,5 @@
         });
     });
 
-</script>
-<script>
-  document.getElementById('money-select').addEventListener('change', function() {
-      var selectedOption = this.value;
-      if (selectedOption != 'BS' && selectedOption != 'select') {
-          var tasaCambio = prompt('Ingrese la tasa de cambio:');
-          document.querySelector('input[name="tasa_cambio"]').value = tasaCambio;
-      }
-  });
 </script>
 @endsection

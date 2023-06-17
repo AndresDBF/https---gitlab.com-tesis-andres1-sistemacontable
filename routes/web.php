@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\UserController;
+use Spatie\Permission\Traits\HasPermissions;
 use App\Http\Controllers\AsientoController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Importexcel;
@@ -10,6 +12,10 @@ use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\PayOrderController;
 use App\Http\Controllers\PayController;
+use App\Http\Controllers\RetentionController;
+use App\Http\Controllers\RetentionIslrController;
+use App\Http\Controllers\Admin\RoleController;
+use Illuminate\Support\Facades\Auth;
 //use App\Http\Controllers\ClientesController;
 
 
@@ -18,6 +24,13 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+
+Route::get('admin/users/index', [UserController::class, 'index'])->name('users.index');
+/* Route::get('admin/users/index', [UserController::class, 'index'])->middleware('can:')->name('users.index');
+ */
+
+Route::resource('users', UserController::class)->only(['index','edit','update'])->names('users');
+Route::resource('roles', RoleController::class)->names('roles');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 //profile
@@ -76,10 +89,10 @@ Route::get('reportorder',[PurchaseOrderController::class,'reportorder'])->name('
 Route::get('findsupplier',[PurchaseOrderController::class,'findsupplier'])->name('findsupplier');
 Route::post('create',[PurchaseOrderController::class,'create'])->name('create');
 Route::post('storeorder',[PurchaseOrderController::class,'storeorder'])->name('storeorder');
-Route::get('createdetorder/{numConcept}',[PurchaseOrderController::class,'createdetorder'])->name('createdetorder');
+Route::get('createdetorder/{numConcept}/{tasa_cambio}',[PurchaseOrderController::class,'createdetorder'])->name('createdetorder');
 Route::post('storedetpurchase',[PurchaseOrderController::class,'storedetpurchase'])->name('storedetpurchase');
 Route::get('totalorder/{idorco}',[PurchaseOrderController::class,'totalorder'])->name('totalorder');
-Route::get('deleteorderco/{idorco}',[PurchaseOrderController::class,'deleteorderco'])->name('deleteorderco');
+Route::get('deleteorderco/{idorco}', [PurchaseOrderController::class, 'deleteorderco'])->name('deleteorderco');
 Route::get('deleteordercom/{idorco}',[PurchaseOrderController::class,'deleteordercom'])->name('deleteordercom');
 Route::get('/autorizar/{idorco}',[PurchaseOrderController::class,'autorizar'])->name('autorizar');
 
@@ -107,6 +120,19 @@ Route::post('subgroupaccount2/{idgru}', [PayController::class, 'subgroupaccount2
 Route::post('accountname2/{idsgr}', [PayController::class, 'accountname2']);
 Route::post('subaccountname2/{idgcu}', [PayController::class, 'subaccountname2']);
 
+//retenciones iva
+Route::get('listpay',[RetentionController::class,'index'])->name('listpay');
+Route::get('createretention/{idorpa}/{idprov}',[RetentionController::class,'create'])->name('createretention');
+Route::post('storeretention',[RetentionController::class,'store'])->name('storeretention');
+Route::get('retentionpdf',[RetentionController::class,'pdf'])->name('retentionpdf');
+
+//ISLR
+Route::get('findagent',[RetentionIslrController::class,'index'])->name('findagent');
+Route::post('listreten',[RetentionIslrController::class,'listreten'])->name('listreten');
+Route::get('createislr/{idorpa}/{idprov}/{idage}', [RetentionIslrController::class, 'create'])->name('createislr');
+Route::post('storeislr',[RetentionIslrController::class,'store'])->name('storeislr');
+Route::get('tipcontribuyente', [RetentionIslrController::class, 'tipcontribuyente']);
+Route::post('tipagente/{tippersona}', [RetentionIslrController::class, 'tipagente']);
 
 Route::get('/excel/importar', [Importexcel::class, 'impportar'])->name('/excel/importar');
 Route::post('/excel/importarexcel', [Importexcel::class, 'importarexcel'])->name('/excel/importarexcel');

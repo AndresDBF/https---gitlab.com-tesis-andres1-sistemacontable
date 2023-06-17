@@ -116,9 +116,9 @@
                         <div class="col-xs-4 col-sm-4 col-md-4">
                             <label for="" class="form-label">Monto del Pago</label>
                             @if ($payorder->moneda != 'BS')
-                                <input type="text" name="amount" value="{{$detPayOrder->montototallocal}}" id="amount" class="form-control" tabindex="4" readonly="readonly">
-                            @else
                                 <input type="text" name="amount" value="{{$detPayOrder->montototalmoneda}}" id="amount" class="form-control" tabindex="4" readonly="readonly">
+                            @else
+                                <input type="text" name="amount" value="{{$detPayOrder->montototallocal}}" id="amount" class="form-control" tabindex="4" readonly="readonly">
                             @endif
                         </div>
                     </div>

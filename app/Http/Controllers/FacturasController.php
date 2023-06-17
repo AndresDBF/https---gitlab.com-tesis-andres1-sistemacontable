@@ -12,6 +12,7 @@ use App\Models\DetFact;
 use App\Models\DescripcionFactura;
 use App\Models\Moneda;
 use Carbon\Carbon;
+use Facade\FlareClient\Http\Exceptions\InvalidData;
 use Illuminate\Support\Facades\Session;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
 use Illuminate\Support\Facades\DB;
@@ -65,12 +66,12 @@ class FacturasController extends Controller
                 
             }
            // $numing = $conceptoFact->idcfact;
-           $tippag = TipPago::where('tip_proceso','comprobante_ingreso')
+           $tippag = TipPago::where('tip_proceso','ingresos_gastos')
                             ->orderBy('descripcion')
                             ->get();
             $money = Moneda::all();
             $fecemi = Carbon::now()
-                            ->format('d/m/y');
+                            ->format('Y-m-d');
         $customer = Cliente::where('idcli',$idcli)->first();
        
         if ($contrCli->montopaglocal > $invoice->sum_mtototallocal || $contrCli->montopagmoneda > $invoice->sum_mtototalmoneda) {
@@ -88,7 +89,6 @@ class FacturasController extends Controller
             'numfact' => 'required',
             'numctrl' => 'required',
         ]);
-        
         $idcli = intval($request->get('idcli'));
         $conceptFact = new ConceptoFact();
         $conceptFact->num_ing = $request->get('numreling');
@@ -111,10 +111,9 @@ class FacturasController extends Controller
         $detInvoice->stsfact = 'ACT';
         $detInvoice->fec_emi = $request->get('fecemi');
         $detInvoice->save();
-        $numConcept = $request->get('numconcept');
-        $tasa_cambio = $request->get('tasa_cambio');
-        $totGiro = $request->get('totgiro');
-        return redirect()->route('createdetinvoiceing', ['numConcept' => $numConcept, 'idcli' => $idcli, 'tasa_cambio' => $tasa_cambio]);
+        $numConcept = intval($request->get('numconcept'));
+        $tasa_cambio = floatval($request->get('tasa_cambio'));
+        return redirect()->route('createdetinvoiceing', ['numConcept' => $numConcept, 'idcli' => $idcli, 'tasa_cambio' => $tasa_cambio]);   
     }
     public function createdetinvoiceing($numConcept,$idcli,$tasa_cambio){
         $query = ConceptoFact::join('facturas','concepto_facts.idcfact','=','facturas.idcfact')
@@ -127,7 +126,6 @@ class FacturasController extends Controller
         $invoice = Factura::orderBy('idfact','desc')
                           ->take(1)
                           ->get();
-        
         $detInvoice = DetFact::orderBy('iddfact','desc')
                              ->take(1)
                              ->get();    
@@ -145,8 +143,12 @@ class FacturasController extends Controller
     public function storedetinvoiceing(Request $request){
         $numconcept = intval($request->get('numconcept'));
         $tasa_cambio = floatval($request->get('tasa_cambio'));
-        $tipmoney = Factura::where('idfact',$request->get('idfact'))->first();
+        $tipmoney = Factura::where('idfact',intval($request->get('idfact')))->first();
+        $contrCli = ContrCli::select('montopaglocal','montopagmoneda')
+                            ->where('idcli',intval($tipmoney->idcli))
+                            ->first();
         if ($request->get('numconcept') == 1){
+            
             $amountUnit = floatval($request->get('amountUnit_0'));
             $amountTotal = floatval($request->get('total-amount0'));
             
@@ -154,18 +156,30 @@ class FacturasController extends Controller
             $conceptFact->idfact = $request->get('idfact');
             $conceptFact->descripcion = $request->get("concept_0");
             if ($tipmoney->moneda == 'EUR' || $tipmoney->moneda == 'USD') {
+                if (floatval($request->get('total-amount0')) > floatval($contrCli->montopagmoneda)) {
+                    Session::flash('more','el monto supera el total del contrato');
+                    return redirect()->route('createdetinvoiceing',['numConcept' => $numconcept, 'idcli' => intval($tipmoney->idcli), 'tasa_cambio' => $tasa_cambio]);
+                }
                 $conceptFact->montounitariolocal = $amountUnit * $tasa_cambio;
                 $conceptFact->monto_unitariomoneda = $amountUnit;
                 $conceptFact->montobienlocal = $amountTotal * $tasa_cambio;
                 $conceptFact->monto_bienmoneda = $amountTotal;
             }
             elseif ($tipmoney->moneda == 'COP') {
+                if (floatval($request->get('total-amount0')) > floatval($contrCli->montopagmoneda)) {
+                    Session::flash('more','el monto supera el total del contrato');
+                    return redirect()->route('createdetinvoiceing',['numConcept' => $numconcept, 'idcli' => intval($tipmoney->idcli), 'tasa_cambio' => $tasa_cambio]);
+                }
                 $conceptFact->montounitariolocal = $amountUnit / $tasa_cambio;
                 $conceptFact->monto_unitariomoneda = $amountUnit;
                 $conceptFact->montobienlocal = $amountTotal / $tasa_cambio;
                 $conceptFact->monto_bienmoneda = $amountTotal;
             }
             else{
+                if (floatval($request->get('total-amount0')) > floatval($contrCli->montopaglocal)) {
+                    Session::flash('more','el monto supera el total del contrato');
+                    return redirect()->route('createdetinvoiceing',['numConcept' => $numconcept, 'idcli' => intval($tipmoney->idcli), 'tasa_cambio' => $tasa_cambio]);
+                }
                 $conceptFact->montounitariolocal = $amountUnit;
                 $conceptFact->monto_unitariomoneda = 0;
                 $conceptFact->montobienlocal = $amountTotal;
@@ -173,6 +187,7 @@ class FacturasController extends Controller
             }
             $conceptFact->save();
         }else{
+            
             for ($i=0; $i < $numconcept; $i++) { 
                 $amountUnit = floatval($request->get("amountUnit_" . $i));
                 $amountTotal = floatval($request->get("total-amount" . $i));
@@ -199,6 +214,15 @@ class FacturasController extends Controller
                 }
                 
                 $conceptFact->save();
+
+            }
+            $descripcionFactura = DescripcionFactura::where('idfact', $conceptFact->idfact)
+                                                    ->selectRaw('SUM(monto_bienmoneda) as total_monto_bienmoneda, SUM(montobienlocal) as total_montobienlocal')
+                                                    ->first();
+            if (floatval($descripcionFactura->total_monto_bienmoneda > $contrCli->montopagmoneda)  ||  floatval($descripcionFactura->total_montobienlocal >$contrCli->montopaglocal)) {
+                $descripcionFactura = DescripcionFactura::where('idfact', $conceptFact->idfact)->delete();
+                Session::flash('more','el monto supera el total del contrato');
+                return redirect()->route('createdetinvoiceing',['numConcept' => $numconcept, 'idcli' => intval($tipmoney->idcli), 'tasa_cambio' => $tasa_cambio]);
             }
         }
         $idfact = $conceptFact->idfact; 
@@ -247,11 +271,15 @@ class FacturasController extends Controller
     public function deleteInvoice($idfact){
         $conceptInvoice = DescripcionFactura::where('idfact',$idfact)->delete();
         $detInvoice = DetFact::where('idfact',$idfact)->delete();
+        $invoice = Factura::where('idfact',$idfact)->first();
+        $idcli = Cliente::select('idcli')
+                        ->where('idcli',intval($invoice->idcli))
+                        ->first();
         $invoice = Factura::where('idfact',$idfact)->delete();
         $conceptFact = ConceptoFact::orderBy('created_at','desc')
                                     ->take(1)
                                     ->forceDelete();
-        return redirect()->route('createinvoiceing');
+        return redirect()->route('createinvoiceing',$idcli);
     }
     public function deletefact($idfact,$idcfact){
         $conceptInvoice = DescripcionFactura::where('idfact',$idfact)->delete();

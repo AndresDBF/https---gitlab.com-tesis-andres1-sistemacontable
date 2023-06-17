@@ -331,40 +331,31 @@ return [
             'label_color' => 'success',
         ], */
         [
+            'text'        => 'Giros de Cobro',
+            'url'         => 'findcustomer',
+            'icon'        => 'fas fa-fw fa-file-invoice-dollar',
+            'label_color' => 'success',
+            'url'  => 'findcustomer',
+        
+        ],
+        [
             'text'        => 'Ingresos',
             'url'         => 'seat',
             'icon'        => 'fas fad fa-hand-holding-usd',
             'label_color' => 'success',
             'submenu' => [
                 [
-                    'text' => 'Comprobante de Ingreso',
+                    'text' => 'Recibo de Pago',
                     'url'  => 'searchInvoice',
                 ],
                 [
-                    'text' => 'Ingreso',
+                    'text' => 'Factura Legal',
                     'url'  => 'searchIncome',
                 ],
 
             ],
         ],
         
-        [
-            'text'        => 'Facturación',
-            'url'         => 'factura',
-            'icon'        => 'fas fa-fw fa-file-invoice-dollar',
-            'label_color' => 'success',
-            'submenu' => [
-                [
-                    'text' => 'Factura de Ingreso',
-                    'url'  => 'findcustomer',
-                ],
-                [
-                    'text' => 'Orden de Pago',
-                    'url'  => 'registerorder',
-                ],
-
-            ],
-        ],
         [
             'text'        => 'Orden de Compra',
             'url'         => 'reportorder',
@@ -397,15 +388,44 @@ return [
                     'url'  => '#',
                 ],
                 [
-                    'text' => 'Registrar Pago',
-                    'url'  => 'registerpay',
+                    'text' => 'Orden de Pago',
+                    'url'  => 'registerorder',
                 ],
                 [
-                    'text' => 'Retenciones',
+                    'text' => 'Registrar Pago',
+                    'url'  => 'registerpay',
+                ],             
+            ],
+        ],
+        [
+            'text'        => 'Nomina',
+            'url'         => '#',
+            'icon'        => 'fas fa-user-circle',
+            'label_color' => 'success',
+            'submenu' => [
+                [
+                    'text' => 'Registrar Empleado',
                     'url'  => '#',
                 ],
-                
-
+                [
+                    'text' => 'Pago de Nomina',
+                    'url'  => '#',
+                ],
+            ],
+        
+        ],
+        [
+            'text'        => 'Retenciones',
+            'icon'        => 'fas fa-money-bill',
+            'submenu' => [
+                [
+                    'text' => 'Impuestos Sobre la Renta',
+                    'url'  => 'findagent',
+                ],
+                [
+                    'text' => 'Impuestos al Valor Agregado',
+                    'url'  => 'listpay',
+                ],
             ],
         ],
         [
@@ -422,6 +442,7 @@ return [
                     'text' => 'Proyección de Gastos',
                     'url'  => '#',
                 ],
+                
             ],
         ],
         [
@@ -434,9 +455,18 @@ return [
         ],
         ['header' => 'account_settings'],
         [
-            'text' => 'profile',
-            'url'  => 'admin/settings',
+            'text' => 'Usuarios',
+            'url'  => 'users',
             'icon' => 'fas fa-fw fa-user',
+            'submenu' => [
+                [
+                    'text' => 'Lista de Roles',
+                    'url'  => 'roles',
+                ],[
+                    'text' => 'Lista de Usuarios',
+                    'url'  => 'users',
+                ],
+            ],
         ],
         [
             'text' => 'change_password',

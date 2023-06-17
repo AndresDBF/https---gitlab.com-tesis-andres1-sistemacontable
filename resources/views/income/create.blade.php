@@ -198,7 +198,7 @@
             <div class="well">
                 <div class="row">
                     <div class="col-xs-6 col-sm-6 col-md-6">
-                        <h3 class="text-center">Cuenta Debe</h3>
+                        <h3 class="text-center">Cuenta Debito</h3>
                           <div class="form-group">
                           <label for="groupaccount">Grupo de Cuenta</label>
                           <select name = 'groupaccount1' id ="groupaccount1" class="custom-select">
@@ -227,7 +227,7 @@
                           </div>
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6">
-                        <h3 class="text-center">Cuenta Haber</h3>
+                        <h3 class="text-center">Cuenta Credito</h3>
                           <div class="form-group">
                           <label for="groupaccount">Grupo de Cuenta</label>
                           <select name = 'groupaccount2' id ="groupaccount2" class="custom-select">

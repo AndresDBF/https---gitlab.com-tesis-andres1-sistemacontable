@@ -1,0 +1,177 @@
+body{
+    margin: 15px 20px 15px 20px;
+}
+
+.img-principal {
+    position: absolute;
+    margin: 40px;
+
+}
+
+.primer-bloque{
+    position: relative;
+    top: 45px;
+    text-align: center;
+}
+
+.titulo{
+    font-size: 15px;
+    margin-bottom: 10px;
+    margin-left:180px ;
+    margin-right:300px ;
+}
+
+div>span{
+    text-align: center;
+    position: relative;
+    bottom: 20px;
+    font-size: 12px;
+}
+
+.text{
+    font-size: 15px;
+    margin-left:300px ;
+    margin-right:550px ;
+}
+
+input {
+    border: transparent;
+}
+
+.label{
+    font-weight: bolder;
+    position: absolute;
+    top: 5px;
+    right: 0px;
+    margin-left: 950px;
+    padding-bottom: 5%;
+    
+}
+
+.Nro-de-comprobante{
+    position: relative;
+    border: 2px solid black;
+    margin-left: 160px;
+    margin-right: 0px;
+    padding-bottom: 20px;
+    padding-top: 5px;
+}
+
+.Fec-emisión,
+.Per-fiscal {
+    text-align: left;
+    border: 2px inset black;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    top: 80px;
+    right: 200px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    margin-left: 16px;
+    margin-right: 0px;
+}
+
+.Segundo-bloque {
+    border: 2px inset black;
+    position: relative;
+    margin-top: 65px;
+    margin-bottom: 5px;
+}
+
+.Nombre-agente,
+.direc-agente,
+.Nombre-sujeto,
+.direc-sujeto {
+    padding: 6px 5px 6px 5px;
+    text-align: left;
+    
+}
+
+.registro-agente {
+    position: absolute;
+    top: 0px;
+    margin-left: 620px;
+    padding: 5px;
+    text-align: right;
+
+}
+
+#Nom-agente,
+#direccion,
+#Nom-sujetc,
+#direccion-sujetc {
+    width: 450px;
+}
+
+#registro {
+    text-align: center;
+    width: 532px;
+}
+
+.Tercer-bloque{
+    border: 2px inset black;
+    position: relative;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.registro-sujeto{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 5px;
+    text-align: right;
+}
+
+#registro-sujetc {
+    text-align: center;
+    width: 490px;
+}
+
+.tabla{
+    font-size: 15px;
+    margin-top: 25px;
+    margin-right: 20px ;
+    margin-left: 20px;
+}
+
+table{
+    margin-top:30px;
+}
+
+th {
+    border-bottom: 2px solid black;
+}
+
+.pie-pagina{
+    display: flex;
+    position: relative;
+    border: 2px solid black;
+    margin-top: 400px;
+    bottom: 40px;
+    
+}
+
+.agente{
+    position:relative ;
+    left: 130px;
+    padding: 20px 0px 30px 0px;
+    
+}
+
+.sujeto20{
+    padding: 20px 00px 30px 0px;
+    border-left: 2px solid black;
+    position: relative; 
+    left: 190px;
+    margin-right: 90px;
+    padding-left: 6%;
+}
+
+.Fecha-retencion{
+    border-left: 2px solid black;
+    position:relative;  
+    left: 680px;
+    padding: 20px 0px 40px 30px;
+}

@@ -27,8 +27,8 @@ class CreateOrdenPagosTable extends Migration
             $table->string('stsorpa',3);
             $table->string('numfact');
             $table->string('numctrl');
-            $table->date('fec_emi')->format('d/y/m');
-            $table->date('fec_vencimiento')->format('d/y/m');
+            $table->date('fec_emi')->format('Y-m-d');
+            $table->date('fec_vencimiento')->format('Y-m-d');
             $table->string('tippago');
             $table->string('moneda',3);
             $table->timestamps();

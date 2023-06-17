@@ -25,7 +25,7 @@ class PurchaseOrderController extends Controller
     public function reportorder(){
         $registerPurchase = Proveedor::join('orden_compras','proveedors.idprov','=','orden_compras.idprov')
                                      ->select('orden_compras.idorco','orden_compras.numorden','proveedors.nombre','proveedors.identificacion',
-                                     'orden_compras.stsorden','orden_compras.tiempo_pago')
+                                     'orden_compras.stsorden','orden_compras.tiempo_pago','proveedors.tipid','proveedors.tiprif')
                                      ->where('orden_compras.stsorden','ACT')
                                      ->orderBy('proveedors.nombre','asc')
                                      ->get();
@@ -72,18 +72,26 @@ class PurchaseOrderController extends Controller
             'days' => 'required|numeric',
         ]);
         
-        $numConcept = $request->get('numconcept');
+        $numConcept = intval($request->get('numconcept'));
+        $tasa_cambio = floatval($request->get('tasa_cambio'));
         $purchase = new OrdenCompra();
         $purchase->idprov = $request->get('idprov');
         $purchase->numorden = $request->get('numorden');
         $purchase->stsorden = 'ACT';
         $purchase->tiempo_pago = $request->get('days');
+        if (strlen($request->get('money')) > 3) {
+            Session::flash('error','Debe seleccionar un tipo de moneda');
+            return redirect()->route('findsupplier');
+        }
+        $purchase->moneda = $request->get('money');
         $purchase->save();    
+
+
         
-        return redirect()->route('createdetorder',$numConcept);
+        return redirect()->route('createdetorder',['numConcept' => $numConcept, 'tasa_cambio' => $tasa_cambio]);
     }
 
-    public function createdetorder($numConcept){
+    public function createdetorder($numConcept,$tasa_cambio){
         $purchase = OrdenCompra::orderBy('idorco','desc')
                                ->take(1)
                                ->get();
@@ -94,26 +102,26 @@ class PurchaseOrderController extends Controller
                              ->get();
         $money = Moneda::all();
         $cantConcept = $numConcept;
-        return view('purchase.detorder',compact('purchase','cantConcept','idorco','money'))
+        return view('purchase.detorder',compact('purchase','cantConcept','idorco','money','tasa_cambio'))
                 ->with('supplier',$supplier[0])
                 ->with('purchase',$purchase[0]);
     }
 
     public function storedetpurchase(Request $request){
-        
+        $numConcept = intval($request->get('numconcept'));
         OrdenCompra::where('idorco',$request->get('idorco'))->update([
             'moneda' => $request->get('money')
         ]);
-        
-        $numConcept = intval($request->get('numconcept'));
-        $taxes = 0;
-        $amountTot = 0;
-        $totPurchase = 0;
+        if (strlen($request->get('money')) > 3) {
+            Session::flash('error','Seleccione un tipo de moneda');
+            return redirect()->route('createdetorder',$numConcept);
+        }
         $tasa_cambio = floatval($request->get('tasa_cambio'));
         if ($tasa_cambio == null && ($request->get('money') != 'BS')) {
            Session::flash('error','debe seleccionar una tasa de cambio');
            return redirect()->route('createdetorder',$numConcept);
-        } else {
+        } 
+        else {
             if ($numConcept == 1  ) {
                 $amountUnit = floatval($request->get('amountUnit_0'));
                 $amountTotal = floatval($request->get('total-amount0'));
@@ -131,12 +139,9 @@ class PurchaseOrderController extends Controller
                         $detPurchase->save();
                         $taxeslocal =  $detPurchase->montobienlocal * 0.16;
                         $taxesmoneda = $detPurchase->montobienmoneda * 0.16;
-                        $amountTotlocal = $taxeslocal + $detPurchase->montobienlocal;
-                        $amountTotmoneda = $taxesmoneda + $detPurchase->montobienmoneda;
+                        
                     }
                     else {
-                           
-
                         $detPurchase->montounitlocal = $amountUnit / $tasa_cambio;
                         $detPurchase->montounitmoneda =  $amountUnit;
                         $detPurchase->montobienlocal = $amountTotal / $tasa_cambio;
@@ -145,8 +150,7 @@ class PurchaseOrderController extends Controller
                         $detPurchase->save();
                         $taxeslocal =  $detPurchase->montobienlocal * 0.16;
                         $taxesmoneda = $detPurchase->montobienmoneda * 0.16;
-                        $amountTotlocal = $taxeslocal + $detPurchase->montobienlocal;
-                        $amountTotmoneda = $taxesmoneda + $detPurchase->montobienmoneda;
+                       
                     }
                     
                 }
@@ -159,25 +163,39 @@ class PurchaseOrderController extends Controller
                     $detPurchase->save();
                     $taxeslocal =  0;
                     $taxesmoneda = $detPurchase->montobienmoneda * 0.16;
-                    $amountTotlocal = 0;
-                    $amountTotmoneda = $taxesmoneda + $detPurchase->montobienmoneda;
+                    
                 }
                
                 $idorco = $detPurchase->idorco;
-                $sumAmountlocal = DetalleOrdenCompra::where('idorco',$idorco)
+                if ($request->get('iva') == 'S') {
+                    $sumAmountlocal = DetalleOrdenCompra::where('idorco',$idorco)
                                                 ->sum('montobienlocal');
-                $sumAmountmoneda = DetalleOrdenCompra::where('idorco',$idorco)
-                                                ->sum('montobienmoneda');
-                $taxeslocal =  floatval($sumAmountlocal * 0.16);
-                $taxesmoneda = floatval($sumAmountmoneda * 0.16);
-                $totPurchaselocal = floatval($sumAmountlocal + $taxeslocal);   
-                $totPurchasemoneda = floatval($sumAmountmoneda + $taxesmoneda);   
-                DetalleOrdenCompra::where('idorco', $idorco)->update([
-                    'montoivalocal' => $taxeslocal,
-                    'montoivamoneda' => $taxesmoneda,
-                    'montototallocal' => $totPurchaselocal,
-                    'montototalmoneda' => $totPurchasemoneda
-                ]);
+                    $sumAmountmoneda = DetalleOrdenCompra::where('idorco',$idorco)
+                                                    ->sum('montobienmoneda');
+                    $taxeslocal =  floatval($sumAmountlocal * 0.16);
+                    $taxesmoneda = floatval($sumAmountmoneda * 0.16);
+                    $totPurchaselocal = floatval($sumAmountlocal + $taxeslocal);   
+                    $totPurchasemoneda = floatval($sumAmountmoneda + $taxesmoneda);   
+                    DetalleOrdenCompra::where('idorco', $idorco)->update([
+                        'montoivalocal' => $taxeslocal,
+                        'montoivamoneda' => $taxesmoneda,
+                        'montototallocal' => $totPurchaselocal,
+                        'montototalmoneda' => $totPurchasemoneda
+                    ]);
+                }
+                else {
+                    $sumAmountlocal = DetalleOrdenCompra::where('idorco',$idorco)
+                                                        ->sum('montobienlocal');
+                    $sumAmountmoneda = DetalleOrdenCompra::where('idorco',$idorco)
+                                                        ->sum('montobienmoneda');
+                    DetalleOrdenCompra::where('idorco', $idorco)->update([
+                    'montoivalocal' => 0,
+                    'montoivamoneda' => 0,
+                    'montototallocal' => $sumAmountlocal,
+                    'montototalmoneda' => $sumAmountmoneda
+                    ]);
+                }
+                
             }
             else {
                 
@@ -228,20 +246,34 @@ class PurchaseOrderController extends Controller
                     }
                    
                     $idorco = $detPurchase->idorco;
-                    $sumAmountlocal = DetalleOrdenCompra::where('idorco',$idorco)
+                    if ($request->get('iva') == 'S') {
+                        $sumAmountlocal = DetalleOrdenCompra::where('idorco',$idorco)
                                                     ->sum('montobienlocal');
-                    $sumAmountmoneda = DetalleOrdenCompra::where('idorco',$idorco)
-                                                    ->sum('montobienmoneda');
-                    $taxeslocal =  floatval($sumAmountlocal * 0.16);
-                    $taxesmoneda = floatval($sumAmountmoneda * 0.16);
-                    $totPurchaselocal = floatval($sumAmountlocal + $taxeslocal);   
-                    $totPurchasemoneda = floatval($sumAmountmoneda + $taxesmoneda);   
-                    DetalleOrdenCompra::where('idorco', $idorco)->update([
-                        'montoivalocal' => $taxeslocal,
-                        'montoivamoneda' => $taxesmoneda,
-                        'montototallocal' => $totPurchaselocal,
-                        'montototalmoneda' => $totPurchasemoneda
-                    ]);
+                        $sumAmountmoneda = DetalleOrdenCompra::where('idorco',$idorco)
+                                                        ->sum('montobienmoneda');
+                        $taxeslocal =  floatval($sumAmountlocal * 0.16);
+                        $taxesmoneda = floatval($sumAmountmoneda * 0.16);
+                        $totPurchaselocal = floatval($sumAmountlocal + $taxeslocal);   
+                        $totPurchasemoneda = floatval($sumAmountmoneda + $taxesmoneda);   
+                        DetalleOrdenCompra::where('idorco', $idorco)->update([
+                            'montoivalocal' => $taxeslocal,
+                            'montoivamoneda' => $taxesmoneda,
+                            'montototallocal' => $totPurchaselocal,
+                            'montototalmoneda' => $totPurchasemoneda
+                        ]);
+                    }
+                    else {
+                        $sumAmountlocal = DetalleOrdenCompra::where('idorco',$idorco)
+                                                            ->sum('montobienlocal');
+                        $sumAmountmoneda = DetalleOrdenCompra::where('idorco',$idorco)
+                                                            ->sum('montobienmoneda');
+                        DetalleOrdenCompra::where('idorco', $idorco)->update([
+                        'montoivalocal' => 0,
+                        'montoivamoneda' => 0,
+                        'montototallocal' => $sumAmountlocal,
+                        'montototalmoneda' => $sumAmountmoneda
+                        ]);
+                    }
                 }
             }
         }
@@ -271,7 +303,7 @@ class PurchaseOrderController extends Controller
         $conceptPurchase = DetalleOrdenCompra::where('idorco',$idorco)->delete();
         $Purchase = OrdenCompra::where('idorco',$idorco)->delete();
         
-        return redirect()->route('reportorder');
+        return redirect()->route('findsupplier');
     }
     public function deleteordercom($idorco){
         
@@ -281,7 +313,7 @@ class PurchaseOrderController extends Controller
     }
 
     public function autorizar($idorco){
-        $fecAuthorize = Carbon::now()->format('d/m/y');
+        $fecAuthorize = Carbon::now()->format('Y-m-d');
         $user = Auth::user();
         $username = $user->name;
     
@@ -290,7 +322,7 @@ class PurchaseOrderController extends Controller
             'fec_autoriza' => $fecAuthorize,
             'autorizacion' => $username
         ]);
-
+        Session::flash('auto','Se ha autorizado la orden de Compra');
         return redirect()->route('reportorder');
     }
 }

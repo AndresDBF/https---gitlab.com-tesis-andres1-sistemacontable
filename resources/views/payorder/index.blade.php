@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Orden de Compra')
+@section('title', 'Lista Compras Aprobadas')
 
 @section('content_header')
     <h1>Ordenes de Compra Aprobadas</h1>

@@ -52,12 +52,12 @@ class PayController extends Controller
         $valueIdorpa = $idorpa;
         $payorder = OrdenPago::where('idorpa',$idorpa)
                           ->first();   
-        $fecTransaction =  Carbon::now()->format('d/m/y');
+        $fecTransaction =  Carbon::now()->format('Y-m-d');
         $detPayOrder = DetalleOrdenPago::where('idorpa',$idorpa)
                                         ->first();
         $supplier = Proveedor::where('idprov',$idprov)->first();
         $money = Moneda::all();
-        $formPay = TipPago::where('tip_proceso','comprobante_ingreso')
+        $formPay = TipPago::where('tip_proceso','ingresos_gastos')
                           ->orderBy('descripcion')
                           ->get();
                           
@@ -80,32 +80,56 @@ class PayController extends Controller
                                 ->first();
         $idcta2 = CatgSubCuenta::where('idscu', $request->get('subaccountname2'))
                                 ->first();
+        
         $amount = floatval($request->get('amount'));
+        $amountTaxes = floatval($payOrder->montoivalocal);
         $tasa = $payOrder->tasa_cambio;
-        $seat = new Asiento();
-        $seat->fec_asi = $request->get('fecTransiction');
-        $seat->observacion = $request->get('observartion');
-        $seat->idcta1 = $idcta1->idcta;
-        $seat->idcta2 = $idcta2->idcta;
-        $seat->descripcion = $request->get('description');
+        $seatAmount = new Asiento();
+        $seatAmount->fec_asi = $request->get('fecTransiction');
+        $seatAmount->observacion = $request->get('observation');
+        $seatAmount->idcta1 = $idcta1->idcta;
+        $seatAmount->idcta2 = $idcta2->idcta;
+        $seatAmount->descripcion = $request->get('description');
         if ($request->get('money') != 'BS') {
             if ($request->get('money') == 'USD' || $request->get('money') == 'EUR') {
-                $seat->monto_deb = $amount * $tasa;
-                $seat->monto_hab = $amount * $tasa;
+                $seatAmount->monto_deb = $amount * $tasa;
+                $seatAmount->monto_hab = $amount * $tasa;
             } else {
-                $seat->monto_deb = $amount / $tasa;
-                $seat->monto_hab = $amount / $tasa;
+                $seatAmount->monto_deb = $amount / $tasa;
+                $seatAmount->monto_hab = $amount / $tasa;
             }
         }
         else{
-            $seat->monto_deb = $amount;
-            $seat->monto_hab = $amount;
+            $seatAmount->monto_deb = $amount;
+            $seatAmount->monto_hab = $amount;
         }
-        $seat->save();
+        $seatAmount->save();
+
+        $seatTaxes = new Asiento();
+        $seatTaxes->fec_asi = $request->get('fecTransiction');
+        $seatTaxes->observacion = $request->get('observation');
+        $seatTaxes->idcta1 = 85;
+        $seatTaxes->idcta2 = 85;
+        $seatTaxes->descripcion = $request->get('description');
+        $seatTaxes->monto_deb = $amountTaxes;
+        $seatTaxes->monto_hab = $amountTaxes;
+        $seatTaxes->save();
+
+        $amountIgtf = $seatAmount->monto_deb * 0.03;
+
+        $seatIgtf = new Asiento();
+        $seatIgtf->fec_asi = $request->get('fecTransiction');
+        $seatIgtf->observacion = $request->get('observation');
+        $seatIgtf->idcta1 = 88;
+        $seatIgtf->idcta2 = 88;
+        $seatIgtf->descripcion = $request->get('description');
+        $seatIgtf->monto_deb = $amountIgtf;
+        $seatIgtf->monto_hab = $amountIgtf;
+        $seatIgtf->save();
 
         $proofPay = new ComprobantePago();
         $proofPay->idorpa = $request->get('idorpa');
-        $proofPay->idasi = $seat->idasi;
+        $proofPay->idasi = $seatAmount->idasi;
         $proofPay->numconfirm = $request->get('numconfirm');
         $proofPay->moneda = $request->get('money');
         if ($request->get('money') == 'USD' || $request->get('money') == 'EUR') {

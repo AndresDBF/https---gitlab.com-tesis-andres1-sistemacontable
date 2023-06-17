@@ -70,11 +70,11 @@ class ComprIngController extends Controller
         $invoice = Factura::where('idfact',$valueIdfact)
                           ->first();  
         $nameCli = Cliente::where('idcli',$idcli)->first();
-        $fecTransaction =  Carbon::now()->format('d/m/y');
+        $fecTransaction =  Carbon::now()->format('Y-m-d');
         $detInvoice = DetFact::where('idfact',$valueIdfact)
                              ->first();
         $money = Moneda::all();
-        $formPay = TipPago::where('tip_proceso','comprobante_ingreso')
+        $formPay = TipPago::where('tip_proceso','ingresos_gastos')
                           ->orderBy('descripcion')
                           ->get();
         return view('proof.create',compact('invoice','fecTransaction','nameCli','detInvoice','money','formPay','valueIdfact','valueIdcli'));

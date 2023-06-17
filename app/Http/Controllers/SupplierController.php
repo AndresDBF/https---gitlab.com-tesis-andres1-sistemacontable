@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CategoriaProveedor;
 use App\Models\Proveedor;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Pagination\Paginator;
 class SupplierController extends Controller
 {
@@ -44,8 +45,8 @@ class SupplierController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
+
         $this->validate($request,[
             
             'name' => 'required|regex:/^[A-Z][A-Z,a-z, ,á,é,í,ó,ú]+$/',
@@ -57,6 +58,14 @@ class SupplierController extends Controller
             'category' => 'required',
 
         ]);
+        if ($request->get('reten') == 'S' && $request->get('porcreten') == null) {
+            Session::flash('error','debe seleccionar el porcentaje retenido');
+            return redirect()->action([SupplierController::class, 'create']);
+
+        }
+        $porcreten = intval($request->get('porcreten'));
+        $porcreten = $porcreten / 100;
+
         $supplier = new Proveedor();
         $supplier->nombre = $request->get('name');
         $supplier->tipid = $request->get('tipid');
@@ -71,6 +80,8 @@ class SupplierController extends Controller
         $supplier->telefono = $request->get('phone');
         $supplier->correo = $request->get('email');
         $supplier->categoria = $request->get('category');
+        $supplier->indcontribuyente = $request->get('reten');
+        $supplier->porcentajereten = $porcreten;
         $supplier->save();
         return redirect('/supplier');
     }

@@ -17,7 +17,10 @@ class Proveedor extends Model
         'direccion',
         'telefono',
         'correo',
-        'categoria'
+        'categoria',
+        'indcontribuyente',
+        'porcentajereten'
+
 
     ];
 }

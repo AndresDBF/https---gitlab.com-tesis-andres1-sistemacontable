@@ -39,8 +39,8 @@ class PayOrderController extends Controller
     public function createpayorder($idprov, $idorco){
         $numegre = rand(100000,999999);
         $supplier = Proveedor::find($idprov);
-        $fecEmi = Carbon::now()->format('d/m/y');
-        $tippag = TipPago::where('tip_proceso','comprobante_ingreso')
+        $fecEmi = Carbon::now()->format('Y-m-d');
+        $tippag = TipPago::where('tip_proceso','ingresos_gastos')
                             ->orderBy('descripcion')
                             ->get();
         $money = Moneda::all();
@@ -50,6 +50,7 @@ class PayOrderController extends Controller
     }
 
     public function store(Request $request){
+        
         $this->validate($request,[
             'numfact' => 'required|numeric',
            // 'numctrl' => 'required|regex:/^\d{2}-\d{3}$/',
@@ -59,7 +60,7 @@ class PayOrderController extends Controller
             'identification' => 'required|numeric',
             'phone' => 'required',
             
-        ]);
+        ]); 
          
 
         $idprov = $request->get('idprov');
@@ -69,60 +70,52 @@ class PayOrderController extends Controller
             Session::flash('error','debe seleccionar una tasa de cambio');
             return redirect()->route('createpayorder',['idprov' => $idprov, 'idorco' => $idorco]);
         }
-        else{
-            $idorco = $request->get('idorco');
-            $idprov = $request->get('idprov');
-            $purchase = OrdenCompra::where('idorco',$idorco)->first();
-
-            //para sumar a la fecha de vencimiento de la factura
-            $fecemi = $request->get('fecemi');
-            $newFecemi = Carbon::createFromFormat('d/m/y',$fecemi);
-            $value = intval($purchase->tiempo_pago);
-            $fecven = $newFecemi->addDays($value);
         
-            $newFecven = $fecven->format('d/m/y');
+        $idorco = $request->get('idorco');
+        $idprov = $request->get('idprov');
+        $purchase = OrdenCompra::where('idorco',$idorco)->first();
 
+        //para sumar a la fecha de vencimiento de la factura
+        $fecemi = $request->get('fecemi');
+        $newFecemi = Carbon::createFromFormat('Y-m-d',$fecemi);
+        $value = intval($purchase->tiempo_pago);
+        $fecven = $newFecemi->addDays($value);
+    
+        $newFecven = $fecven->format('Y-m-d');
 
-
-
-            $payOrder = new OrdenPago();
-            $payOrder->idorco = $request->get('idorco');
-            $payOrder->idprov = $request->get('idprov');
-            $payOrder->num_egre = $request->get('numrelegre');
-            $payOrder->stsorpa = 'ACT';
-            $payOrder->numfact = $request->get('numfact');
-            $payOrder->numctrl = $request->get('numctrl');
-            $payOrder->fec_emi = $fecemi;
-            $payOrder->fec_vencimiento = $newFecven;
-            if($request->get('tip_pag') == 'Selecciona un tipo de pago'){
-                
-                Session::flash('errorpag','debe seleccionar un tipo de pago');
-                return redirect()->route('createpayorder',['idprov' => $idprov,'idorco' => $idorco]);
-            }else{
-                $payOrder->tippago = $request->get('tip_pag');
-            }
-
-            if($request->get('money') == 'Selecciona un tipo de moneda'){
-                
-                Session::flash('errormon','debe seleccionar un tipo de moneda');
-                return redirect()->route('createpayorder',['idprov' => $idprov,'idorco' => $idorco]);
-            }else{
-                $payOrder->moneda = $request->get('money');
-            }
-
-
-            $payOrder->save();
-            $numConcept = $request->get('numconcept');
-            OrdenCompra::where('idorco', $request->get('idorco'))->update([
-                'stsorden' => 'INC'
+        $payOrder = new OrdenPago();
+        $payOrder->idorco = $request->get('idorco');
+        $payOrder->idprov = $request->get('idprov');
+        $payOrder->num_egre = $request->get('numrelegre');
+        $payOrder->stsorpa = 'ACT';
+        $payOrder->numfact = $request->get('numfact');
+        $payOrder->numctrl = $request->get('numctrl');
+        $payOrder->fec_emi = $fecemi;
+        $payOrder->fec_vencimiento = $newFecven;
+        if($request->get('tip_pag') == 'Selecciona un tipo de pago'){
             
-            ]);
-
+            Session::flash('errorpag','debe seleccionar un tipo de pago');
+            return redirect()->route('createpayorder',['idprov' => $idprov,'idorco' => $idorco]);
+        }else{
+            $payOrder->tippago = $request->get('tip_pag');
         }
-        
-        
-        return redirect()->route('detorder',['numConcept' => $numConcept, 'tasa' => $tasa_cambio]);
 
+        if($request->get('money') == 'Selecciona un tipo de moneda'){
+            
+            Session::flash('errormon','debe seleccionar un tipo de moneda');
+            return redirect()->route('createpayorder',['idprov' => $idprov,'idorco' => $idorco]);
+        }else{
+            $payOrder->moneda = $request->get('money');
+        }
+
+        
+        $payOrder->save();
+        $numConcept = $request->get('numconcept');
+        OrdenCompra::where('idorco', $request->get('idorco'))->update([
+            'stsorden' => 'INC'
+        
+        ]);    
+        return redirect()->route('detorder',['numConcept' => $numConcept, 'tasa' => $tasa_cambio]);
     }
 
     public function detorder($numConcept,$tasa){
@@ -146,6 +139,7 @@ class PayOrderController extends Controller
     }
 
     public function storedetorder(Request $request){
+
         $tasa_cambio = floatval($request->get('tasa'));
         $numConcept = intval($request->get('numconcept'));
         $taxes = 0;

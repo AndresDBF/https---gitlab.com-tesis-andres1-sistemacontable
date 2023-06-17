@@ -12,12 +12,9 @@ class Factura extends Model
     protected $fillable = [
         'idfact',
         'idcfact',
-        'nomacre',
-        'dirfact',
-        'tipid',
-        'identificacion',
-        'tiprif',
-        'telefono',
-        'tip_pago',
+        'idcfact',	
+        'idcli',	
+        'tip_pago',	
+        'moneda'
     ];
 }

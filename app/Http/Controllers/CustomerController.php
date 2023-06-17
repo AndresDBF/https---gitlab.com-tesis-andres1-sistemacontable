@@ -69,7 +69,7 @@ class CustomerController extends Controller
             }
             /* $accounts = CatCuenta::orderBy('tipcta')
                                  ->get(); */
-            $tippag = TipPago::where('tip_proceso','contr_cli')
+            $tippag = TipPago::where('tip_proceso','contratos')
                              ->orderBy('descripcion')
                              ->get();
             $money = Moneda::all();

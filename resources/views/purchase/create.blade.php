@@ -72,7 +72,7 @@
               <label for="" class="well-lg form-label">Dias de Plazo de Pago</label>
               <input type="numeric" name="days" id="days"  class="form-control">
             </div>
-            <div class="col-xs-6 col-sm-6">
+            <div class="col-xs-3 col-sm-3">
               <label for="dni">Numero Total de Conceptos</label>
               <select name = 'numconcept' class="custom-select">
                   <option value="1">1</option>
@@ -82,6 +82,18 @@
                   <option value="5">5</option>
                 </select>
             </div>
+            <div class="col-xs-4 col-sm-4 col-md-4">
+              <div class="form-group">
+                <label for="dni">Moneda</label>
+                <select name = 'money' id="money-select" class="custom-select">
+                  <option value="select">Selecciona un tipo de pago</option>
+                    @foreach ($money as $mon)
+                        <option value="{{$mon->tipmoneda}}">{{$mon->descripcion}}</option>
+                    @endforeach
+                </select>
+              </div>
+            </div>
+            <input type="hidden" name="tasa_cambio" value="">
           </div>
         </div>
         <div class="well pb-3 mt-3">
@@ -96,5 +108,13 @@
 @stop
 
 @section('js')
-
+  <script>
+    document.getElementById('money-select').addEventListener('change', function() {
+        var selectedOption = this.value;
+        if (selectedOption != 'BS' && selectedOption != 'select') {
+            var tasaCambio = prompt('Ingrese la tasa de cambio:');
+            document.querySelector('input[name="tasa_cambio"]').value = tasaCambio;
+        }
+    });
+  </script>
 @stop

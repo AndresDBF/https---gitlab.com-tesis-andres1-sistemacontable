@@ -7,6 +7,11 @@
 @stop
 
 @section('content')
+    @if (session('more'))
+        <div class="alert alert-danger">
+            {{session('more')}}
+        </div>
+    @endif
     <div class="container"> 
         <div class="card">
             <div class="card-body pl-6">
@@ -173,7 +178,7 @@
                         <div class="col-xs-3 col-sm-3 col-md-3">
                             <label for="" class="form-label">Precio del Bien o Servicio</label>
                             @for ($i = 0; $i < $cantConcept; $i++)
-                                <input type="number" name="total-amount{{$i}}" id="total-amount{{$i}}" class="form-control text-decoration-none total-amount" tabindex="7" readonly>
+                                <input type="number" name="total-amount{{$i}}" id="total-amount{{$i}}" class="form-control text-decoration-none total-amount" tabindex="7" readonly="readonly">
                                 <br>
                             @endfor
                         </div>
