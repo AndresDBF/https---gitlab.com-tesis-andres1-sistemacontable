@@ -23,6 +23,7 @@ class CreateDetalleOrdenPagosTable extends Migration
             $table->foreign('idcon')
                   ->references('idcon')
                   ->on('concepto_ordens');
+            $table->string('indiva',1);
             $table->float('baseimponiblelocal',14,2);
             $table->float('baseimponiblemoneda',14,2);
             $table->float('montoivalocal',14,2);

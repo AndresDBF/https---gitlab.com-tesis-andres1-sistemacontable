@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -18,8 +18,9 @@ class CreateContrClisTable extends Migration
             $table->unsignedBigInteger('idcli')->nullable();
             $table->foreign('idcli')
                   ->references('idcli')
-                  ->on('clientes');
+                  ->on('clientes'); 
             $table->string('stscontr',3);
+            $table->string('ind_girosre',1);
             $table->string('tip_pag');
             $table->float('montopaglocal',14,2);
             $table->float('montopagmoneda',14,2);

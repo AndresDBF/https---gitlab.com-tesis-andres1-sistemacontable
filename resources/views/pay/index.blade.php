@@ -47,9 +47,10 @@
                             @break
                     @endswitch
                     @if ($pay->moneda != 'BS')
-                        <th>{{ $detPayOrder[$index]->montototallocal}}</th>
-                    @else
                         <th>{{ $detPayOrder[$index]->montototalmoneda}}</th>
+                    @else
+                        <th>{{ $detPayOrder[$index]->montototallocal}}</th>
+                        
                     @endif
                     
                     <td>

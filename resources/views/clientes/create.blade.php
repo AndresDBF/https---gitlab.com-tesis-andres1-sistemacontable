@@ -180,7 +180,7 @@
        });
     });
   </script>
-  <script src="{{asset('js/verifytippay.js')}}">
+  <script src="{{asset('js/process/verifytippay.js')}}">
     
 </script>
 

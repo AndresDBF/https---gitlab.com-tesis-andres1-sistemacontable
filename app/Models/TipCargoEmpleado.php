@@ -11,6 +11,7 @@ class TipCargoEmpleado extends Model
     protected $primaryKey = 'idcarg';
     protected $fillable = [
         'concepto_cargo',	
-        'tipcargo'
+        'tipcargo',
+        'sueldo_cargo'
     ];
 }

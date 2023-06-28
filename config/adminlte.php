@@ -304,7 +304,7 @@ return [
         // Sidebar items:
         [
             'type' => 'sidebar-menu-search',
-            'text' => 'search',
+            'text' => 'Buscar',
         ],
         [
             'text' => 'blog',
@@ -349,7 +349,7 @@ return [
                     'url'  => 'searchInvoice',
                 ],
                 [
-                    'text' => 'Factura Legal',
+                    'text' => 'Relación de Ingreso',
                     'url'  => 'searchIncome',
                 ],
 
@@ -380,14 +380,6 @@ return [
             'label_color' => 'success',
             'submenu' => [
                 [
-                    'text' => 'Impuestos',
-                    'url'  => '#',
-                ],
-                [
-                    'text' => 'Nomina',
-                    'url'  => '#',
-                ],
-                [
                     'text' => 'Orden de Pago',
                     'url'  => 'registerorder',
                 ],
@@ -399,20 +391,9 @@ return [
         ],
         [
             'text'        => 'Nomina',
-            'url'         => '#',
             'icon'        => 'fas fa-user-circle',
             'label_color' => 'success',
-            'submenu' => [
-                [
-                    'text' => 'Registrar Empleado',
-                    'url'  => '#',
-                ],
-                [
-                    'text' => 'Pago de Nomina',
-                    'url'  => '#',
-                ],
-            ],
-        
+            'url'  => 'payroll',
         ],
         [
             'text'        => 'Retenciones',
@@ -429,19 +410,23 @@ return [
             ],
         ],
         [
-            'text'        => 'Gastos Operativos',
-            'url'         => 'seat',
+            'text'        => 'Contabilidad',
             'icon'        => 'fas fad fa-credit-card',
             'label_color' => 'success',
             'submenu' => [
                 [
-                    'text' => 'Registro de Gastos',
-                    'url'  => '#',
+                    'text' => 'Proyección de Gastos',
+                    'url'  => 'proyectgast',
                 ],
                 [
-                    'text' => 'Proyección de Gastos',
-                    'url'  => '#',
+                    'text' => 'Libro Diario',
+                    'url'  => 'diarybook',
                 ],
+                [
+                    'text' => 'Cierre de Mes',
+                    'url'  => 'diarybook',
+                ],
+                
                 
             ],
         ],

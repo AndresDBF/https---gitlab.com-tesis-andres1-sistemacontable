@@ -15,7 +15,7 @@
     @endif
     <div class="card">
         <div class="card-body pl-6">
-        <h3 class="text-center fw-bolder pb-4">Ingresa la Identificación del Beneficiario de la Factura</h3>
+        <h3 class="text-center fw-bolder pb-4">Identificación del Beneficiario de la Factura</h3>
             <div class="well">
                 <div class="row">
                     <div class="col-xs-3 col-sm-6 col-md-4">
@@ -52,37 +52,37 @@
             <thead class="bd-primary text-dark">
                 <tr>
                     <th scope="col">Fecha de Emisión de Cobro</th>
-                    <th scope="col">Cliente</th>
+                    <th scope="col">Número de Factura</th>
                     <th scope="col">Forma de Pago</th>
                     <th scope="col">Monto Total de Factura</th>
                     <th scope="col">Seleccionar</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($findDetInvoice as $index => $detInvoice)
+                @foreach ($findDetInvoice as $invoice)
                     <tr>
-                        <td>{{ $detInvoice->fec_emi }}</td>
-                        <td>{{ $nameCli[$index]->nombre }}</td>
-                        @if ($detInvoice->tip_pago == 'EFE')
-                            <td>EFECTIVO</td>
-                        @elseif ($detInvoice->tip_pago == 'TRA')
+                        <td>{{ $invoice->fec_emi }}</td>
+                        <td>{{ $invoice->numfact }}</td>
+                        @if ($invoice->tip_pago == 'EFE')
+                            <td>EFECTIVO</td> 
+                        @elseif ($invoice->tip_pago == 'TRA')
                             <td>TRANSFERENCIA BANCARIA</td>
-                        @elseif ($detInvoice->tip_pago == 'PMO')
+                        @elseif ($invoice->tip_pago == 'PMO')
                             <td>PAGO MOVIL</td>
-                        @elseif ($detInvoice->tip_pago == 'TDE')
+                        @elseif ($invoice->tip_pago == 'TDE')
                             <td>TARJETA DE DEBITO</td>
                         @else
                             <td>TARJETA DE CREDITO</td>
                         @endif
 
-                        @if ($detInvoice->moneda != 'BS')
-                            <td>{{ $detInvoice->mtototalmoneda }}</td> 
+                        @if ($invoice->moneda != 'BS')
+                            <td>{{ $invoice->mtototalmoneda }}</td> 
                         @else
-                            <td>{{ $detInvoice->mtototallocal }}</td> 
+                            <td>{{ $invoice->mtototallocal }}</td> 
                         @endif
 
                         <td class="text-center">
-                            <a href="#" class="btn btn-info mb-2" onclick="confirmCreate('{{ route('createIng', ['idfact' => $findInvoice[$index]->idfact, 'idcli' => $customer->idcli]) }}')">
+                            <a href="#" class="btn btn-info mb-2" onclick="confirmCreate('{{ route('createIng', ['idfact' => $invoice->idfact, 'idcli' => $customer->idcli]) }}')">
                                 <i class="fas fa-plus-circle"></i>
                             </a>
                         </td>

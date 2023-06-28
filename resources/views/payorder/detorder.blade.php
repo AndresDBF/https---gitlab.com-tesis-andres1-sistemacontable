@@ -171,6 +171,15 @@
                                 <br>
                             @endfor
                         </div>
+                        <div class="col-xs-3 col-sm-3 col-md-3">
+                            <div class="form-group">
+                              <label for="dni">Aplicar I.V.A</label>
+                              <select name = 'iva' id="money-select" class="custom-select">
+                                <option value="S">SI</option>
+                                <option value="N">NO</option>
+                              </select>
+                            </div>
+                          </div>
                     </div>
                 </div>                                                
             </div>

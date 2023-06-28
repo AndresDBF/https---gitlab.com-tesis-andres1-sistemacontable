@@ -19,7 +19,8 @@
                 <th scope="col">ID</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Identificación</th>
-                <th scope="col">Status de Contrato</th>
+                <th scope="col">Moneda</th>
+                <th scope="col">Monto Total del Contrato</th>
                 <th scope="col">Tipo de Contrato</th>
                 <th scope="col">Acciones</th>
             </tr>
@@ -30,7 +31,13 @@
                     <th>{{$cli->idcli}}</th>
                     <th>{{$cli->nombre}}</th>
                     <th>{{$cli->tipid}}-{{$cli->identificacion}}-{{$cli->tiprif}}</th>
-                    <th>{{$cli->stscontr}}</th>
+                    <th>{{$cli->moneda}}</th>
+                    @if ($cli->moneda == 'BS')
+                        <th>{{$cli->montopaglocal}}</th>
+                    @else
+                        <th>{{$cli->montopagmoneda}}</th>
+                    @endif
+                   
                     @if ($cli->tip_pag == 'ANU')
                         <th>ANUAL</th>
                     @elseif($cli->tip_pag =='MEN')
@@ -70,7 +77,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, editar',
+                confirmButtonText: 'Sí, crear',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {

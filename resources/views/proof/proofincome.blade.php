@@ -52,39 +52,39 @@
             <thead class="bd-primary text-dark">
                 <tr>
                     <th scope="col">Fecha de Emision</th>
-                    <th scope="col">Cliente</th>
-                    <th scope="col">Identificacion</th>
+                    <th scope="col">Número de Factura</th>
+                    <th scope="col">Número de Control</th>
                     <th scope="col">Forma de Pago</th>
                     <th scope="col">Monto Total de Factura</th>
                     <th scope="col">Seleccionar</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($findDetInvoice as $index => $detInvoice)
+                @foreach ($findDetInvoice as $Invoice)
                     <tr>
-                        <th>{{ $detInvoice->fec_emi }}</th>
-                        <th>{{ $nameCli->nombre }}</th>
-                        <th>{{ $nameCli->tipid }}-{{ $nameCli->identificacion }}-{{ $nameCli->tiprif }}</th>
-                        @if ($findInvoice[$index]->tip_pago == 'EFE')
+                        <th>{{ $Invoice->fec_emi }}</th>
+                        <th>{{ $Invoice->numfact }}</th>
+                        <th>{{ $Invoice->numctrl }}</th>
+                        @if ($Invoice->tip_pago == 'EFE')
                             <th>EFECTIVO</th>
-                        @elseif ($findInvoice[$index]->tip_pago == 'TRA')
+                        @elseif ($Invoice->tip_pago == 'TRA')
                             <th>TRANSFERENCIA BANCARIA</th>
-                        @elseif ($findInvoice[$index]->tip_pago == 'PMO')
+                        @elseif ($Invoice->tip_pago == 'PMO')
                             <th>PAGO MOVIL</th>
-                        @elseif ($findInvoice[$index]->tip_pago == 'TDE')
+                        @elseif ($Invoice->tip_pago == 'TDE')
                             <th>TARJETA DE DEBITO</th>
                         @else
                             <th>TARJETA DE CREDITO</th>
                         @endif
 
-                        @if ($detInvoice->moneda != 'BS')
-                            <th>{{ $detInvoice->mtototalmoneda }}</th> 
+                        @if ($Invoice->moneda != 'BS')
+                            <th>{{ $Invoice->mtototalmoneda }}</th> 
                         @else
-                            <th>{{ $detInvoice->mtototallocal }}</th> 
+                            <th>{{ $Invoice->mtototallocal }}</th> 
                         @endif
 
                         <th class="text-center">
-                            <a href="#" class="btn btn-info mb-2" onclick="confirmCreate('{{ route('createIncome', ['idfact' => $findInvoice[$index]->idfact, 'idcli' => $nameCli->idcli]) }}')">
+                            <a href="#" class="btn btn-info mb-2" onclick="confirmCreate('{{ route('createIncome', ['idfact' => $Invoice->idfact, 'idcli' => $nameCli->idcli]) }}')">
                                 <i class="fas fa-plus-circle"></i>
                             </a>
                         </th>

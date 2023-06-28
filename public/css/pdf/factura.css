@@ -1,0 +1,127 @@
+body {
+    margin-top: 30px;
+    margin-right: 50px;
+    margin-bottom:30px;
+    margin-left: 50px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#img {
+    position:absolute;
+    left: 40px;
+    top: 35px;
+    bottom: 20px;
+
+}
+
+#title {
+    text-align: justify;
+    margin-left: 180px;
+}
+
+.nom-empresa {
+    text-align:justify;
+    margin-left: 170px;
+    margin-right: 1000px;
+
+}
+
+.border {
+    border-bottom: 5px inset gray;
+}
+
+.datos {
+    text-align: center;
+    margin-top: 45px;
+    font-size: 30px;
+    background-color: rgb(223, 221, 221);
+}
+
+.derecho {
+    position: absolute;
+    top: 280px;
+    right: 200px;
+    margin-bottom: 10px;
+}
+
+.control {
+    float: right;
+    margin-right: 120px;
+}
+
+div input {
+    border: transparent;
+    border-bottom: 1px inset gray;
+    margin-bottom: 2px;
+
+
+}
+
+form {
+    border: 5px inset gray;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.nombre {
+    margin-left: 50px;
+}
+
+.cedula {
+    margin-left: 150px;
+}
+
+.oficina {
+    margin-left: 145px;
+}
+
+.inter {
+    margin-left: 192px;
+
+}
+.gris {
+    background-color:rgb(223, 221, 221);
+}
+
+.table {
+    width: 100%;
+    border: 2px inset black;
+    border-radius: 10px;
+    margin-top: 4px;
+}
+
+.th, td {
+  background-size: 24px ;
+    
+    border: 2px inset black;
+}
+
+.borde-total {
+    float: right;
+    margin-top: 20px;
+    border: 2px inset grey;
+    border-radius: 10px ;
+    padding: 15px;
+}
+
+#total {
+ position: absolute;
+ margin-left: 5.3%;
+}
+
+#IVA {
+    position: absolute;
+    margin-left: 2%;
+}
+
+.los-input {
+    position: absolute;
+    margin-top: 10%;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    padding-left: 10px;
+}
+.los-input {
+    border: 3px inset grey;
+    border-radius: 10px;
+}

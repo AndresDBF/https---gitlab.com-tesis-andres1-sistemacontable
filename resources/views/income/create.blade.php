@@ -3,7 +3,7 @@
 @section('title', 'Ingreso')
 
 @section('content_header')
-    <h1>Creació de Ingreso</h1>
+    <h1>Creación de Ingreso</h1>
 @stop
 
 @section('content')
@@ -89,7 +89,7 @@
                 <div class="row">
                     <div class="col-xs-3 col-sm-3 col-md-3">
                         <label for="" class="form-label">Fecha de Transacción</label>
-                        <input type="text" name="fecTransiction" value="{{$detProof->fec_trans}}" id="fecTransiction" readonly="readonly" class="form-control text-decoration-none text-center">
+                        <input type="text" name="fecTransiction" value="{{$proofIncome->fec_trans}}" id="fecTransiction" readonly="readonly" class="form-control text-decoration-none text-center">
                     </div>
                     <div class="col-xs-3 col-sm-3 col-md-3">
                         <label for="" class="form-label">Fecha de Ingreso</label>
@@ -101,7 +101,7 @@
                     </div>
                     <div class="col-xs-3 col-sm-3 col-md-3">
                         <label for="" class="form-label">Numero de factura</label>
-                        <input type="text" name="numfact" value="{{$detInvoice->numfact}}" id="numfact" readonly="readonly" class="form-control text-decoration-none">
+                        <input type="text" name="numfact" value="{{$proofIncome->numfact}}" id="numfact" readonly="readonly" class="form-control text-decoration-none">
                     </div>
                 </div>
             </div>
@@ -114,16 +114,16 @@
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <label for="" class="">Forma de Pago</label>
                         <select name="formPay" class="custom-select">
-                            @if ($detProof->formpago == "EFE")
-                                <option value="{{$detProof->formpago}}" readonly="readonly" >EFECTIVO</option>
-                            @elseif ($detProof->formpago == "TRA")
-                                <option value="{{$detProof->formpago}}" readonly="readonly" >TRANSFERENCIA BANCARIA</option>
-                            @elseif ($detProof->formpago == "PMO")
-                                <option value="{{$detProof->formpago}}" readonly="readonly" >PAGO MOVIL</option>
-                            @elseif ($detProof->formpago == "TDE")
-                                <option value="{{$detProof->formpago}}" readonly="readonly" >TARJETA DE DEBITO</option>    
-                            @elseif($detProof->formpago == "TRC")
-                                <option value="{{$detProof->formpago}}">TARJETA DE CREDITO</option>    
+                            @if ($proofIncome->formpago == "EFE")
+                                <option value="{{$proofIncome->formpago}}" readonly="readonly" >EFECTIVO</option>
+                            @elseif ($proofIncome->formpago == "TRA")
+                                <option value="{{$proofIncome->formpago}}" readonly="readonly" >TRANSFERENCIA BANCARIA</option>
+                            @elseif ($proofIncome->formpago == "PMO")
+                                <option value="{{$proofIncome->formpago}}" readonly="readonly" >PAGO MOVIL</option>
+                            @elseif ($proofIncome->formpago == "TDE")
+                                <option value="{{$proofIncome->formpago}}" readonly="readonly" >TARJETA DE DEBITO</option>    
+                            @elseif($proofIncome->formpago == "TRC")
+                                <option value="{{$proofIncome->formpago}}">TARJETA DE CREDITO</option>    
                             @endif
                         </select>
                     </div>
@@ -159,15 +159,24 @@
             </div>
             <div class="mb-3 mt-3">
                 <label for="" class="form-label">Por Concepto de</label>
+                
+                @if($errors->first('byconcept'))
+                    <p class="text-danger">{{$errors->first('byconcept')}}</p>
+                @endif
                 <input type="text" name="byconcept" id="byconcept" class="form-control" tabindex="5">
             </div>
             <div class="mb-3 mt-3">
                 <label for="" class="form-label">Descripción de Comprobante de Ingreso</label>
-                <textarea class="form-control" name="description" aria-valuemax="{{$detProof->descripcion}}" id="description" tabindex="6"></textarea>
+                @if($errors->first('descriptioni'))
+                    <p class="text-danger">{{$errors->first('descriptioni')}}</p>
+                @endif
+                <textarea class="form-control" name="descriptioni" aria-valuemax="{{$proofIncome->descripcion}}" id="description" tabindex="6"></textarea>
             </div>
-            <input type="hidden" name="iddcomp" id="iddcomp" value="{{$detProof->iddcomp}}">
-            <input type="hidden" name="idcli" id="iddfact" value="{{$customer->idcli}}">
+            <input type="hidden" name="iddcomp" id="iddcomp" value="{{$proofIncome->iddcomp}}">
+            <input type="hidden" name="idcli" id="idcli" value="{{$customer->idcli}}">
             <input type="hidden" name="iddfact" id="iddfact" value="{{$detInvoice->iddfact}}">
+            <input type="hidden" name="tasa" id="tasa" value="{{$proofIncome->tasa_cambio}}">
+            <input type="hidden" name="montoasiento" id="montoasiento" value="{{$detInvoice->mtolocal}}">
 
             
            {{--  <div class="well pb-3 mt-3">
@@ -259,10 +268,16 @@
             </div>
             <div class="mb-3">
               <label for="recipient-name" class="col-form-label">Observacion</label>
+              @if($errors->first('observation'))
+                <p class="text-danger">{{$errors->first('observation')}}</p>
+              @endif
               <input type="text" class="form-control" name="observation" id="observation">
             </div>
             <div class="mb-3">
               <label for="message-text" class="col-form-label">Descripcion</label>
+              @if($errors->first('description'))
+                <p class="text-danger">{{$errors->first('description')}}</p>
+              @endif
               <textarea class="form-control" name="description" id="description"></textarea>
             </div>
         </div>
@@ -287,7 +302,7 @@
     })
   </script>
   {{-- scripts js --}}
-  <script src="{{asset('js/seat.js')}}">
+  <script src="{{asset('js/process/seat.js')}}">
   
   </script>
   <script>// Obtener los elementos select y input

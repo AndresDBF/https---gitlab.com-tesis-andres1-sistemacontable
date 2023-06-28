@@ -24,7 +24,7 @@ class CreateProveedorsTable extends Migration
             $table->string('correo');
             $table->string('categoria');
             $table->string('indcontribuyente',1);
-            $table->floatval('porcentajereten',14,2);
+            $table->float('porcentajereten',14,2);
             $table->timestamps();
         });
     }

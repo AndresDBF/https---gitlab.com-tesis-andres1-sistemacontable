@@ -17,6 +17,7 @@ class CreateTipCargoEmpleadosTable extends Migration
             $table->id('idcarg');
             $table->string('concepto_cargo');
             $table->string('tipcargo');
+            $table->float('sueldo_cargo',14,2);
             $table->timestamps();
         });
     }

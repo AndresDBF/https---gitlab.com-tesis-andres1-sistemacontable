@@ -241,9 +241,9 @@
     myInput.focus()
   })
 </script>
-<script src="{{asset('js/retentionislr.js')}}"></script>
-<script src="{{asset('js/accountcredit.js')}}"></script>
-<script src="{{asset('js/accountdebit.js')}}"></script>
+<script src="{{asset('js/process/retentionislr.js')}}"></script>
+<script src="{{asset('js/process/accountcredit.js')}}"></script>
+<script src="{{asset('js/process/accountdebit.js')}}"></script>
 <script>
     function confirmAsi(url) {
         Swal.fire({

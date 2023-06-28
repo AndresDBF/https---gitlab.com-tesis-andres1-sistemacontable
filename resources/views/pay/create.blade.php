@@ -24,6 +24,7 @@
                     <input type="hidden" name="idorpa" value="{{$valueIdorpa}}">
                     <input type="hidden" name="idprov" value="{{$valueIdprov}}">
                     <input type="hidden" name="tasa_cambio" value="{{$detPayOrder->tasa_cambio}}">
+                    <input type="hidden" name="indiva" value="{{$detPayOrder->indiva}}">
                     <div class="mb-3">
                         <label for="" class="form-label">Nombre del Proveedor</label>
                         <input type="text" name="name" id="name" value="{{$supplier->nombre}}" class="form-control" readonly="readonly">
@@ -97,18 +98,44 @@
                         <div class="col-xs-4 col-sm-4 col-md-4">
                             <label for="" class="">Forma de Pago</label>
                             <select name="formPay" class="custom-select" id="form-pay-select">
-                                @foreach ($formPay as $pay)
-                                    <option value="{{ $pay->tippago }}">{{ $pay->descripcion }}</option>
-                                @endforeach  
+                                @switch($payorder->tippago)
+                                    @case('EFE')
+                                        <option value="{{ $payorder->tippago }}">EFECTIVO</option>
+                                        @break
+                                    @case('PMO')
+                                        <option value="{{ $payorder->tippago }}">PAGO MOVIL</option>
+                                        @break
+                                    @case('TRA')
+                                        <option value="{{ $payorder->tippago }}">TRANSFERENCIA BANCARIA</option>
+                                        @break
+                                    @case('TDE')
+                                        <option value="{{ $payorder->tippago }}">TARJETA DE DEBITO</option>
+                                        @break
+                                    @case('TCR')
+                                        <option value="{{ $payorder->tippago }}">TARJETA DE CREDITO</option>
+                                        @break                                        
+                                @endswitch
+                                
                             </select>
                         </div>
                         
                         <div class="col-xs-4 col-sm-4 col-md-4">
                             <label for="" class="form-label">Moneda</label>
                             <select name="money" class="custom-select" id="money-select">
-                                @foreach ($money as $mon)
-                                    <option value="{{ $mon->tipmoneda }}">{{ $mon->descripcion }}</option>
-                                @endforeach
+                                @switch($payorder->moneda)
+                                    @case('USD')
+                                        <option value="{{ $payorder->moneda }}">DOLAR ESTADOUNIDENSE</option>
+                                        @break
+                                    @case('BS')
+                                        <option value="{{ $payorder->moneda }}">BOLIVARES</option>
+                                        @break
+                                    @case('EUR')
+                                        <option value="{{ $payorder->moneda }}">EUROS</option>
+                                        @break
+                                    @case('COP')
+                                        <option value="{{ $payorder->moneda }}">PESOS COLOMBIANOS</option>
+                                        @break                               
+                                @endswitch
                             </select>
                         </div>
                         <input type="hidden" name="tasa_cambio" value="">

@@ -23,6 +23,7 @@ class CreateFacturasTable extends Migration
             $table->foreign('idcli')
                         ->references('idcli')
                         ->on('clientes');
+            $table->string('tip_pago',3);
             $table->string('moneda',3);
             $table->timestamps();
         });

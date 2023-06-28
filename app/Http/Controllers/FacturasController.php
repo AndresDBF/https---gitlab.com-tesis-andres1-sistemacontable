@@ -12,9 +12,8 @@ use App\Models\DetFact;
 use App\Models\DescripcionFactura;
 use App\Models\Moneda;
 use Carbon\Carbon;
-use Facade\FlareClient\Http\Exceptions\InvalidData;
 use Illuminate\Support\Facades\Session;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 
 
@@ -27,9 +26,10 @@ class FacturasController extends Controller
     public function index(){
         $customer = Cliente::join('contr_clis','clientes.idcli','=','contr_clis.idcli')
         ->select('clientes.idcli','clientes.nombre','clientes.tipid','clientes.identificacion','clientes.tiprif','clientes.telefono', 
-        'clientes.email','contr_clis.stscontr','contr_clis.tip_pag')
+        'clientes.email','contr_clis.stscontr','contr_clis.tip_pag','contr_clis.moneda','contr_clis.montopaglocal','contr_clis.montopagmoneda')
         ->orderBy('clientes.nombre')
         ->paginate(10);
+        
         
         return view('invoice.index')
              ->with('customer',$customer);
@@ -249,7 +249,9 @@ class FacturasController extends Controller
         $totalImpuestomoneda = floatval($baseImponiblemoneda * 0.16);
         $totalFactlocal = $baseImponibleLocal + $totalImpuestolocal;
         $totalFactmoneda = $baseImponiblemoneda + $totalImpuestomoneda;
-        
+
+        $customer = cliente::where('idcli',intval($invoice->idcli))->first();
+        $idcli = intval($customer->idcli);
         DetFact::where('idfact',$idfact)->update([
             'mtolocal' => $baseImponibleLocal,
             'mtomoneda' => $baseImponiblemoneda,
@@ -265,7 +267,39 @@ class FacturasController extends Controller
         $detInvoice->mtoimpuesto = $totalImpuesto;
         $detInvoice->mtototal = $totalFact;
         $detInvoice->save(); */
-        return view('invoice.totalinvoice', compact('baseImponibleLocal','baseImponiblemoneda','totalImpuestolocal','totalImpuestomoneda','totalFactlocal','totalFactmoneda','invoice','descFact','idfact'));
+        return view('invoice.totalinvoice', compact('idcli','baseImponibleLocal',
+        'baseImponiblemoneda','totalImpuestolocal','totalImpuestomoneda','totalFactlocal','totalFactmoneda',
+        'invoice','descFact','idfact'));
+    }
+
+    public function convertToPdf($idfact,$idcli)
+    {
+        $customer = Cliente::find($idcli);
+
+        $invoice = Factura::where('idfact',$idfact)
+                        ->first();
+        $detInvoice = DetFact::where('idfact',$idfact)
+                            ->first();
+        $descripInvoice = DescripcionFactura::where('idfact',$idfact)
+                                            ->get(); 
+
+        $numreling = ConceptoFact::join('facturas','concepto_facts.idcfact','=','facturas.idcfact')                        
+                            ->select('concepto_facts.num_ing')
+                            ->where('idfact',$idfact)
+                            ->first();
+        $imagePath = storage_path("img/logo.png");
+      //  $image = "data:img/logo.png;base64,".base64_encode(file_get_contents($imagePath));     
+        $image = base64_encode(file_get_contents($imagePath));
+        
+
+        $pdf = PDF::loadView('invoice.invoicepdf',compact('customer','invoice','detInvoice','descripInvoice','image','numreling'));
+        
+        return $pdf->download("giro_" . $customer->nombre . ".pdf");
+        
+        
+        
+         
+
     }
     
     public function deleteInvoice($idfact){

@@ -18,7 +18,7 @@
     @endif
     <div class="card">
         <div class="card-body pl-6">
-            <h3 class="text-center fw-bolder pb-4">Lista de Clientes para Facturar</h3>
+            <h3 class="text-center fw-bolder pb-4">Selecciona el Cliente para Facturar</h3>
             <form action="{{route('findIncome')}}" method="POST">
                 @csrf
                 <div class="well">

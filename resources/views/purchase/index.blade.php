@@ -37,7 +37,7 @@
                 <th>{{ $purchase->stsorden }}</th>
                 <th>{{ $purchase->tiempo_pago }} Dias</th>
                 <td>
-                    <a href="#" class="btn btn-info mb-2" onclick="confirmAutorizar('{{ route('autorizar', ['idorco' => $purchase->idorco]) }}')">Autorizar</a>
+                    <a href="#" class="btn btn-info mb-2" data-bs-toggle="modal" data-bs-target="#retening" onclick="confirmAutorizar('{{ route('autorizar', ['idorco' => $purchase->idorco]) }}')">Autorizar</a>
                     <br>
                     <a href="#" class="btn btn-danger mb-2" onclick="confirmDelete('{{ route('deleteorderco', ['idorco' => $purchase->idorco]) }}')">Eliminar</a>
                  

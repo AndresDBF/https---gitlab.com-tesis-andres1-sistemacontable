@@ -35,7 +35,7 @@ class CreateRetencionIslrsTable extends Migration
             $table->foreign('idage')
                   ->references('idage')
                   ->on('tipo_agentes');
-            $table->integer('ncomprobante');
+            $table->string('ncomprobante');
             $table->date('fecemi')->format('Y-m-d');
             $table->timestamps();
         });

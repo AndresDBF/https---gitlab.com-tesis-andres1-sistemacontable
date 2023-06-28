@@ -9,6 +9,7 @@ use App\Models\OrdenCompra;
 use App\Models\DetalleOrdenCompra;
 use App\Models\Moneda;
 use App\Models\TipPago;
+use App\Models\ProyeccionGasto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -27,9 +28,8 @@ class PurchaseOrderController extends Controller
                                      ->select('orden_compras.idorco','orden_compras.numorden','proveedors.nombre','proveedors.identificacion',
                                      'orden_compras.stsorden','orden_compras.tiempo_pago','proveedors.tipid','proveedors.tiprif')
                                      ->where('orden_compras.stsorden','ACT')
-                                     ->orderBy('proveedors.nombre','asc')
+                                     ->orderBy('orden_compras.idorco','asc')
                                      ->get();
-   
         return view('purchase.index',compact('registerPurchase'));
     }
 
@@ -40,6 +40,16 @@ class PurchaseOrderController extends Controller
     }
 
     public function create(Request $request){
+        $proyect = ProyeccionGasto::orderBy('fecstsini','asc')->first();
+        if ($proyect == null) {
+            Session::flash('error','Debe crear la proyeccion de gastos de la quincena');
+            return redirect()->route('findsupplier');
+        }
+        if ($proyect->presupuesto<= 0){
+            
+            Session::flash('error','Se ha quedado sin presupuesto');
+            return redirect()->route('findsupplier');
+        }
         $queryPurchase = OrdenCompra::orderBy('idorco','desc')
                                ->get();
         $value = count($queryPurchase);
@@ -71,9 +81,17 @@ class PurchaseOrderController extends Controller
         $this->validate($request,[
             'days' => 'required|numeric',
         ]);
-        
+        $tasa_cambio = 1;
+        if ($request->get('tasa_cambio') != null) {
+
+            $tasa_cambio = $request->get('tasa_cambio');
+        } else {
+
+          
+            $tasa_cambio = 1;
+        }
         $numConcept = intval($request->get('numconcept'));
-        $tasa_cambio = floatval($request->get('tasa_cambio'));
+        
         $purchase = new OrdenCompra();
         $purchase->idprov = $request->get('idprov');
         $purchase->numorden = $request->get('numorden');
@@ -86,12 +104,12 @@ class PurchaseOrderController extends Controller
         $purchase->moneda = $request->get('money');
         $purchase->save();    
 
-
         
         return redirect()->route('createdetorder',['numConcept' => $numConcept, 'tasa_cambio' => $tasa_cambio]);
     }
 
     public function createdetorder($numConcept,$tasa_cambio){
+        
         $purchase = OrdenCompra::orderBy('idorco','desc')
                                ->take(1)
                                ->get();
@@ -108,6 +126,7 @@ class PurchaseOrderController extends Controller
     }
 
     public function storedetpurchase(Request $request){
+
         $numConcept = intval($request->get('numconcept'));
         OrdenCompra::where('idorco',$request->get('idorco'))->update([
             'moneda' => $request->get('money')
@@ -195,6 +214,8 @@ class PurchaseOrderController extends Controller
                     'montototalmoneda' => $sumAmountmoneda
                     ]);
                 }
+                //
+                
                 
             }
             else {
@@ -276,6 +297,17 @@ class PurchaseOrderController extends Controller
                     }
                 }
             }
+        }
+        //verificacion en proyeccion de gastos 
+        $proyect = ProyeccionGasto::orderBy('fecstsini','asc')
+                                ->first();
+        $sumPurchase = DetalleOrdenCompra::where('idorco',$idorco)
+                                        ->sum('montototallocal');
+        if ($sumPurchase > $proyect->presupuesto){
+            $purchase = OrdenCompra::where('idorco',$idorco)->delete();
+            $purchase = DetalleOrdenCompra::where('idorco',$idorco)->delete();
+            Session::flash('error','el monto supera el presupuesto de la quincena');
+            return redirect()->route('findsupplier');
         }
         return redirect()->route('totalorder', ['idorco' => $idorco]);
     }

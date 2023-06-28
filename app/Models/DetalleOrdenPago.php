@@ -12,6 +12,7 @@ class DetalleOrdenPago extends Model
     protected $fillable = [ 
         'idorpa',	
         'idcon'	,
+        'indiva',
         'baseimponiblelocal',
         'baseimponiblemoneda',
         'montoivalocal',

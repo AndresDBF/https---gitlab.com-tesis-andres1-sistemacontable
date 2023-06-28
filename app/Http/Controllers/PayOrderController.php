@@ -15,6 +15,7 @@ use App\Models\ConceptoOrden;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class PayOrderController extends Controller
@@ -62,10 +63,16 @@ class PayOrderController extends Controller
             
         ]); 
          
-
+        
         $idprov = $request->get('idprov');
         $idorco = $request->get('idorco');
-        $tasa_cambio = $request->get('tasa_cambio');
+        if ($request->get('tasa_cambio') != null) {
+            $tasa_cambio = $request->get('tasa_cambio');
+        } else {
+            $tasa_cambio = 0;
+        }
+        
+        
         if ($tasa_cambio == null && ($request->get('money') != 'BS')) {
             Session::flash('error','debe seleccionar una tasa de cambio');
             return redirect()->route('createpayorder',['idprov' => $idprov, 'idorco' => $idorco]);
@@ -173,21 +180,36 @@ class PayOrderController extends Controller
                 $conceptOrder->save();
             }
             
-
-            $taxeslocal =  $conceptOrder->montobienlocal * 0.16;
-            $taxesmoneda =  $conceptOrder->montobienmoneda * 0.16;
+            if ($request->get('iva') == 'S') {
+                $taxeslocal =  $conceptOrder->montobienlocal * 0.16;
+                $taxesmoneda =  $conceptOrder->montobienmoneda * 0.16;
+            }else {
+                $taxeslocal =  0;
+                $taxesmoneda =  0;
+            }
+            
+           
 
             $amountTotlocal = $taxeslocal + $conceptOrder->montobienlocal;
             $amountTotmoneda = $taxesmoneda + $conceptOrder->montobienmoneda;
 
-            $igtflocal = $amountTotlocal * 0.03;
-            $igtfmoneda = $amountTotmoneda * 0.03;
+            if ($request->get('money') != 'BS') {
+                $igtflocal = $amountTotlocal * 0.03;
+                $igtfmoneda = $amountTotmoneda * 0.03;
+            }
+            else {
+                $igtflocal = 0;
+                $igtfmoneda = 0;
+            }
+            
+
             $totpayorderlocal = $amountTotlocal + $igtflocal;
             $totpayordermoneda = $amountTotmoneda + $igtfmoneda;
 
             $detOrder = new DetalleOrdenPago();
             $detOrder->idorpa = $request->get('idorpa');
             $detOrder->idcon = $conceptOrder->idcon;
+            $detOrder->indiva = $request->get('iva');
             $detOrder->baseimponiblelocal = $conceptOrder->montobienlocal;
             $detOrder->baseimponiblemoneda = $conceptOrder->montobienmoneda;
             $detOrder->montoivalocal = $taxeslocal;
@@ -236,14 +258,29 @@ class PayOrderController extends Controller
                 }
                 
     
-                $taxeslocal =  $conceptOrder->montobienlocal * 0.16;
-                $taxesmoneda =  $conceptOrder->montobienmoneda * 0.16;
+                if ($request->get('iva') == 'S') {
+                    $taxeslocal =  $conceptOrder->montobienlocal * 0.16;
+                    $taxesmoneda =  $conceptOrder->montobienmoneda * 0.16;
+                }else {
+                    $taxeslocal =  0;
+                    $taxesmoneda =  0;
+                }
+                
+               
     
                 $amountTotlocal = $taxeslocal + $conceptOrder->montobienlocal;
                 $amountTotmoneda = $taxesmoneda + $conceptOrder->montobienmoneda;
     
-                $igtflocal = $amountTotlocal * 0.03;
-                $igtfmoneda = $amountTotmoneda * 0.03;
+                if ($request->get('money') != 'BS') {
+                    $igtflocal = $amountTotlocal * 0.03;
+                    $igtfmoneda = $amountTotmoneda * 0.03;
+                }
+                else {
+                    $igtflocal = 0;
+                    $igtfmoneda = 0;
+                }
+                
+    
                 $totpayorderlocal = $amountTotlocal + $igtflocal;
                 $totpayordermoneda = $amountTotmoneda + $igtfmoneda;
     
@@ -274,6 +311,21 @@ class PayOrderController extends Controller
         return view('payorder.total',['amountOrder' => $amountOrder],compact('detailOrder','idorpa','payOrder'));
     }
 
+    public function payorderpdf($idorpa,$idprov){
+        $amountOrder = ConceptoOrden::where('idorpa',$idorpa)
+                                     ->get();
+        $detailOrder = DetalleOrdenPago::where('idorpa',$idorpa)->first();    
+        $payOrder = OrdenPago::where('idorpa',$idorpa)->first();    
+        $supplier = Proveedor::find($idprov);
+        $imagePath = storage_path("img/logo.png");
+      //  $image = "data:img/logo.png;base64,".base64_encode(file_get_contents($imagePath));     
+        $image = base64_encode(file_get_contents($imagePath));
+        
+
+        $pdf = PDF::loadView('payorder.payorderpdf',compact('amountOrder','detailOrder','payOrder','supplier','image'));
+        
+        return $pdf->download("orden_pago_" . $supplier->nombre . ".pdf");
+    }
     public function deleteorderpa($idprov,$idorco){
        $payOrder = OrdenPago::where('idorco',$idorco)->delete();
        return redirect()->route('create',['idprov' => $idprov, 'idorco' => $idorco]);

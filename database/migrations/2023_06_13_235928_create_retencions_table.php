@@ -31,7 +31,7 @@ class CreateRetencionsTable extends Migration
             $table->foreign('idorpa')
                   ->references('idorpa')
                   ->on('orden_pagos');
-            $table->integer('ncomprobante');
+            $table->string('ncomprobante');
             $table->date('fecemi')->format('Y-m-d');
             $table->date('fecrecep')->format('Y-m-d');
             $table->timestamps();

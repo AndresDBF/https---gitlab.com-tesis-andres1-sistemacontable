@@ -18,7 +18,7 @@
     @php( $password_reset_url = $password_reset_url ? url($password_reset_url) : '' )
 @endif
 
-@section('auth_header', __('adminlte::adminlte.login_message'))
+@section('auth_header', ('Iniciar Sesión')/* __('adminlte::adminlte.login_message') */)
 
 @section('auth_body')
     <form action="{{ $login_url }}" method="post">
@@ -44,9 +44,7 @@
 
         {{-- Password field --}}
         <div class="input-group mb-3">
-            <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror"
-                   placeholder="{{ __('adminlte::adminlte.password') }}">
-                   <button type="button" class="btn btn-outline-dark border-0" onclick="mostrarcontrasena()"><i class="fa fa-eye"></i></button>
+            <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('adminlte::adminlte.password') }}" >
 
 
 
@@ -71,7 +69,7 @@
                     <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
                     <label for="remember">
-                        {{ __('adminlte::adminlte.remember_me') }}
+                        Recordar Contraseña{{-- {{ __('adminlte::adminlte.remember_me') }} --}}
                     </label>
                 </div>
             </div>
@@ -79,7 +77,7 @@
             <div class="col-5">
                 <button type=submit class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }}">
                     <span class="fas fa-sign-in-alt"></span>
-                    {{ __('adminlte::adminlte.sign_in') }}
+                    Ingresar{{-- {{ __('adminlte::adminlte.sign_in') }} --}}
                 </button>
             </div>
         </div>
@@ -94,7 +92,7 @@
     @if($register_url)
         <p class="my-0">
             <a href="{{ $register_url }}">
-                {{ __('adminlte::adminlte.register_a_new_membership') }}
+                Registrar un Nuevo Usuario{{-- {{ __('adminlte::adminlte.register_a_new_membership') }} --}}
             </a>
         </p>
     @endif

@@ -56,7 +56,7 @@
                             <label for="" class="form-label">Rif o Cedula del Proveedor</label>
                             <input type="number" name="identification" id="identification" value="{{$supplier->identificacion}}" class="form-control text-decoration-none" readonly="readonly">
                         </div>
-                        @if ($supplier->tipid != null)
+                        @if ($supplier->tiprif != null)
                           <div class="col-xs-3 col-sm-6 col-md-4" id="div-off">
                             <label for="" class="form-label">Digito Verificador</label>
                             <input type="text" name="tiprif" class="form-control text-decoration-none" value="{{$supplier->tiprif}}" readonly="readonly">
@@ -64,9 +64,9 @@
                         @endif
                     </div>
                 </div>
-                <input type="hidden" name="{{$numOper}}" name="numoper">
-                <input type="hidden" name="{{$registerOrderPay->idorpa}}">
-                <input type="hidden" name="{{$registerOrderPay->idprov}}">
+                <input type="hidden" value="{{$numOper}}" name="numoper">
+                <input type="hidden" value="{{$registerOrderPay->idorpa}}" name="idorpa">
+                <input type="hidden" value="{{$registerOrderPay->idprov}}" name="idprov">
             </div>
         </div>
         <div class="card">
@@ -124,95 +124,7 @@
                 <a href="{{route('listpay')}}">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 </a>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#seatmodal">Confirmar</button>
-            </div>
-        </div>
-        <div class="modal fade" id="seatmodal" tabindex="-1" aria-labelledby="seatmodalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header text-center">
-                  <h5 class="modal-title" id="seatmodalLabel">Completar Asiento Contable Final</h5>
-                  {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <p>Cerrar</p>
-                  </button> --}}
-                </div>
-                <div class="modal-body">
-                    <div class="well">
-                        <div class="row">
-                            <div class="col-xs-6 col-sm-6 col-md-6">
-                                <h3 class="text-center">Cuenta Crédito</h3>
-                                  <div class="form-group">
-                                  <label for="groupaccount">Grupo de Cuenta</label>
-                                  <select name = 'groupaccount1' id ="groupaccount1" class="custom-select">
-                                      <option selected="">Seleccionar Grupo</option>
-                                  </select>
-                                  </div>
-                                  <div class="form-group">
-                                  <label for="subgroupaccount">Subgrupo de Cuenta</label>
-                                  <select name = 'subgroupaccount1' id ="subgroupaccount1" class="custom-select">
-                                      <option selected="">Seleccionar Subgrupo</option>
-                                  </select>
-                                  </div> 
-                                  <div class="form-group">
-                                  <label for="accountname">Nombre de Cuenta</label>
-                                  <select name = 'accountname1'id="accountname1" class="custom-select">
-                                      <option selected="">Seleccionar Cuenta</option>
-                                  </select>
-                                  </div>
-                                  <div class="form-group">
-                                  <label for="subaccountname">Nombre de Subcuenta</label>
-                                  <select name = 'subaccountname1'id="subaccountname1" class="custom-select">
-                                      <option selected="">Seleccionar Subcuenta</option>
-                                  </select>
-                                  <input type="hidden" name="subaccount_tipsubcta1" id="subaccount_tipsubcta1" value="">
-                                  <input type="hidden" name="subaccount_descripcion1" id="subaccount_tipsubcta1" value="">
-                                  </div>
-                            </div>
-                            <div class="col-xs-6 col-sm-6 col-md-6">
-                                <h3 class="text-center">Cuenta Debito</h3>
-                                  <div class="form-group">
-                                  <label for="groupaccount">Grupo de Cuenta</label>
-                                  <select name = 'groupaccount2' id ="groupaccount2" class="custom-select">
-                                      <option selected="">Seleccionar Grupo</option>
-                                  </select>
-                                  </div>
-                                  <div class="form-group">
-                                  <label for="subgroupaccount">Subgrupo de Cuenta</label>
-                                  <select name = 'subgroupaccount2' id ="subgroupaccount2" class="custom-select">
-                                      <option selected="">Seleccionar Subgrupo</option>
-                                  </select>
-                                  </div> 
-                                  <div class="form-group">
-                                  <label for="accountname">Nombre de Cuenta</label>
-                                  <select name = 'accountname2'id="accountname2" class="custom-select">
-                                      <option selected="">Seleccionar Cuenta</option>
-                                  </select>
-                                  </div>
-                                  <div class="form-group">
-                                  <label for="subaccountname">Nombre de Subcuenta</label>
-                                  <select name = 'subaccountname2'id="subaccountname2" class="custom-select">
-                                      <option selected="">Seleccionar Subcuenta</option>
-                                  </select>
-                                  <input type="hidden" name="subaccount_tipsubcta2" id="subaccount_tipsubcta2" value="">
-                                  <input type="hidden" name="subaccount_descripcion2" id="subaccount_tipsubcta2" value="">
-                                  </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                      <label for="recipient-name" class="col-form-label">Observacion</label>
-                      <input type="text" class="form-control" name="observation" id="observation">
-                    </div>
-                    <div class="mb-3">
-                      <label for="message-text" class="col-form-label">Descripcion</label>
-                      <textarea class="form-control" name="description" id="description"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                  <button type="button" class="btn btn-primary" onclick="confirmAsi('{{ route('storeretention') }}')">Guardar</button>
-                </div>
-              </div>
+                <button type="button" class="btn btn-primary" onclick="confirmAsi('{{ route('storeretention') }}')">Guardar</button>
             </div>
         </div>
     </form>
@@ -230,9 +142,9 @@
     myInput.focus()
   })
 </script>
-<script src="{{asset('js/retention.js')}}"></script>
-<script src="{{asset('js/accountcredit.js')}}"></script>
-<script src="{{asset('js/accountdebit.js')}}"></script>
+<script src="{{asset('js/process/retention.js')}}"></script>
+<script src="{{asset('js/process/accountcredit.js')}}"></script>
+<script src="{{asset('js/process/accountdebit.js')}}"></script>
 <script>
     function confirmAsi(url) {
         Swal.fire({

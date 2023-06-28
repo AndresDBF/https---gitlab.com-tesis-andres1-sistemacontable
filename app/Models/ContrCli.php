@@ -13,6 +13,7 @@ class ContrCli extends Model
         'idcont',
         'idcli',
         'stscontr',
+        'ind_girosre',
         'tip_pag',
         'montopaglocal',
         'montolocalmoneda',

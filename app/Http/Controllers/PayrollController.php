@@ -2,7 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asiento;
+use App\Models\Moneda;
 use Illuminate\Http\Request;
+use App\Models\Nomina;
+use App\Models\TipCargoEmpleado;
+use App\Models\ValoresNomina;
+use App\Models\PagoNomina;
+use App\Models\TotalPagoNomina;
+use App\Models\CatgCuenta;
+use App\Models\CatgSubCuenta;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Pagination\Paginator;
+use Carbon\Carbon;
 
 class PayrollController extends Controller
 {
@@ -13,7 +25,15 @@ class PayrollController extends Controller
      */
     public function index()
     {
-        //
+        $registerEmployee = TipCargoEmpleado::join('nominas','tip_cargo_empleados.idcarg','=','nominas.idcarg')
+                                            ->select('nominas.idnom','nominas.nombre','nominas.tipid','nominas.identificacion','nominas.tiprif'
+                                                    ,'nominas.telefono','nominas.fec_ingr','concepto_cargo')
+                                            ->where('stsemp','ACT')
+                                            ->orderBy('nominas.nombre','asc')
+                                            ->paginate(10);
+        $registerCharges = TipCargoEmpleado::all();
+        $registerValuePay = ValoresNomina::all();
+        return view('payroll.index',compact('registerEmployee','registerCharges','registerValuePay'));
     }
 
     /**
@@ -23,7 +43,14 @@ class PayrollController extends Controller
      */
     public function create()
     {
-        //
+        $charges = TipCargoEmpleado::all();
+        $countCharges = count($charges);
+        $fecing = Carbon::now()->format('Y-m-d');
+        if ($countCharges < 1) {
+            Session::flash('error','no existen cargos registrados');
+            return redirect('/payroll');
+        }
+        return view('payroll.employee.create',compact('charges','fecing'));
     }
 
     /**
@@ -32,9 +59,48 @@ class PayrollController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request){
+
+        $this->validate($request, [
+            'name' => 'required|string|min:3|regex:/^[A-Z][a-zA-Z\s]+$/',
+            'identification' => 'required|numeric',
+            'phone' => 'required',
+            'email' => 'required|email',
+            'direction' => 'required'
+        ], [
+            'name.required' => 'El nombre es requerido.',
+            'name.string' => 'El nombre debe ser una cadena de texto.',
+            'name.min' => 'El nombre debe tener al menos :min caracteres.',
+            'name.regex' => 'El nombre debe tener al menos dos palabras con la primera en mayúscula.',
+            'identification.required' => 'La identificación es requerida.',
+            'identification.numeric' => 'La identificación debe ser numérica.',
+            'phone.required' => 'El teléfono es requerido.',
+            'email.required' => 'El correo electrónico es requerido.',
+            'email.email' => 'El correo electrónico debe tener un formato válido.',
+            'direction.required' => 'La dirección es requerida.'
+        ]);    
+        
+        $employee = new Nomina();
+        $employee->idcarg = intval($request->get('tipcarg'));
+        $employee->nombre = $request->get('name');
+        $employee->tipid = $request->get('tipid');
+        $employee->identificacion = $request->get('identification');
+        if (strlen($request->get('tiprif')) > 1) {
+            $employee->tiprif = null;
+            
+        } else {
+            $employee->tiprif->$request->get('tiprif');
+        }
+        $employee->telefono = $request->get('phone');
+        $employee->direccion =$request->get('direction');
+        $employee->correo = $request->get('email');
+        $employee->stsemp = 'ACT';
+        $employee->sueldo = floatval($request->get('salary'));
+        $employee->fec_ingr = $request->get('fec_ing');
+        $employee->save();
+        Session::flash('employee','Empleado Registrado Correctamente');
+        return redirect('/payroll');
+        
     }
 
     /**
@@ -56,7 +122,12 @@ class PayrollController extends Controller
      */
     public function edit($id)
     {
-        //
+        $employee = Nomina::find($id);
+       
+        $charges = TipCargoEmpleado::where('idcarg', '!=', $employee->idcarg)->get();
+        $chargeEmployee = TipCargoEmpleado::where('idcarg',$employee->idcarg)->first();
+
+        return view('payroll.employee.edit',compact('employee','charges','chargeEmployee'));
     }
 
     /**
@@ -68,7 +139,37 @@ class PayrollController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string|min:3|regex:/^[A-Z][a-zA-Z\s]+$/',
+            'identification' => 'required|numeric',
+            'phone' => 'required',
+            'email' => 'required|email',
+            'direction' => 'required'
+        ], [
+            'name.required' => 'El nombre es requerido.',
+            'name.string' => 'El nombre debe ser una cadena de texto.',
+            'name.min' => 'El nombre debe tener al menos :min caracteres.',
+            'name.regex' => 'El nombre debe tener al menos dos palabras con la primera en mayúscula.',
+            'identification.required' => 'La identificación es requerida.',
+            'identification.numeric' => 'La identificación debe ser numérica.',
+            'phone.required' => 'El teléfono es requerido.',
+            'email.required' => 'El correo electrónico es requerido.',
+            'email.email' => 'El correo electrónico debe tener un formato válido.',
+            'direction.required' => 'La dirección es requerida.'
+        ]);  
+        $employee = Nomina::find($id);
+        $employee->idcarg = intval($request->get('tipcarg'));
+        $employee->nombre = $request->get('name');
+        $employee->tipid = $request->get('tipid');
+        $employee->identificacion = $request->get('identification');       
+        $employee->telefono = $request->get('phone');
+        $employee->direccion =$request->get('direction');
+        $employee->correo = $request->get('email');
+        $employee->fec_ingr = $request->get('fec_ing');
+
+        $employee->save();
+        Session::flash('employee','Empleado Modificado Correctamente');
+        return redirect('/payroll');
     }
 
     /**
@@ -79,6 +180,158 @@ class PayrollController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $employee = Nomina::find($id);
+        $verifyPayroll = PagoNomina::where('idnom',intval($employee->idnom))->get();
+        $countValues = count($verifyPayroll);
+        if ($countValues > 0) {
+            Session::flash('error','Existen Pagos Registrados no se puede borrar el empleado');
+            return redirect('/payroll');
+        } else{
+            $employee->Delete();
+        }
+        Session::flash('destroy','Se ha borrado el empleado correctamente');
+        return redirect('/payroll');
     }
+
+    public function payemployee($idnom){
+        $employee = Nomina::find($idnom);
+        $valueHed = ValoresNomina::where('idval',2)->first();
+        $valueVh = ValoresNomina::where('idval',1)->first();
+        $valueFes = ValoresNomina::where('idval',3)->first();
+        $valueHen = ValoresNomina::where('idval',4)->first();
+        $valueCes = ValoresNomina::where('idval',5)->first();
+        $money = Moneda::all();
+        return view('payroll.pay',compact('valueHed','employee','valueVh','valueFes','valueHen','valueCes','money','idnom'));
+    }
+
+    public function storepayemployee(Request $request){
+        $this->validate($request,[
+            'dayst' => 'required',
+            'incent' => 'required'
+        ]);
+       
+        if (($request->get('indhed') == 'N' && $request->get('amounthed') != null) || ($request->get('indhed') == 'S' && $request->get('amounthed') == null)) {
+            Session::flash('error','ingrese el valor de horas extras diurnas');
+            return redirect()->route('payemployee',intval($request->get('idnom')));
+        }
+        elseif (($request->get('indfer') == 'N' && $request->get('amountfer') != null) || ($request->get('indfer') == 'S' && $request->get('amountfer') == null)) {
+            Session::flash('error','ingrese el los dias feriados');
+            return redirect()->route('payemployee',intval($request->get('idnom')));
+        }
+        elseif (($request->get('indhec') == 'N' && $request->get('amounthec') != null) || $request->get('indhec') == 'S' && $request->get('amounthec') == null) {
+            Session::flash('error','ingrese el valor de horas extras nocturnas');
+            return redirect()->route('payemployee',intval($request->get('idnom')));
+        }
+        $idcta1 = CatgSubCuenta::select('idcta')
+                                ->where('idscu', $request->get('subaccountname1'))
+                                ->first();
+        $idcta2 = CatgSubCuenta::where('idscu', $request->get('subaccountname2'))
+                                ->first();
+        $fecpag = Carbon::now()->format('Y-m-d');
+        $valueHed = ValoresNomina::where('idval',2)->first();
+        $valueFes = ValoresNomina::where('idval',3)->first();
+        $valueHen = ValoresNomina::where('idval',4)->first();
+        $employee = Nomina::select('sueldo')
+                            ->where('idnom',intval($request->get('idnom')))
+                            ->first();
+        $valueMen = round(floatval($employee->sueldo / 30),2);
+        //SUELDO DEL EMPLEADO
+        $payrollSuel = new PagoNomina();
+        $payrollSuel->idnom = intval($request->get('idnom'));
+        $payrollSuel->concepto_pago = 'total de sueldo mensual';
+        $payrollSuel->montopago = (floatval($valueMen * intval($request->get('dayst') ) ));
+        $payrollSuel->fecpag = $fecpag;
+        $payrollSuel->save();
+        //HORAS EXTRAS DIURNAS SI REQUIERE
+        $payrollHed = new PagoNomina();
+        $payrollHed->idnom = intval($request->get('idnom'));
+        $payrollHed->concepto_pago = $request->get('concepthed');
+        if ($request->get('amounthed') == null) {
+            $payrollHed->montopago = 0;
+        } else {
+            $payrollHed->montopago = (floatval($request->get('amounthed') * $valueHed->monto_valor));
+        }
+        $payrollHed->fecpag = $fecpag;
+        $payrollHed->save();
+        //HORAS EXTRAS NOCTURNAS SI REQUIERE
+        $payrollHen = new PagoNomina();
+        $payrollHen->idnom = intval($request->get('idnom'));
+        $payrollHen->concepto_pago = $request->get('concepthen');
+        if ($request->get('amounthen') == null) {
+            $payrollHen->montopago = 0;
+        } else {
+            $payrollHen->montopago = (floatval($request->get('amounthen')) * floatval($valueHen->monto_valor));
+        }
+        $payrollHen->fecpag = $fecpag;
+        $payrollHen->save();
+        //DIAS FERIADO SI REQUIERE
+        $payrollFer = new PagoNomina();
+        $payrollFer->idnom = intval($request->get('idnom'));
+        $payrollFer->concepto_pago = $request->get('conceptfer');
+        if ($request->get('amountfer') == null) {
+            $payrollFer->montopago = 0;
+        } else {
+            $payrollFer->montopago = (floatval($request->get('amountfer')) * floatval($valueFes->monto_valor));
+        }
+        $payrollFer->fecpag = $fecpag;
+        $payrollFer->save();
+        //CESTATICKET
+        $payrollCes = new PagoNomina();
+        $payrollCes->idnom = intval($request->get('idnom'));
+        $payrollCes->concepto_pago = $request->get('conceptces');
+        $payrollCes->montopago = (floatval($request->get('cestaticket')));
+        $payrollCes->fecpag = $fecpag;
+        $payrollCes->save();
+        //INCENTIVO
+        if (floatval($request->get('incent')) > 0 && floatval($request->get('incent') != null) ) {
+            $payrollInc = new PagoNomina();
+            $payrollInc->idnom = intval($request->get('idnom'));
+            $payrollInc->concepto_pago = 'Incentivo';
+            $payrollInc->montopago = (floatval($request->get('incent') * $request->get('tasa_cambio')));
+            $payrollInc->fecpag = $fecpag;
+            $payrollInc->save();
+        }
+
+        $totalAsing = floatval($payrollSuel->montopag + $payrollSuel->montopago + $payrollHen->montopago +  $payrollFer->montopago + $payrollCes->montopago);
+        $SSO = floatval(9.55);
+        $FAOV = floatval(1.15);
+        $totalDeduc = floatval( $SSO + $FAOV);
+        $totalNeto = floatval($totalAsing - $totalDeduc);
+
+
+        $seatAmount = new Asiento();
+        $seatAmount->fec_asi = $fecpag;
+        $seatAmount->observacion = $request->get('observation');
+        $seatAmount->idcta1 = $idcta1->idcta;
+        $seatAmount->idcta2 = $idcta2->idcta;
+        $seatAmount->descripcion = $request->get('description');
+        $seatAmount->monto_deb = $totalNeto;
+        $seatAmount->monto_hab = $totalNeto;
+        $seatAmount->save();
+
+        if ($request->get('incent') != null) {
+            $seatAmount = new Asiento();
+            $seatAmount->fec_asi = $fecpag;
+            $seatAmount->observacion = $request->get('observation');
+            $seatAmount->idcta1 = 211;
+            $seatAmount->idcta2 = $idcta2->idcta;
+            $seatAmount->descripcion = $request->get('description');
+            $seatAmount->monto_deb = floatval($request->get('incent') * $request->get('tasa_cambio'));
+            $seatAmount->monto_hab = floatval($request->get('incent') * $request->get('tasa_cambio'));
+            $seatAmount->save();
+        }
+
+        $totalPag = new TotalPagoNomina();
+        $totalPag->idnom = intval($request->get('idnom'));
+        $totalPag->idasi = $seatAmount->idasi;
+        $totalPag->totalasignacion = $totalAsing;
+        $totalPag->totaldeduccion = $totalDeduc;
+        $totalPag->netocobrar = $totalNeto;
+        $totalPag->save();
+
+        Session::flash('message','Se realizo el pago correctamente');
+        return redirect('/payroll');
+
+    }
+
 }

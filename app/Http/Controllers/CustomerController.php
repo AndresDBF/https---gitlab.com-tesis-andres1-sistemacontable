@@ -152,6 +152,13 @@ class CustomerController extends Controller
         $contrCustomer = new ContrCli();
         $contrCustomer->idcli = $customer->idcli;
         $contrCustomer->stscontr = $request->get('stscontr');
+        if ($request->get('tip_pag') != 'ANU') {
+           $contrCustomer->ind_girosre = 'S';
+        } else {
+            $contrCustomer->ind_girosre = 'N';
+        }
+        
+        $contrCustomer->stscontr = $request->get('stscontr');
         $contrCustomer->tip_pag = $request->get('tip_pag');
         
         if ($request->get('money') == 'USD' || $request->get('money') == 'EUR') {

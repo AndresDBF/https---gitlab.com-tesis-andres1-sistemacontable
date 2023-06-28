@@ -12,7 +12,10 @@ use App\Models\TipPago;
 use App\Models\DetComprobanteIng;
 use App\Models\ComprobanteIngreso;
 use Illuminate\Support\Facades\Session;
+
 use Carbon\Carbon;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class ComprIngController extends Controller
 {
@@ -39,16 +42,18 @@ class ComprIngController extends Controller
     
         $findInvoice = Factura::where('idcli', $nameCli->idcli)->get();
         $invoiceId = $findInvoice->pluck('idfact');
-        $findDetInvoice = DetFact::whereIn('idfact', $invoiceId)
-            ->where('stsfact', 'ACT')
-            ->get();
-    
+        $findDetInvoice = Factura::join('det_facts','facturas.idfact','=','det_facts.idfact')
+                                ->select('det_facts.fec_emi','facturas.idfact','det_facts.numfact','det_facts.numctrl',
+                                'det_facts.mtototallocal','det_facts.mtototalmoneda','facturas.tip_pago','facturas.moneda')
+                                ->whereIn('facturas.idfact',$invoiceId)
+                                ->where('det_facts.stsfact','ACT')
+                                ->get();   
+                                 
         $customer = Cliente::where('identificacion', $identification)->get();
     
         $valueInvoice = count($findInvoice);
         $valueCli = count($customer);
         $countInvoice = count($findDetInvoice);
-    
         if ($countInvoice > 0) {
             if ($valueCli > 0 && $valueInvoice > 0) {
                 return view('proof.proofincome', compact('findDetInvoice', 'findInvoice', 'customer'))
@@ -65,6 +70,7 @@ class ComprIngController extends Controller
     
 
     public function createIncome($idfact,$idcli){
+
         $valueIdfact = $idfact;
         $valueIdcli = $idcli;
         $invoice = Factura::where('idfact',$valueIdfact)
@@ -131,7 +137,50 @@ class ComprIngController extends Controller
             'stsfact' => 'PAG'
         ]);
         Session::flash('successProof','se ha realizado el comprobante de ingreso Correctamente');
-            return redirect()->route('searchInvoice');
+            return redirect()->route('totalproof',$proofIncome->idcom);
     }    
+
+    public function totalproof($idcom){
+        $proofIncome = ComprobanteIngreso::find($idcom);
+        $detProofIncome = DetComprobanteIng::where('idcom',$idcom)->first();
+        $customer = Cliente::where('idcli',intval($detProofIncome->idcli))->first();
+        $idcom = intval($proofIncome->idcom);
+        $idcli = intval($customer->idcli);
+        return view('proof.total',compact('proofIncome','detProofIncome','customer','idcli','idcom'));
+    }
+
+    public function convertToPdf($idcom, $idcli)
+    {
+        // ...
+
+        $proofIncome = ComprobanteIngreso::find($idcom);
+        $detProofIncome = DetComprobanteIng::where('idcom', $idcom)->first();
+        $customer = Cliente::where('idcli', intval($detProofIncome->idcli))->first();
+        $imagePath = storage_path("img/logo.png");
+        $image = base64_encode(file_get_contents($imagePath));
+
+        $options = new Options();
+        $options->set('isRemoteEnabled', true); // Permite cargar imágenes desde URL
+        $options->set('defaultFont', 'Arial'); // Fuente predeterminada
+        $options->set('orientation', 'landscape'); // Orientación horizontal
+        $options->set('size', 'letter'); // Tamaño de página: carta (letter)
+
+        $dompdf = new Dompdf($options);
+
+        $view = view('proof.proofpdf', compact('customer', 'proofIncome', 'detProofIncome', 'image'))->render();
+        $dompdf->loadHtml($view);
+        $dompdf->render();
+
+        return $dompdf->stream('recibo.pdf');
+    }
+
+
+
+    public function deleteproof($idcom){
+       
+        $detProofIncome = DetComprobanteIng::where('idcom',$idcom)->delete();
+        $proofIncome = ComprobanteIngreso::find($idcom)->delete();
+        return redirect()->route('searchInvoice');
+    }
 }
 

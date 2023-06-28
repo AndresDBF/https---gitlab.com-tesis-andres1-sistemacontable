@@ -92,7 +92,7 @@
 <a href="{{route('deleteInvoice',['idfact'=>$idfact])}}">
     <button type="button" class="btn btn-secondary">Atras</button>
 </a>
-<a href="{{route('findcustomer')}}">
-    <button type="button" class="btn btn-primary ml-2">Aceptar</button>
-</a>
+<a href="{{ route('invoicepdf', ['idfact' => $idfact, 'idcli' => $idcli]) }}" class="btn btn-primary ml-2">Imprimir PDF</a>
+<a href="{{ route('findcustomer') }}" class="btn btn-primary ml-2">Aceptar</a>
+
 @stop

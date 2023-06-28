@@ -14,6 +14,9 @@ use App\Models\DetalleRetencionIslr;
 use App\Models\Retencion;
 use App\Models\DetalleRetencion;
 use Illuminate\Http\Request;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 
@@ -27,8 +30,9 @@ class RetentionIslrController extends Controller
 
     public function listreten(Request $request)
     {
+        
         $tipagent = TipoAgente::where('idage',intval($request->get('tipagente')))->first();
-
+       
         if ($tipagent->sustraendo != 'N/A' && $tipagent->mayorpago != 'TODO PAGO') {
             $registerOrderPay = OrdenPago::join('detalle_orden_pagos','orden_pagos.idorpa','=','detalle_orden_pagos.idorpa')
             ->select('orden_pagos.idorpa','orden_pagos.idprov','orden_pagos.numfact','orden_pagos.fec_emi','orden_pagos.moneda',
@@ -93,19 +97,19 @@ class RetentionIslrController extends Controller
             ->where('orden_pagos.stsorpa','PEN')
             ->where('orden_pagos.idorpa',intval($idorpa))
             ->first();
-            dd($registerOrderPay);
+           
         $tipagent = TipoAgente::where('idage',$idage)->first();
         return view('islr.create',compact('registerOrderPay','supplier','tipagent','fecEmi','perFiscal','month','nVoucher','numOper'));
     }
 
     public function store(Request $request)
     {
-/*         $this->validate($request,[
+        $this->validate($request,[
             'numfact' => 'required',
-            'numcontrl' => 'required',
+            'numctrl' => 'required',
             'base' => 'required',
-        ]); */
-        
+        ]);
+       
       
         $pay = OrdenPago::join('comprobante_pagos','orden_pagos.idorpa','=','comprobante_pagos.idorpa')
             ->select('comprobante_pagos.idpag','orden_pagos.numfact','orden_pagos.numctrl')
@@ -126,16 +130,6 @@ class RetentionIslrController extends Controller
         $seatAmount->monto_deb = floatval($request->get('taxesreten'));
         $seatAmount->monto_hab = floatval($request->get('taxesreten'));
         $seatAmount->save();
-
-        $seatislr = new Asiento();
-        $seatislr->fec_asi = $request->get('fecemi');
-        $seatislr->observacion = $request->get('observation');
-        $seatislr->idcta1 = 87;
-        $seatislr->idcta2 = 87;
-        $seatislr->descripcion = $request->get('description');
-        $seatislr->monto_deb = floatval($request->get('taxesreten'));
-        $seatislr->monto_hab = floatval($request->get('taxesreten'));
-        $seatislr->save();
 
         $retention = new RetencionIslr();
         $retention->idpag = $pay->idpag;
@@ -171,10 +165,39 @@ class RetentionIslrController extends Controller
             $detRetention->montoretenido = floatval($request->get('taxesreten'));
             $detRetention->save();
 
+            OrdenPago::where('idorpa',intval($request->get('idorpa')))->update([
+                'stsorpa' => 'CAN'
+            ]);
+
             Session::flash('message','Se ha realizado la Retención de I.S.L.R. correctamente');
-            return redirect()->route('findagent');
+            return redirect()->route('totalislr', ['idreti' => $retention->idreti, 'idprov' => intval($request->get('idprov'))]);
         }
     }
+
+    public function totalislr($idreti,$idprov){
+        $supplier = Proveedor::find($idprov);
+        $retenislr = RetencionIslr::where('idreti',$idreti)->first();
+        $detRetenislr = DetalleRetencionIslr::where('idreti',$idreti)->first();
+        return view('islr.total',compact('supplier','retenislr','detRetenislr'));
+    }
+
+    public function islrpdf($idreti,$idprov){
+        $supplier = Proveedor::find($idprov);
+        $retenislr = RetencionIslr::where('idreti',$idreti)->first();
+        $detRetenislr = DetalleRetencionIslr::where('idreti',$idreti)->first();
+        $imagePath = storage_path("img/logo.png");
+        $fecha = Carbon::parse($retenislr->fecemi); 
+       
+        $year = $fecha->format('Y');
+        //  $image = "data:img/logo.png;base64,".base64_encode(file_get_contents($imagePath));     
+          $image = base64_encode(file_get_contents($imagePath));
+          
+  
+          $pdf = PDF::loadView('islr.comproislr',compact('image','year','retenislr','detRetenislr','supplier'));
+          
+          return $pdf->download("retencioniva_" . $supplier->nombre . ".pdf");
+    }
+
     public function tipcontribuyente()
     {
         return TipoAgente::distinct()->get(['tippersona']);
