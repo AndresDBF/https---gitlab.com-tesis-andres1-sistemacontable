@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        /* User::create([
+         User::create([
             'name' => 'Juan Fabrega',
             'email' => 'jjfabregam@gmail.com',
             'password' => bcrypt('Dirfix4u2023*')
@@ -33,13 +33,13 @@ class UserSeeder extends Seeder
             'name' => 'Luis Gonzalez',
             'email' => 'lgonzalez@fix4u.solutions',
             'password' => bcrypt('Asifix4u2023*')
-        ])->assignRole('asistente'); */
+        ])->assignRole('asistente'); 
         User::create([
             'name' => 'Andres Becerra',
             'email' => 'andres200605@gmail.com',
             'password' => bcrypt('12345678')
-        ])->assignRole('directorgeneral');
+        ])->assignRole('desarrollo');
 
-        User::factory(9)->create();
+       // User::factory(9)->create();
     }
 }

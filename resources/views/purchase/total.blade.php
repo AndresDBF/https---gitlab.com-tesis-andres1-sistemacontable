@@ -46,8 +46,8 @@
             </div>
         </div>
         <div class="d-flex justify-content-between ml-3 mr-5">
-            <label class="fw-bold fs-4 me-auto">Monto Total del bien</label>
-            @if ($money = 'BS')
+            <label class="fw-bold fs-4 me-auto">Monto Total del bien ({{$purchase->moneda}})</label>
+            @if ($purchase->moneda = 'BS')
                 <label class="fw-bold ms-auto fs-4">{{$sumAmountmoneda}}</label>
             @else
                 <label class="fw-bold ms-auto fs-4">{{$sumAmountlocal}}</label>
@@ -55,8 +55,8 @@
             
         </div>   
         <div class="d-flex justify-content-between ml-3 mr-5">
-            <label class="fw-bold fs-4 me-auto">Monto Total del IVA</label>
-            @if ($money = 'BS')
+            <label class="fw-bold fs-4 me-auto">Monto Total del IVA ({{$purchase->moneda}})</label>
+            @if ($purchase->moneda = 'BS')
             <label class="fw-bold ms-auto fs-4">{{$amountPurchase->montoivamoneda}}</label>
             @else
             <label class="fw-bold ms-auto fs-4">{{$amountPurchase->montoivalocal}}</label>
@@ -64,8 +64,8 @@
             
         </div>
         <div class="d-flex justify-content-between ml-3 mr-5">
-            <label class="fw-bold fs-4 me-auto">Valor Total</label>
-            @if ($money = 'BS')
+            <label class="fw-bold fs-4 me-auto">Valor Total ({{$purchase->moneda}})</label>
+            @if ($purchase->moneda = 'BS')
             <label class="fw-bold ms-auto fs-4">{{$amountPurchase->montototalmoneda}}</label>
             @else
             <label class="fw-bold ms-auto fs-4">{{$amountPurchase->montototallocal}}</label>

@@ -7,7 +7,17 @@
 @stop
 
 @section('content')
-   
+
+    @if(session('message'))
+    <div class="alert alert-success" role="alert">
+        {{ session('message') }}
+    </div>
+    @endif
+    @if(session('error'))
+    <div class="alert alert-danger" role="alert">
+        {{ session('error') }}
+    </div>
+    @endif
     <a href="supplier/create" class="btn btn-primary mb-3">CREAR</a>
     <table id="clientes" class="table table-striped table-bordered shadow-lg mt-4" style="width: 100%">
 

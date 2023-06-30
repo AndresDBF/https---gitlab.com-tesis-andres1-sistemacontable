@@ -22,20 +22,26 @@ use Carbon\Carbon;
 
 class RetentionIslrController extends Controller
 {
-    public function index()
+    public function __construct()
     {
+        $this->middleware('auth');
+        $this->middleware('can:findagent')->only('index');
+        $this->middleware('can:listreten')->only('listreten');
+        $this->middleware('can:createislr')->only('create','store','totalislr','islrpdf','tipcontribuyente','tipagente');
+    }
+
+    public function index(){
         $tipagente = TipoAgente::orderBy('concepto','asc')->get();
         return view('islr.index',compact('tipagente'));
     }
 
-    public function listreten(Request $request)
-    {
+    public function listreten(Request $request){
         
         $tipagent = TipoAgente::where('idage',intval($request->get('tipagente')))->first();
        
         if ($tipagent->sustraendo != 'N/A' && $tipagent->mayorpago != 'TODO PAGO') {
             $registerOrderPay = OrdenPago::join('detalle_orden_pagos','orden_pagos.idorpa','=','detalle_orden_pagos.idorpa')
-            ->select('orden_pagos.idorpa','orden_pagos.idprov','orden_pagos.numfact','orden_pagos.fec_emi','orden_pagos.moneda',
+            ->select('orden_pagos.idorpa','orden_pagos.idprov','orden_pagos.numfact','orden_pagos.numctrl','orden_pagos.fec_emi','orden_pagos.moneda',
             'detalle_orden_pagos.baseimponiblelocal')
             ->where('orden_pagos.stsorpa','PEN')
             // ->where('detalle_orden_pagos.baseimponiblelocal', '<', floatval($tipagent->mayorpago))
@@ -55,7 +61,7 @@ class RetentionIslrController extends Controller
         }
         elseif ($tipagent->mayorpago == 'TODO PAGO') {
             $registerOrderPay = OrdenPago::join('detalle_orden_pagos','orden_pagos.idorpa','=','detalle_orden_pagos.idorpa')
-            ->select('orden_pagos.idorpa','orden_pagos.idprov','orden_pagos.numfact','orden_pagos.fec_emi','orden_pagos.moneda',
+            ->select('orden_pagos.idorpa','orden_pagos.idprov','orden_pagos.numfact','orden_pagos.numctrl','orden_pagos.fec_emi','orden_pagos.moneda',
             'detalle_orden_pagos.montototallocal','detalle_orden_pagos.montototalmoneda','detalle_orden_pagos.baseimponiblelocal')
             ->where('orden_pagos.stsorpa','PEN')
             ->get();
@@ -70,8 +76,7 @@ class RetentionIslrController extends Controller
         }
     }
 
-    public function create($idorpa,$idprov,$idage)
-    {
+    public function create($idorpa,$idprov,$idage){
         $fecEmi = Carbon::now()->format('Y-m-d');
         $perFiscal = Carbon::now()->format('Y');
         $month = Carbon::now()->format('m');
@@ -102,15 +107,14 @@ class RetentionIslrController extends Controller
         return view('islr.create',compact('registerOrderPay','supplier','tipagent','fecEmi','perFiscal','month','nVoucher','numOper'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $this->validate($request,[
             'numfact' => 'required',
             'numctrl' => 'required',
             'base' => 'required',
         ]);
        
-      
+        $supplier = Proveedor::find(intval($request->get('idprov')));
         $pay = OrdenPago::join('comprobante_pagos','orden_pagos.idorpa','=','comprobante_pagos.idorpa')
             ->select('comprobante_pagos.idpag','orden_pagos.numfact','orden_pagos.numctrl')
             ->where('orden_pagos.idorpa',intval($request->get('idorpa')))
@@ -121,12 +125,22 @@ class RetentionIslrController extends Controller
         $idcta2 = CatgSubCuenta::where('idscu', $request->get('subaccountname2'))
             ->first();
 
+        $seatTaxes = new Asiento();
+        $seatTaxes->fec_asi = $request->get('fecemi');
+        $seatTaxes->observacion ="Registro de retencion I.S.L.R Para el proveedor " . $supplier->nombre;
+        $seatTaxes->idcta1 = 37;
+        $seatTaxes->idcta2 = 79;
+        $seatTaxes->descripcion = "Registro de retencion I.S.L.R Para el proveedor " . $supplier->nombre;
+        $seatTaxes->monto_deb = floatval($request->get('taxesreten'));
+        $seatTaxes->monto_hab = floatval($request->get('taxesreten'));
+        $seatTaxes->save();
+
         $seatAmount = new Asiento();
         $seatAmount->fec_asi = $request->get('fecemi');
-        $seatAmount->observacion = $request->get('observation');
-        $seatAmount->idcta1 = $idcta1->idcta;
-        $seatAmount->idcta2 = $idcta2->idcta;
-        $seatAmount->descripcion = $request->get('description');
+        $seatAmount->observacion = "Cierre de cuenta por pagar I.S.L.R Para el proveedor " . $supplier->nombre;
+        $seatAmount->idcta1 = 79;
+        $seatAmount->idcta2 = 37;
+        $seatAmount->descripcion = "Cierre de cuenta por pagar I.S.L.R para el proveedor " . $supplier->nombre;
         $seatAmount->monto_deb = floatval($request->get('taxesreten'));
         $seatAmount->monto_hab = floatval($request->get('taxesreten'));
         $seatAmount->save();
@@ -198,12 +212,10 @@ class RetentionIslrController extends Controller
           return $pdf->download("retencioniva_" . $supplier->nombre . ".pdf");
     }
 
-    public function tipcontribuyente()
-    {
+    public function tipcontribuyente(){
         return TipoAgente::distinct()->get(['tippersona']);
     }
-    public function tipagente(Request $request)
-    {
+    public function tipagente(Request $request){
         return TipoAgente::where("tippersona",$request->tippersona)->orderBy('concepto','asc')->get();
     }
 }

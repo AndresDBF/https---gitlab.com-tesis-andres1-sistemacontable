@@ -27,17 +27,17 @@
                     <input type="text" id="name" name="name" class="form-control" value="{{ $user->name }}" required>
                 </div>
 
+                <div class="form-group">
+                    <label for="name">email</label>
+                    <input type="text" id="name" name="name" class="form-control" value="{{ $user->email }}" required>
+                </div>
+                
                 @foreach ($roles as $role)
                     <div class="form-check">
                         {{ Form::checkbox('roles[]', $role->id, false, ['class' => 'form-check-input','id' => 'role-'.$role->id]) }}
                         {{ Form::label('role-'.$role->id, $role->name, ['class' => 'form-check-label']) }}
                     </div>
                 @endforeach
-
-
-                {{-- Resto del formulario --}}
-                {{-- ... --}}
-
                 <button type="submit" class="btn btn-primary">Guardar Cambios</button>
             </form>
         </div>

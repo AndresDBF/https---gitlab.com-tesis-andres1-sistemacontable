@@ -112,7 +112,7 @@
     </div>
     <div class="block">
         <div class="block-2">
-            <h3 class="datos">Libro Diario</h3>
+            <h3 class="datos">Reporte de Egresos</h3>
         </div>
     </div>
     <div>
@@ -120,32 +120,32 @@
         <table class="table">
             <thead class="gris">
                 <th>fecha de Asiento</th>
+                <th>Descripcion</th>
                 <th>Cuenta 1</th>
                 <th>Cuenta 2</th>
-                <th>Descripcion</th>
                 <th>Debe</th>
                 <th>Haber</th>
             </thead>
             <tbody>
-                @foreach ($accounts as $acco)
+                @foreach ($expenses as $expe)
                     <tr>
-                        <th>{{$acco->fec_asi}}</th>
-                        <th>{{$acco->idcta1}}</th>
-                        <th>{{$acco->idcta2}}</th>
-                        <th>{{$acco->descripcion}}</th>
-                        <th>{{$acco->monto_deb}}</th>
-                        <th>{{$acco->monto_hab}}</th>
+                        <th>{{$expe->fec_asi}}</th>
+                        <th>{{$expe->descripcion}}</th>
+                        <th>{{$expe->tipsubcta1}}</th>
+                        <th>{{$expe->tipsubcta2}}</th>
+                        <th>{{$expe->monto_deb}}</th>
+                        <th>{{$expe->monto_hab}}</th>
                     </tr>
                 @endforeach
             </tbody>
             
         </table>
     </div>
- {{--    <div class="borde-total">
+{{--     <div class="borde-total">
         <div>
             <p>Totales: {{$sumdeb}}  {{$sumhab}}</p>
             
-        </div>
-    </div> --}}
+        </div> --}}
+    </div>
 </body>
 </html>

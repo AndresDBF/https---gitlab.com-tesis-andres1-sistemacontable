@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\Session;
 
 class ConfigPayrollController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can:chargescreate')->only('chargescreate','chargesStore');
+        $this->middleware('can:chargeedit')->only('chargeedit','chargesupdate');
+        $this->middleware('can:chargesdelete')->only('chargesdelete');
+        $this->middleware('can:valueedit')->only('valueedit','valueupdate');
+
+    }
     //cargos de empleado
     public function chargescreate(){
         return view('payroll.charge.create');

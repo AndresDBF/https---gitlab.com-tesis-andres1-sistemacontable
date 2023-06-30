@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asiento;
 use App\Models\Cliente;
 use Illuminate\Http\Request;
 use App\Models\ConceptoFact;
@@ -22,10 +23,14 @@ class FacturasController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:findcustomer')->only('index');
+        $this->middleware('can:createinvoiceing')
+             ->only('createinvoiceing','storeinvoiceing','createdetinvoiceing','storedetinvoiceing',
+            'totalinvoice','convertToPdf','deleteInvoice','deletefact');
     }
     public function index(){
         $customer = Cliente::join('contr_clis','clientes.idcli','=','contr_clis.idcli')
-        ->select('clientes.idcli','clientes.nombre','clientes.tipid','clientes.identificacion','clientes.tiprif','clientes.telefono', 
+        ->select('clientes.idcli','clientes.nombre','clientes.tipid','clientes.identificacion','contr_clis.fec_emi','clientes.tiprif','clientes.telefono', 
         'clientes.email','contr_clis.stscontr','contr_clis.tip_pag','contr_clis.moneda','contr_clis.montopaglocal','contr_clis.montopagmoneda')
         ->orderBy('clientes.nombre')
         ->paginate(10);
@@ -36,6 +41,7 @@ class FacturasController extends Controller
 
     }
     public function createinvoiceing($idcli){
+        $sysdate = Carbon::now();
         $query = ConceptoFact::orderBy('idcfact','desc')
                                ->take(1)
                                ->get();
@@ -51,6 +57,7 @@ class FacturasController extends Controller
                             ->first();   
                            
         $contrCli = ContrCli::where('idcli',$idcli)->first();
+        
         //cambiar por una variable local                    
             $values = count($query);
             if ($values == 0){
@@ -73,14 +80,24 @@ class FacturasController extends Controller
             $fecemi = Carbon::now()
                             ->format('Y-m-d');
         $customer = Cliente::where('idcli',$idcli)->first();
-       
-        if ($contrCli->montopaglocal > $invoice->sum_mtototallocal || $contrCli->montopagmoneda > $invoice->sum_mtototalmoneda) {
+      // dd($sysdate->subDays(365) > $contrCli->fec_emi); cuando la fecha se haya vencido el contrato
+      // dd($sysdate->subDays(365) < $contrCli->fec_emi); cuando la fecha del contrato esta vigente
+        if ($sysdate->subDays(365) > $contrCli->fec_emi) {
             return view('invoice/create',compact('idcli','numing','fecemi','tippag','numfact','numctrl','customer','money'));
         }
-        else{
-            Session::flash('error','monto total de giros superados para este cliente');
-            return redirect()->route('findcustomer');
+        else {
+            if ($contrCli->montopaglocal > $invoice->sum_mtototallocal || $contrCli->montopagmoneda > $invoice->sum_mtototalmoneda) {
+                return view('invoice/create',compact('idcli','numing','fecemi','tippag','numfact','numctrl','customer','money'));
+            }
+            else{
+                Session::flash('error','monto total de giros superados para este cliente');
+                return redirect()->route('findcustomer');
+            }
         }
+        
+            
+            
+        
     }
 
     public function storeinvoiceing(Request $request){
@@ -141,13 +158,16 @@ class FacturasController extends Controller
     }
 
     public function storedetinvoiceing(Request $request){
+        
         $numconcept = intval($request->get('numconcept'));
         $tasa_cambio = floatval($request->get('tasa_cambio'));
         $tipmoney = Factura::where('idfact',intval($request->get('idfact')))->first();
         $contrCli = ContrCli::select('montopaglocal','montopagmoneda')
                             ->where('idcli',intval($tipmoney->idcli))
                             ->first();
+       
         if ($request->get('numconcept') == 1){
+            
             
             $amountUnit = floatval($request->get('amountUnit_0'));
             $amountTotal = floatval($request->get('total-amount0'));
@@ -226,7 +246,7 @@ class FacturasController extends Controller
             }
         }
         $idfact = $conceptFact->idfact; 
-            
+        
         return redirect()->route('totalinvoice', ['idfact' => $idfact]);
         
     }
@@ -262,6 +282,16 @@ class FacturasController extends Controller
             'mtototallocal' => $totalFactlocal,
             'mtototalmoneda' => $totalFactmoneda
         ]);
+
+        $seat = new Asiento();
+        $seat->fec_asi = $detInvoice->fec_emi;
+        $seat->observacion = "Cuenta por cobrar de giro para " . $customer->nombre;
+        $seat->idcta1 = 261; 
+        $seat->idcta2 = 118;
+        $seat->descripcion = "Cuenta por cobrar de giro para " . $customer->nombre;
+        $seat->monto_deb = $baseImponibleLocal;
+        $seat->monto_hab = $baseImponibleLocal;
+        $seat->save();
         /* $detInvoice->monto = $baseImponible;
         $detInvoice->mtoimponible = $baseImponible;
         $detInvoice->mtoimpuesto = $totalImpuesto;
@@ -272,8 +302,7 @@ class FacturasController extends Controller
         'invoice','descFact','idfact'));
     }
 
-    public function convertToPdf($idfact,$idcli)
-    {
+    public function convertToPdf($idfact,$idcli){
         $customer = Cliente::find($idcli);
 
         $invoice = Factura::where('idfact',$idfact)

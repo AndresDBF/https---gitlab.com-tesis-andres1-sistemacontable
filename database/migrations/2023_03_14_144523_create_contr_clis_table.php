@@ -22,6 +22,7 @@ class CreateContrClisTable extends Migration
             $table->string('stscontr',3);
             $table->string('ind_girosre',1);
             $table->string('tip_pag');
+            $table->date('fec_emi')->format('Y-m-d');
             $table->float('montopaglocal',14,2);
             $table->float('montopagmoneda',14,2);
             $table->string('moneda',3);

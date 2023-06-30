@@ -30,6 +30,9 @@ class IncomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:searchIncome')->only('searchIncome');
+        $this->middleware('can:findIncome')->only('findIncome');
+        $this->middleware('can:createIng')->only('createIng','storeIncome','imprreportingr','verifyaccount');
     }
     public function searchIncome(){
         $customer = Cliente::join('contr_clis','clientes.idcli','=','contr_clis.idcli')
@@ -112,6 +115,7 @@ class IncomeController extends Controller
         $iddcomp = $request->get('iddcomp');
         $coduser = auth()->id();
         $iddfact = intval($request->get('iddfact'));
+        $customer = Cliente::find(intval($request->get('idcli')));
         //para sacar el monto del asiento
         $finalAmount = floatval($request->get('montoasiento'));
         $detInvoice = DetFact::where('iddfact',$iddfact)->first();
@@ -125,17 +129,17 @@ class IncomeController extends Controller
         $seatAmount->idcta1 = $idcta1->idcta;
         $seatAmount->idcta2 = $idcta2->idcta;
         $seatAmount->descripcion = $request->get('description');
-        $seatAmount->monto_deb = $finalAmount;
-        $seatAmount->monto_hab = $finalAmount;
+        $seatAmount->monto_deb = floatval($detInvoice->mtoimponiblelocal);
+        $seatAmount->monto_hab = floatval($detInvoice->mtoimponiblelocal);
         $seatAmount->save();
 
         if ($amountTaxes > 0) {
             $seatTaxes = new Asiento();
             $seatTaxes->fec_asi = $request->get('fecIncome');
-            $seatTaxes->observacion = $request->get('observation');
-            $seatTaxes->idcta1 = 35;
+            $seatTaxes->observacion = "Retencion por pagar por ingreso de " . $customer->nombre;
+            $seatTaxes->idcta1 = 35; 
             $seatTaxes->idcta2 = 84;
-            $seatTaxes->descripcion = $request->get('description');
+            $seatTaxes->descripcion = "Retencion por pagar por ingreso de " . $customer->nombre;
             $seatTaxes->monto_deb = $amountTaxes * 0.75;
             $seatTaxes->monto_hab = $amountTaxes * 0.75;
             $seatTaxes->save();
@@ -143,10 +147,10 @@ class IncomeController extends Controller
         if ($difIgtf > 0 ) {
             $seatIgtf = new Asiento();
             $seatIgtf->fec_asi = $request->get('fecIncome');
-            $seatIgtf->observacion = $request->get('observation');
-            $seatIgtf->idcta1 = 88;
-            $seatIgtf->idcta2 = 88;
-            $seatIgtf->descripcion = $request->get('description');
+            $seatIgtf->observacion = "Gastos de I.G.T.F por ingreso de " . $customer->nombre;
+            $seatIgtf->idcta1 = 259;
+            $seatIgtf->idcta2 = $idcta1->idcta;
+            $seatIgtf->descripcion = "Gastos de I.G.T.F por ingreso de " . $customer->nombre;
             $seatIgtf->monto_deb = $difIgtf;
             $seatIgtf->monto_hab = $difIgtf;
             $seatIgtf->save();
@@ -282,8 +286,7 @@ class IncomeController extends Controller
         return view('income.total',compact('income','customer','detInvoice','proofIncome','idfact','idcli','idcom'));
     }
 
-    public function imprreportingr($idfact, $idcli,$idcom)
-    {
+    public function imprreportingr($idfact, $idcli,$idcom){
         // ...
         $income = Ingreso::orderBy('iding','desc')->first();
         $detProofIncome = ComprobanteIngreso::join('det_comprobante_ings','comprobante_ingresos.idcom','=','det_comprobante_ings.idcom')
@@ -335,8 +338,7 @@ class IncomeController extends Controller
         return $dompdf->stream('Ingresos_por_cliente.pdf');
     }
 
-    public function verifyaccount(Request $request)
-    {
+    public function verifyaccount(Request $request){
         if ($request->get('subaccountname1') == 'Seleccionar SubCuenta' || $request->get('subaccountname2') == 'Seleccionar SubCuenta') {
             Session::flash('error', 'Debe crear el asiento con una subCuenta');
             return redirect()->route('storeIncome');

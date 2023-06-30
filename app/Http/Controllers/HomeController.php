@@ -7,6 +7,7 @@ use App\Models\Cliente;
 use App\Models\ContrCli;
 use App\Models\Nomina;
 use App\Models\Proveedor;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -41,8 +42,10 @@ class HomeController extends Controller
         
         $countemployeeAct = count($employeeAct);
         $countCliAct = count($contrCliAct);
+
+        $user = Auth::user();
         
 
-        return view('home',compact('countSupplier','countCustomer','countemployee','contrCliAct','countemployeeAct','countCliAct'));
+        return view('home',compact('countSupplier','countCustomer','countemployee','contrCliAct','countemployeeAct','countCliAct','user'));
     }
 }

@@ -21,6 +21,10 @@ class PurchaseOrderController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:reportorder')->only('reportorder');
+        $this->middleware('can:autorizar')->only('autorizar');
+        $this->middleware('can:createorco')->only('create','storeorder','createdetorder','storedetpurchase','totalorder','deleteorderco');
+        $this->middleware('can:deleteordercom')->only('deleteordercom');
     }
 
     public function reportorder(){
@@ -34,7 +38,7 @@ class PurchaseOrderController extends Controller
     }
 
     public function findsupplier(){
-        $tipCategory = CategoriaProveedor::all();
+        $tipCategory = CategoriaProveedor::orderBy('descripcion','asc')->get();
         $supplier = Proveedor::all();
         return view('purchase.find',compact('tipCategory','supplier'));
     }
@@ -78,6 +82,7 @@ class PurchaseOrderController extends Controller
     }
 
     public function storeorder(Request $request){
+
         $this->validate($request,[
             'days' => 'required|numeric',
         ]);
@@ -128,9 +133,6 @@ class PurchaseOrderController extends Controller
     public function storedetpurchase(Request $request){
 
         $numConcept = intval($request->get('numconcept'));
-        OrdenCompra::where('idorco',$request->get('idorco'))->update([
-            'moneda' => $request->get('money')
-        ]);
         if (strlen($request->get('money')) > 3) {
             Session::flash('error','Seleccione un tipo de moneda');
             return redirect()->route('createdetorder',$numConcept);
@@ -323,12 +325,11 @@ class PurchaseOrderController extends Controller
                                         ->sum('montobienlocal');
         $sumAmountmoneda = DetalleOrdenCompra::where('idorco',$idorco)
                                         ->sum('montobienmoneda');
-        $money = OrdenCompra::select('moneda')
-                            ->where('idorco',$idorco)
+        $purchase = OrdenCompra::where('idorco',$idorco)
                             ->first();
        
         
-        return view('purchase.total',['detailPurchase' => $detailPurchase],compact('amountPurchase','idorco','sumAmountlocal','sumAmountmoneda','money'));
+        return view('purchase.total',['detailPurchase' => $detailPurchase],compact('amountPurchase','idorco','sumAmountlocal','sumAmountmoneda','purchase'));
     }
 
     public function deleteorderco($idorco){

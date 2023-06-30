@@ -26,6 +26,9 @@
                         <div class="mb-3">
                             <input type="hidden" name="valueVh" value="{{$valueVh->monto_valor}}">
                             <label for="" class="well-lg form-label">Dias Trabajados</label>
+                            @if($errors->first('dayst'))
+                                <p class="text-danger">{{$errors->first('dayst')}}</p>
+                            @endif
                             <input type="number" name="dayst" class="form-control">
                         </div>
                         <div class="well">
@@ -86,6 +89,9 @@
                             <div class="row">
                                 <div class="col-xs-6 col-sm-6 col-md-6">
                                     <label for="" class="well-lg form-label">Monto del Incentivo de mes</label>
+                                    @if($errors->first('incent'))
+                                        <p class="text-danger">{{$errors->first('incent')}}</p>
+                                    @endif
                                     <input type="number" name="incent" class="form-control">
                                 </div>
                                 <div class="col-xs-4 col-sm-4 col-md-4">

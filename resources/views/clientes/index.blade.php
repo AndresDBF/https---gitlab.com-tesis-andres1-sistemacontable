@@ -12,7 +12,16 @@
         {{ session('mensaje') }}
     </div>
     @endif
-    <a href="clientes/create" class="btn btn-primary mb-3">CREAR</a>
+    @if(session('error'))
+    <div class="alert alert-danger" role="alert">
+        {{ session('error') }}
+    </div>
+    @endif
+
+    @can('clientes.create'){{-- para dar el permiso de que se muestre o no se muestre para el rol --}}
+        <a href="clientes/create" class="btn btn-primary mb-3">CREAR</a>
+    @endcan
+
     <table id="clientes" class="table table-striped table-bordered shadow-lg mt-4" style="width: 100%">
 
         <thead class="bd-primary text-dark">
@@ -20,7 +29,7 @@
                 <th scope="col">ID</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Identificación</th>
-                <th scope="col">Status de Contrato</th>
+                <th scope="col">Fecha de Emisión del Contrato</th>
                 <th scope="col">Tipo de Contrato</th>
                 <th scope="col">Acciones</th>
             </tr>
@@ -35,7 +44,7 @@
                     @else
                         <th>{{$cli->tipid}}-{{ $cli->identificacion}}</th>
                     @endif
-                    <th>{{$cli->stscontr}}</th>
+                    <th>{{$cli->fec_emi}}</th>
                     @if ($cli->tip_pag == 'ANU')
                         <th>ANUAL</th>
                     @elseif($cli->tip_pag =='MEN')
@@ -46,13 +55,17 @@
                         <th>TRIMESTRAL</th>
                     @endif
                     <td>
-                        <a href="{{ route('clientes.edit', ['cliente' => $cli->idcli]) }}" class="btn btn-info mb-2" onclick="confirmEdit(event, '{{ route('clientes.edit', ['cliente' => $cli->idcli]) }}')">Editar</a>
-
-                        <form action="{{route('clientes.destroy',$cli->idcli)}}" method="POST" id="deleteForm{{$cli->idcli}}">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger pt-2" onclick="confirmDelete(event, 'deleteForm{{$cli->idcli}}')">Borrar</button>
-                        </form>
+                        @can('clientes.edit')
+                            <a href="{{ route('clientes.edit', ['cliente' => $cli->idcli]) }}" class="btn btn-info mb-2" onclick="confirmEdit(event, '{{ route('clientes.edit', ['cliente' => $cli->idcli]) }}')">Editar</a> 
+                        @endcan
+                        
+                        @can('clientes.destroy')
+                            <form action="{{route('clientes.destroy',$cli->idcli)}}" method="POST" id="deleteForm{{$cli->idcli}}">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger pt-2" onclick="confirmDelete(event, 'deleteForm{{$cli->idcli}}')">Borrar</button>
+                            </form>
+                        @endcan
                     </td>
                 </tr>
             @endforeach

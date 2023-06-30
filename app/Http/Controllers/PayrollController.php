@@ -18,6 +18,16 @@ use Carbon\Carbon;
 
 class PayrollController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can:payroll.index')->only('index');
+        $this->middleware('can:payroll.create')->only('create','store');
+        $this->middleware('can:payroll.edit')->only('edit','update');
+        $this->middleware('can:payroll.destroy')->only('destroy');
+        $this->middleware('can:payemployee')->only('payemployee','storepayemployee');
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -209,7 +219,19 @@ class PayrollController extends Controller
             'dayst' => 'required',
             'incent' => 'required'
         ]);
-       
+
+        if (strlen($request->get('money')) > 3) {
+            Session::flash('error','debe seleccionar un tipo de moneda para el incentivo');
+            return redirect()->route('payemployee',intval($request->get('idnom')));
+        }
+        if (strlen($request->get('money')) <= 3 && $request->get('incent') == null) {
+            Session::flash('error','debe seleccionar el monto del incentivo');
+            return redirect()->route('payemployee',intval($request->get('idnom')));
+        }
+        if (strlen($request->get('money')) <= 3 && $request->get('incent') != null && $request->tasa_cambio == null) {
+            Session::flash('error','debe seleccionar la tasa de cambio');
+            return redirect()->route('payemployee',intval($request->get('idnom')));
+        }
         if (($request->get('indhed') == 'N' && $request->get('amounthed') != null) || ($request->get('indhed') == 'S' && $request->get('amounthed') == null)) {
             Session::flash('error','ingrese el valor de horas extras diurnas');
             return redirect()->route('payemployee',intval($request->get('idnom')));
@@ -316,6 +338,24 @@ class PayrollController extends Controller
             $seatAmount->idcta1 = 211;
             $seatAmount->idcta2 = $idcta2->idcta;
             $seatAmount->descripcion = $request->get('description');
+            switch ($request->get('money')) {
+                case 'USD':
+                    $seatAmount->monto_deb = floatval($request->get('incent') * $request->get('tasa_cambio'));
+                    $seatAmount->monto_hab = floatval($request->get('incent') * $request->get('tasa_cambio'));
+                    break;
+                case 'EUR':
+                    $seatAmount->monto_deb = floatval($request->get('incent') * $request->get('tasa_cambio'));
+                    $seatAmount->monto_hab = floatval($request->get('incent') * $request->get('tasa_cambio'));
+                    break; 
+                case 'COP':
+                    $seatAmount->monto_deb = floatval($request->get('incent') / $request->get('tasa_cambio'));
+                    $seatAmount->monto_hab = floatval($request->get('incent') / $request->get('tasa_cambio'));
+                    break;
+                case 'BS':
+                    $seatAmount->monto_deb = floatval($request->get('incent'));
+                    $seatAmount->monto_hab = floatval($request->get('incent'));
+                    break; 
+            }
             $seatAmount->monto_deb = floatval($request->get('incent') * $request->get('tasa_cambio'));
             $seatAmount->monto_hab = floatval($request->get('incent') * $request->get('tasa_cambio'));
             $seatAmount->save();

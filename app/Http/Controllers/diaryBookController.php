@@ -9,19 +9,19 @@ use App\Models\CatgSubCuenta;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-
-
 class diaryBookController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can:diarybook')->only('index','storebook');
+    }
     public function index(){
-
-        
         return view('books.index');
-
     }
     
     public function storebook(Request $request){
@@ -45,14 +45,12 @@ class diaryBookController extends Controller
         $sysdate = Carbon::now()->format('Y-m-d');
         $user = Auth::user();
         $nombreUsuario = $user->name;
-        $accounts = CatCuenta::join('asientos', 'cat_cuentas.idcta','=','asientos.idcta1')
-        ->join('catg_sub_cuentas', 'cat_cuentas.idcta', '=', 'catg_sub_cuentas.idcta')
-        ->select('asientos.fec_asi','catg_sub_cuentas.tipsubcta','catg_sub_cuentas.descripcion','asientos.monto_deb', 'asientos.monto_hab')
-        ->where('asientos.fec_asi','>=',$fecini)//NO AGARRA EL FORMATO
-        ->where('asientos.fec_asi','<=',$fecfin)
-        ->orderBy('asientos.fec_asi','asc')
-        ->get();
-
+        $accounts = DB::table('asientos as a')
+                    ->join('catg_sub_cuentas as c1', 'a.idcta1', '=', 'c1.idcta')
+                    ->join('catg_sub_cuentas as c2', 'a.idcta2', '=', 'c2.idcta')
+                    ->select('a.fec_asi', 'c1.tipsubcta as idcta1', 'c2.tipsubcta as idcta2', 'a.monto_deb', 'a.monto_hab', 'a.descripcion')
+                    ->get();
+        
         $sumdeb = CatCuenta::join('asientos', 'cat_cuentas.idcta','=','asientos.idcta1')
         ->join('catg_sub_cuentas', 'cat_cuentas.idcta', '=', 'catg_sub_cuentas.idcta')
         ->select('asientos.fec_asi','catg_sub_cuentas.tipsubcta','catg_sub_cuentas.descripcion','asientos.monto_deb', 'asientos.monto_hab')

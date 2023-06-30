@@ -24,6 +24,6 @@ class ValorNominaSeeder extends Seeder
             array('concepto_valor' => 'CestaTicket', 'monto_valor' => '45', 'fecsts' => $fecsts) ,
         ];
 
-        ValoresNomina::insert($data);
+        ValoresNomina::insert($data); 
     }
 }

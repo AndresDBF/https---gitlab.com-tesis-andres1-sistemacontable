@@ -45,7 +45,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-between ml-3 mr-5">
-            <label class="fw-bold fs-4 me-auto">Monto Base Imponible</label>
+            <label class="fw-bold fs-4 me-auto">Monto Base Imponible ({{$payOrder->moneda}})</label>
             @if ($payOrder->moneda != 'BS')
                 <label class="fw-bold ms-auto fs-4">{{$detailOrder->baseimponiblemoneda}}</label>
             @else
@@ -53,7 +53,7 @@
             @endif
         </div>   
         <div class="d-flex justify-content-between ml-3 mr-5">
-            <label class="fw-bold fs-4 me-auto">Monto Total del IVA</label>
+            <label class="fw-bold fs-4 me-auto">Monto Total del IVA ({{$payOrder->moneda}})</label>
             @if ($payOrder->moneda != 'BS')
                 <label class="fw-bold ms-auto fs-4">{{$detailOrder->montoivamoneda}}</label>
             @else
@@ -61,7 +61,7 @@
             @endif
         </div>
         <div class="d-flex justify-content-between ml-3 mr-5">
-            <label class="fw-bold fs-4 me-auto">Valor Total</label>
+            <label class="fw-bold fs-4 me-auto">Valor Total ({{$payOrder->moneda}})</label>
             @if ($payOrder->moneda != 'BS')
                 <label class="fw-bold ms-auto fs-4">{{$detailOrder->montototalmoneda}}</label>
             @else

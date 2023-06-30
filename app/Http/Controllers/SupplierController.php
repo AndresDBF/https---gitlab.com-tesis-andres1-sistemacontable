@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CategoriaProveedor;
+use App\Models\ComprobantePago;
+use App\Models\DetalleComprobantePago;
 use App\Models\Proveedor;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Pagination\Paginator;
@@ -12,6 +14,10 @@ class SupplierController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:supplier.index')->only('index');
+        $this->middleware('can:supplier.create')->only('create','store');
+        $this->middleware('can:supplier.edit')->only('edit','update');
+        $this->middleware('can:supplier.destroy')->only('destroy');
     }
     /**
      * Display a listing of the resource.
@@ -83,6 +89,7 @@ class SupplierController extends Controller
         $supplier->indcontribuyente = $request->get('reten');
         $supplier->porcentajereten = $porcreten;
         $supplier->save();
+        Session::flash('message','se ha creado el proveedor correctamente');
         return redirect('/supplier');
     }
 
@@ -122,7 +129,7 @@ class SupplierController extends Controller
             $tipCategory = $tipSupplier->where('tip_prove', $categorySupplier)->first()->descripcion;
         }
         
-
+        Session::flash('message','se ha modificado el proveedor correctamente');
         return view('supplier.edit',compact('supplier','tipSupplier','tipCategory','categorySupplier','indTiprif'));
     }
 
@@ -161,8 +168,14 @@ class SupplierController extends Controller
      */
     public function destroy($id)
     {
-        $supplier = Proveedor::find($id);
-        $supplier->delete();
-        return redirect('/supplier');
+        $pay = DetalleComprobantePago::where('idprov',$id)->get();
+        if (count($pay) > 0 ) {
+            Session::flash('error','Existen registros contables de este proveedor, no se puede borrar');
+            return redirect('/supplier');
+        } else {
+            $supplier = Proveedor::find($id);
+            $supplier->delete();
+            return redirect('/supplier');
+        }  
     }
 }

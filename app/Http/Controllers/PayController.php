@@ -34,6 +34,10 @@ class PayController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:registerpay')->only('registerpay');
+        $this->middleware('can:createpayorder')->only('create','store','totalpay','relegrepdf');
+        
+
     }
 
     public function index(){
@@ -102,8 +106,8 @@ class PayController extends Controller
                                 ->first();
         $idcta2 = CatgSubCuenta::where('idscu', $request->get('subaccountname2'))
                                 ->first();
-        $amount = floatval($payOrder->baseimponiblelocal);
-        $amountTaxes = floatval($payOrder->montoivalocal);
+        $amount= floatval($payOrder->baseimponiblelocal);
+        $amountTaxes= floatval($payOrder->montoivalocal);
         $tasa = $payOrder->tasa_cambio;
         $seatAmount = new Asiento();
         $seatAmount->fec_asi = $request->get('fecTransiction');
@@ -111,19 +115,8 @@ class PayController extends Controller
         $seatAmount->idcta1 = $idcta1->idcta;
         $seatAmount->idcta2 = $idcta2->idcta;
         $seatAmount->descripcion = $request->get('description');
-        if ($request->get('money') != 'BS') {
-            if ($request->get('money') == 'USD' || $request->get('money') == 'EUR') {
-                $seatAmount->monto_deb = $amount * $tasa;
-                $seatAmount->monto_hab = $amount * $tasa;
-            } else {
-                $seatAmount->monto_deb = $amount / $tasa;
-                $seatAmount->monto_hab = $amount / $tasa;
-            }
-        }
-        else{
-            $seatAmount->monto_deb = $amount;
-            $seatAmount->monto_hab = $amount;
-        }
+        $seatAmount->monto_deb = $amount;
+        $seatAmount->monto_hab = $amount;
         $seatAmount->save();
 
         if ($request->get('indiva') == 'S') {
@@ -145,8 +138,8 @@ class PayController extends Controller
             $seatTaxes->idcta1 = 37;
             $seatTaxes->idcta2 = 79;
             $seatTaxes->descripcion = $request->get('description');
-            $seatTaxes->monto_deb = $amountTaxes;
-            $seatTaxes->monto_hab = $amountTaxes;
+            $seatTaxes->monto_deb = $amount;
+            $seatTaxes->monto_hab = $amount;
             $seatTaxes->save();
         }
        
@@ -172,11 +165,11 @@ class PayController extends Controller
         $proofPay->moneda = $request->get('money');
         if ($request->get('money') == 'USD' || $request->get('money') == 'EUR') {
             $proofPay->montolocal =  $amount;
-            $proofPay->montomoneda = $amount * $tasa;
+            $proofPay->montomoneda = $amount / $tasa;
         }
         elseif ($request->get('money') == 'COP' ){
             $proofPay->montolocal =  $amount;
-            $proofPay->montomoneda = $amount / $tasa;
+            $proofPay->montomoneda = $amount * $tasa;
         }
         elseif($request->get('money') == 'BS'){
             $proofPay->montolocal = $amount;

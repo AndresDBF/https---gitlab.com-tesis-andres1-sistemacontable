@@ -12,6 +12,13 @@ use Carbon\Carbon;
 
 class ProyectGastController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can:proyectgast')->only('index');
+        $this->middleware('can:createproyectgast')->only('createproyectgast','storeproyectgast');
+
+    }
     public function index(){
         $sysdate = Carbon::now()->format('Y-m-d');
         $proyect = ProyeccionGasto::orderBy('fecstsfin','asc')

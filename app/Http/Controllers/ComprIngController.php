@@ -21,7 +21,12 @@ class ComprIngController extends Controller
 {
     public function __construct()
     {
+        //utilizado para restriccion de rutas
         $this->middleware('auth');
+        $this->middleware('can:searchInvoice')->only('searchInvoice'); //solo se aplicara al metodo index
+        $this->middleware('can:findInvoice')->only('findInvoice');
+        $this->middleware('can:createIncome')
+             ->only('createIncome','storeproof','totalproof','convertToPdf','deleteproof');
     }
     
     public function searchInvoice(){
@@ -33,8 +38,7 @@ class ComprIngController extends Controller
         return view("proof.find",compact('customer'));
     }
 
-    public function findInvoice(Request $request)
-    {
+    public function findInvoice(Request $request){
         $identification = $request->get('customer');
         $nameCli = Cliente::select('idcli', 'nombre', 'tipid','identificacion', 'tiprif')
             ->where('identificacion', $identification)
@@ -149,8 +153,7 @@ class ComprIngController extends Controller
         return view('proof.total',compact('proofIncome','detProofIncome','customer','idcli','idcom'));
     }
 
-    public function convertToPdf($idcom, $idcli)
-    {
+    public function convertToPdf($idcom, $idcli){
         // ...
 
         $proofIncome = ComprobanteIngreso::find($idcom);
@@ -173,8 +176,6 @@ class ComprIngController extends Controller
 
         return $dompdf->stream('recibo.pdf');
     }
-
-
 
     public function deleteproof($idcom){
        

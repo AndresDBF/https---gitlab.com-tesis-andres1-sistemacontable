@@ -29,6 +29,14 @@ use Illuminate\Support\Facades\Session;
 
 class RetentionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can:listpay')->only('index');
+        $this->middleware('can:createretention')->only('create','store','pdf');
+        $this->middleware('can:createretening')->only('createretening','storeretening','totalretentioniva');
+    }
+
     public function index(){
         $registerOrderPay = OrdenPago::join('detalle_orden_pagos','orden_pagos.idorpa','=','detalle_orden_pagos.idorpa')
                                      ->select('orden_pagos.idorpa','orden_pagos.idprov','orden_pagos.numfact','orden_pagos.numctrl','orden_pagos.moneda',
@@ -37,7 +45,7 @@ class RetentionController extends Controller
                                      ->where('detalle_orden_pagos.indiva','S')
                                      ->get();
         $registerIncome = Factura::join('det_facts','facturas.idfact','=','det_facts.idfact')
-                                 ->select('det_facts.fec_emi','det_facts.numfact','det_facts.numctrl','det_facts.mtoimpuestolocal',
+                                 ->select('det_facts.fec_emi','det_facts.numfact','det_facts.numctrl','det_facts.mtoimponiblelocal', 
                                         'facturas.idfact','facturas.idcli')
                                  ->where('det_facts.stsfact','INC')
                                  ->orderBy('fec_emi','asc')
@@ -151,10 +159,14 @@ class RetentionController extends Controller
         $detRetention->idret = $retention->idret;
         $detRetention->fecemifact = $request->get('fecemi');
         if ($request->get('numfact') != $pay->numfact) {
+            $retention = Retencion::where('idret',$retention->idret)->delete();
+            $seat = Asiento::where('idasi',$seatAmount->idasi)->delete();
             Session::flash('error','el numero de factura no coincide con el Pago registrado');
             return redirect()->route('createretention',['idorpa' => intval($request->get('idorpa')), 'idprov' => intval($request->get('idprov'))]);
         }
         elseif ($request->get('numctrl') != $pay->numctrl) {
+            $retention = Retencion::where('idret',$retention->idret)->delete();
+            $seat = Asiento::where('idasi',$seatAmount->idasi)->delete();
             Session::flash('error','el numero de control de factura no coincide con el Pago registrado');
             return redirect()->route('createretention',['idorpa' => intval($request->get('idorpa')), 'idprov' => intval($request->get('idprov'))]);
         }
@@ -185,38 +197,23 @@ class RetentionController extends Controller
             'taxes' => 'required',
             'taxesreten' => 'required',
         ]);
-
+        $customer = Cliente::find(intval($request->get('idcli')));
         $invoice = Factura::join('det_facts','facturas.idfact','=','det_facts.idfact')
                         ->select('facturas.idfact','det_facts.iddfact','det_facts.numfact','det_facts.numctrl')
                         ->where('facturas.idfact',intval($request->get('idfact')))
                         ->first();
                        
         $income = Ingreso::where('iddfact',intval($invoice->iddfact))->first();
-       
-        $idcta1 = CatgSubCuenta::select('idcta')
-                                ->where('idscu', $request->get('subaccountname1'))
-                                ->first();
-        $idcta2 = CatgSubCuenta::where('idscu', $request->get('subaccountname2'))
-                                ->first();
+
         $seatAmount = new Asiento();
         $seatAmount->fec_asi = $request->get('fecemi');
-        $seatAmount->observacion = "Pago de Retenció IVA de";
-        $seatAmount->idcta1 = $idcta1->idcta;
-        $seatAmount->idcta2 = $idcta2->idcta;
-        $seatAmount->descripcion = $request->get('description');
+        $seatAmount->observacion = "Pago de Retención IVA por ingresos de " . $customer->nombre;
+        $seatAmount->idcta1 = 84;
+        $seatAmount->idcta2 = 35;
+        $seatAmount->descripcion = "Pago de Retención IVA por ingresos de " . $customer->nombre;
         $seatAmount->monto_deb = floatval($request->get('taxesreten'));
         $seatAmount->monto_hab = floatval($request->get('taxesreten'));
         $seatAmount->save();
-
-        $seativa = new Asiento();
-        $seativa->fec_asi = $request->get('fecemi');
-        $seativa->observacion = $request->get('observation');
-        $seativa->idcta1 = 84;
-        $seativa->idcta2 = 35;
-        $seativa->descripcion = $request->get('description');
-        $seativa->monto_deb = floatval($request->get('taxes'));
-        $seativa->monto_hab = floatval($request->get('taxes'));
-        $seativa->save();
 
         $retention = new RetencionIngreso();
         $retention->iding = intval($income->iding);
@@ -232,15 +229,15 @@ class RetentionController extends Controller
         $detRetention->idrein = $retention->idrein;
         $detRetention->fecemifact = $request->get('fecemifact');
         if ($request->get('numfact') != $invoice->numfact) {
-            $retention = RetencionIngreso::where('idret',$retention->idret)->delete();
-            $seat = Asiento::whereIn('idasi',[$seatAmount->idasi,$seativa->idasi])->delete();
+            $retention = RetencionIngreso::where('idrein',$retention->idrein)->delete();
+            $seat = Asiento::where('idasi',$seatAmount->idasi)->delete();
            
             Session::flash('error','el numero de factura no coincide con el Pago registrado');
             return redirect()->route('createretening',['idfact' => intval($request->get('idfact')), 'idcli' => intval($request->get('idcli'))]);
         }
         elseif ($request->get('numctrl') != $invoice->numctrl) {
-            $retention = RetencionIngreso::where('idret',$retention->idret)->delete();
-            $seat = Asiento::whereIn('idasi',[$seatAmount->idasi,$seativa->idasi])->delete();
+            $retention = RetencionIngreso::where('idrein',$retention->idrein)->delete();
+            $seat = Asiento::where('idasi',$seatAmount->idasi)->delete();
            
             Session::flash('error','el numero de control de factura no coincide con el Pago registrado');
             return redirect()->route('createretening',['idfact' => intval($request->get('idfact')), 'idcli' => intval($request->get('idcli'))]);

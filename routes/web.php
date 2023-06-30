@@ -20,6 +20,7 @@ use App\Http\Controllers\ConfigPayrollController;
 use App\Http\Controllers\OutSeatController;
 use App\Http\Controllers\ProyectGastController;
 use App\Http\Controllers\diaryBookController;
+use App\Http\Controllers\ReportIngGastController;
 use Illuminate\Support\Facades\Auth;
 //use App\Http\Controllers\ClientesController;
 
@@ -107,7 +108,7 @@ Route::post('storedetpurchase',[PurchaseOrderController::class,'storedetpurchase
 Route::get('totalorder/{idorco}',[PurchaseOrderController::class,'totalorder'])->name('totalorder');
 Route::get('deleteorderco/{idorco}', [PurchaseOrderController::class, 'deleteorderco'])->name('deleteorderco');
 Route::get('deleteordercom/{idorco}',[PurchaseOrderController::class,'deleteordercom'])->name('deleteordercom');
-Route::get('/autorizar/{idorco}',[PurchaseOrderController::class,'autorizar'])->name('autorizar');
+Route::get('autorizar/{idorco}',[PurchaseOrderController::class,'autorizar'])->name('autorizar');
 
 //Orden de Pago 
 Route::get('registerorder',[PayOrderController::class,'index'])->name('registerorder');
@@ -184,7 +185,12 @@ Route::post('storeproyectgast',[ProyectGastController::class,'storeproyectgast']
 //libro diario
 Route::get('diarybook',[diaryBookController::class,'index'])->name('diarybook');
 Route::post('storebook',[diaryBookController::class,'storebook'])->name('storebook');
-//CIERRE DE MES
+
+//Reporte de ingresos y egresos
+Route::get('reporting',[ReportIngGastController::class,'reporting'])->name('reporting');
+Route::post('storereporting',[ReportIngGastController::class,'storeing'])->name('storereporting');
+Route::get('reportgast',[ReportIngGastController::class,'reportgast'])->name('reportgast');
+Route::post('storereportgast',[ReportIngGastController::class,'storegast'])->name('storereportgast');
 
 
 Route::get('/excel/importar', [Importexcel::class, 'impportar'])->name('/excel/importar');

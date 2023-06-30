@@ -15,6 +15,7 @@ class ContrCli extends Model
         'stscontr',
         'ind_girosre',
         'tip_pag',
+        'fec_emi',
         'montopaglocal',
         'montolocalmoneda',
         'moneda',

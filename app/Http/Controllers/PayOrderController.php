@@ -23,6 +23,10 @@ class PayOrderController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:registerorder')->only('index');
+        $this->middleware('can:createpayorder')
+             ->only('createpayorder','store','detorder','storedetorder',
+            'totalorder','payorderpdf','deleteorderpa','deletedetorderpa');
     }
 
     public function index(){
@@ -174,9 +178,9 @@ class PayOrderController extends Controller
             }
             else {
                 $conceptOrder->montounitariolocal = $amountUnit / $tasa_cambio;
-                $conceptOrder->montounitariomoneda = 
-                $conceptOrder->montobienlocal = $amountTot;
-                $conceptOrder->montobienmoneda = $amountTot / $tasa_cambio;
+                $conceptOrder->montounitariomoneda =  $amountUnit;
+                $conceptOrder->montobienlocal = $amountTot / $tasa_cambio;
+                $conceptOrder->montobienmoneda = $amountTot;
                 $conceptOrder->save();
             }
             
@@ -251,9 +255,9 @@ class PayOrderController extends Controller
                 }
                 else {
                     $conceptOrder->montounitariolocal = $amountUnit / $tasa_cambio;
-                    $conceptOrder->montounitariomoneda = 
-                    $conceptOrder->montobienlocal = $amountTot;
-                    $conceptOrder->montobienmoneda = $amountTot / $tasa_cambio;
+                    $conceptOrder->montounitariomoneda = $amountUnit;
+                    $conceptOrder->montobienlocal = $amountTot / $tasa_cambio;
+                    $conceptOrder->montobienmoneda = $amountTot;
                     $conceptOrder->save();
                 }
                 
@@ -335,6 +339,10 @@ class PayOrderController extends Controller
         $detailorder = DetalleOrdenPago::where('idorpa',$idorpa)->delete();
         $conceptpayorder = ConceptoOrden::where('idorpa',$idorpa)->delete();
 
+        $payorder = OrdenPago::where('idorpa',$idorpa)->first();
+        OrdenCompra::where('idorco',intval($payorder->idorco))->update([
+            'stsorden' => 'AUT'
+        ]);
         $payorder = OrdenPago::where('idorpa',$idorpa)->delete();
         return redirect()->route('registerorder');
     }

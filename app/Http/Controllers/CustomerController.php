@@ -14,6 +14,7 @@ use App\Models\CatgCuenta;
 use App\Models\CatgSubCuenta;
 use App\Models\TipPago;
 use App\Models\Asiento;
+use App\Models\Ingreso;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Pagination\Paginator;
@@ -28,6 +29,10 @@ class CustomerController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:clientes.index')->only('index');
+        $this->middleware('can:clientes.create')->only('create','store');
+        $this->middleware('can:clientes.edit')->only('edit','update');
+        $this->middleware('can:clientes.destroy')->only('destroy');
     }
     /**
      * Display a listing of the resource.
@@ -38,7 +43,7 @@ class CustomerController extends Controller
     {
         $customer = Cliente::join('contr_clis','clientes.idcli','=','contr_clis.idcli')
         ->select('clientes.idcli','clientes.nombre','clientes.tipid','clientes.identificacion','clientes.tiprif','clientes.telefono',
-        'clientes.email','contr_clis.stscontr','contr_clis.tip_pag','contr_clis.tasa_cambio')
+        'clientes.email','contr_clis.stscontr','contr_clis.tip_pag','contr_clis.tasa_cambio','contr_clis.fec_emi')
         ->orderBy('clientes.nombre')
         ->paginate(10);
         
@@ -108,7 +113,7 @@ class CustomerController extends Controller
             'valuecont' => 'required',
             'money' => 'required'
         ]);
-
+        $sysdate = Carbon::now()->format('Y-m-d');
         $idcta1 = CatgSubCuenta::select('idcta')
                                 ->where('idscu', $request->get('subaccountname1'))
                                 ->first();
@@ -157,9 +162,10 @@ class CustomerController extends Controller
         } else {
             $contrCustomer->ind_girosre = 'N';
         }
-        
+       
         $contrCustomer->stscontr = $request->get('stscontr');
         $contrCustomer->tip_pag = $request->get('tip_pag');
+        $contrCustomer->fec_emi = $sysdate;
         
         if ($request->get('money') == 'USD' || $request->get('money') == 'EUR') {
             $contrCustomer->montopaglocal = $request->get('valuecont') * $request->get('tasa_cambio');
@@ -223,6 +229,7 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $sysdate = Carbon::now()->format('Y-m-d');
         $customer = Cliente::find($id);
         $customer->nombre = $request->get('name');
         $customer->tipid = $request->get('tipid');
@@ -240,7 +247,8 @@ class CustomerController extends Controller
 
         ContrCli::where('idcli',$id)->update([
             'stscontr' => $request->get('stscontr'),
-            'tip_pag' => $request->get('tip_pag')
+            'tip_pag' => $request->get('tip_pag'),
+            'fec_emi' => $sysdate
         ]);
        
         return redirect('/clientes');
@@ -254,12 +262,16 @@ class CustomerController extends Controller
      */
     public function destroy($idcli)
     {
-
-        $contrcli = ContrCli::where('idcli',$idcli);
-        $contrcli->delete();
-        $cliente = Cliente::where('idcli',$idcli);
-        $cliente->delete();
-        
+        $income = Ingreso::where('idcli',$idcli)->get();
+        if (count($income) > 0) {
+            Session::flash('error','Existen registros contables de este cliente, no se puede borrar');
+            return redirect('/clientes');
+        } else {        
+            $contrcli = ContrCli::where('idcli',$idcli);
+            $contrcli->delete();
+            $cliente = Cliente::where('idcli',$idcli);
+            $cliente->delete();
+        }
         return redirect('/clientes');
     }
     public function groupaccount1()

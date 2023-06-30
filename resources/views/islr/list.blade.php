@@ -19,8 +19,8 @@
             <tr>
                 <th scope="col">Fecha de Factura</th>
                 <th scope="col">Nombre del Beneficiario</th>
-                <th scope="col">Identificación</th>
-                <th scope="col">Numero de factura </th>
+                <th scope="col">Número de factura </th>
+                <th scope="col">Número de Control</th>
                 <th scope="col">Base Imponible de la Factura</th>
                 <th scope="col">Acción</th>
             </tr>
@@ -31,8 +31,8 @@
                     <tr>
                         <th>{{ $pay->fec_emi }}</th>
                         <th>{{ $supplier[$index]->nombre }}</th>
-                        <th>{{ $supplier[$index]->tipid}}-{{ $supplier[$index]->identificacion }}-{{$supplier[$index]->tiprif}}</th>
                         <th>{{ $pay->numfact}}</th>
+                        <th>{{ $pay->numctrl}}</th>
                         <th>{{ $pay->baseimponiblelocal}}</th> 
                         <td>       
                             <a href="#" class="btn btn-info mb-2" onclick="confirmCrear('{{route('createislr',['idorpa' => $pay->idorpa , 'idprov' => $pay->idprov, 'idage' => $tipagent->idage])}}')"><i class="fas fa-check"></i></a>

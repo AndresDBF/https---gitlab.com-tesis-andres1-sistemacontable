@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>Sistema</b>Contable',
+    'logo' => '<b>Sistema</b>FIX4U',
     'logo_img' => 'icons/logo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -317,12 +317,14 @@ return [
             'icon'        => 'fas fa-fw fa-users',
             'label'       => 4,
             'label_color' => 'success',
+            'can'         => 'clientes.index',
         ],
         [
             'text'        => 'Proveedores',
             'url'         => 'supplier',
             'icon'        => 'fas fa-fw fa-wallet',
             'label_color' => 'success',
+            'can'         => 'supplier.index',
         ],
         /* [
             'text'        => 'Asiento',
@@ -336,6 +338,7 @@ return [
             'icon'        => 'fas fa-fw fa-file-invoice-dollar',
             'label_color' => 'success',
             'url'  => 'findcustomer',
+            'can'  => 'findcustomer',
         
         ],
         [
@@ -347,10 +350,12 @@ return [
                 [
                     'text' => 'Recibo de Pago',
                     'url'  => 'searchInvoice',
+                    'can'  => 'searchInvoice',
                 ],
                 [
                     'text' => 'Relación de Ingreso',
                     'url'  => 'searchIncome',
+                    'can'  => 'searchIncome',
                 ],
 
             ],
@@ -365,10 +370,12 @@ return [
                 [
                     'text' => 'Autorizaciones',
                     'url'  => 'reportorder',
+                    'can'  => 'reportorder',
                 ],
                 [
                     'text' => 'Crear Orden de Compra',
                     'url'  => 'findsupplier',
+                    'can'  => 'createorco',
                 ],
 
             ],
@@ -382,10 +389,12 @@ return [
                 [
                     'text' => 'Orden de Pago',
                     'url'  => 'registerorder',
+                    'can'  => 'registerorder',
                 ],
                 [
                     'text' => 'Registrar Pago',
                     'url'  => 'registerpay',
+                    'can'  => 'registerpay',
                 ],             
             ],
         ],
@@ -393,7 +402,8 @@ return [
             'text'        => 'Nomina',
             'icon'        => 'fas fa-user-circle',
             'label_color' => 'success',
-            'url'  => 'payroll',
+            'url'         => 'payroll',
+            'can'         => 'payroll.index'
         ],
         [
             'text'        => 'Retenciones',
@@ -402,10 +412,12 @@ return [
                 [
                     'text' => 'Impuestos Sobre la Renta',
                     'url'  => 'findagent',
+                    'can'  => 'findagent',
                 ],
                 [
                     'text' => 'Impuestos al Valor Agregado',
                     'url'  => 'listpay',
+                    'can'  => 'listpay',
                 ],
             ],
         ],
@@ -417,14 +429,22 @@ return [
                 [
                     'text' => 'Proyección de Gastos',
                     'url'  => 'proyectgast',
+                    'can'  => 'proyectgast',
                 ],
                 [
                     'text' => 'Libro Diario',
                     'url'  => 'diarybook',
+                    'can'  => 'diarybook',
                 ],
                 [
-                    'text' => 'Cierre de Mes',
-                    'url'  => 'diarybook',
+                    'text' => 'Reporte de Ingresos',
+                    'url'  => 'reporting',
+                    'can'  => 'reporting'
+                ],
+                [
+                    'text' => 'Reporte de Egresos',
+                    'url'  => 'reportgast',
+                    'can'  => 'reportgast',
                 ],
                 
                 
@@ -443,6 +463,7 @@ return [
             'text' => 'Usuarios',
             'url'  => 'users',
             'icon' => 'fas fa-fw fa-user',
+            'can'  => 'users.index',
             'submenu' => [
                 [
                     'text' => 'Lista de Roles',
@@ -458,60 +479,7 @@ return [
             'url'  => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
         ],
-        [
-            'text'    => 'multilevel',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'level_two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-            ],
-        ],
-        ['header' => 'labels'],
-        [
-            'text'       => 'important',
-            'icon_color' => 'red',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'warning',
-            'icon_color' => 'yellow',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'information',
-            'icon_color' => 'cyan',
-            'url'        => '#',
-        ],
+
     ],
 
     /*

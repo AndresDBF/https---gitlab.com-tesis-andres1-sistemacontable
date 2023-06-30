@@ -54,7 +54,7 @@
                         <th scope="col">Fecha de Factura</th>
                         <th scope="col">Numero de factura </th>
                         <th scope="col">Numero de Control </th>
-                        <th scope="col">Monto de Impuesto de la Factura</th>
+                        <th scope="col">Base Imponible de la Factura</th>
                         <th scope="col">Acción</th>
                     </tr>
                 </thead>
@@ -65,7 +65,7 @@
                                 <th>{{$income->fec_emi}}</th>
                                 <th>{{$income->numfact}}</th>
                                 <th>{{$income->numctrl}}</th>
-                                <th>{{$income->mtoimpuestolocal}}</th>
+                                <th>{{$income->mtoimponiblelocal}}</th>
                                 <th>
                                     <a href="{{route('createretening',['idfact' => $income->idfact,'idcli' => $income->idcli])}}" class="btn btn-info"><i class="fas fa-check"></i></a>
                                 </th>

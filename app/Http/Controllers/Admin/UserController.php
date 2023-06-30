@@ -9,13 +9,13 @@ use Illuminate\Pagination\Paginator;
 use Spatie\Permission\Models\Role;
 class UserController extends Controller
 {
-   /*  public function __construct()
+    public function __construct()
     {
         //utilizado para restriccion de rutas
-        $this->middleware('can:admin.users.index')->only('index');
-        $this->middleware('can:admin.users.edit')->only('edit');
-        $this->middleware('can:admin.users.update')->only('update');
-    } */
+        $this->middleware('can:users.index')->only('index'); //solo se aplicara al metodo index
+        $this->middleware('can:users.edit')->only('edit');
+        $this->middleware('can:users.update')->only('update');
+    }
     public function index()
     {
         $users = User::paginate(5);
@@ -24,9 +24,10 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = User::where('id',intval($id))->first();
+        $user = User::findOrFail($id);
         $roles = Role::all();
-        return view('admin/users.edit',compact('user','roles'));
+        $password = $user->password;
+        return view('admin/users.edit',compact('user','roles','password'));
     }
 
 
