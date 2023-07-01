@@ -311,11 +311,11 @@ return [
             'url'  => 'admin/blog',
             'can'  => 'manage-blog',
         ],
+        ['header' => 'REGISTROS'],
         [
             'text'        => 'Clientes',
             'url'         => 'clientes',
             'icon'        => 'fas fa-fw fa-users',
-            'label'       => 4,
             'label_color' => 'success',
             'can'         => 'clientes.index',
         ],
@@ -326,12 +326,14 @@ return [
             'label_color' => 'success',
             'can'         => 'supplier.index',
         ],
-        /* [
-            'text'        => 'Asiento',
-            'url'         => 'asiento',
-            'icon'        => 'fas fa-fw fa-wallet',
+        [
+            'text'        => 'Categorias de Proveedores',
+            'url'         => 'catsupplier',
+            'icon'        => 'fas fa-tags',
             'label_color' => 'success',
-        ], */
+            'can'         => 'supplier.index',
+        ],
+        ['header' => 'COBRANZAS'],
         [
             'text'        => 'Giros de Cobro',
             'url'         => 'findcustomer',
@@ -346,34 +348,43 @@ return [
             'url'         => 'seat',
             'icon'        => 'fas fad fa-hand-holding-usd',
             'label_color' => 'success',
+            'can'  => 'searchInvoice',
+            'can'  => 'searchIncome',
             'submenu' => [
                 [
                     'text' => 'Recibo de Pago',
+                    'icon' => 'fas fa-check',
                     'url'  => 'searchInvoice',
                     'can'  => 'searchInvoice',
                 ],
                 [
                     'text' => 'Relación de Ingreso',
+                    'icon' => 'fas fa-check',
                     'url'  => 'searchIncome',
                     'can'  => 'searchIncome',
                 ],
 
             ],
         ],
+        ['header' => 'ADMINISTRACIÓN'],
         
         [
             'text'        => 'Orden de Compra',
             'url'         => 'reportorder',
             'icon'        => 'fas fa-shopping-cart',
             'label_color' => 'success',
+            'can'  => 'createorco',
+            'can'  => 'reportorder',
             'submenu' => [
                 [
                     'text' => 'Autorizaciones',
+                    'icon' => 'fas fa-check',
                     'url'  => 'reportorder',
                     'can'  => 'reportorder',
                 ],
                 [
                     'text' => 'Crear Orden de Compra',
+                    'icon' => 'fas fa-check',
                     'url'  => 'findsupplier',
                     'can'  => 'createorco',
                 ],
@@ -385,14 +396,18 @@ return [
             'url'         => 'seat',
             'icon'        => 'fas fa-fw fa-dollar-sign',
             'label_color' => 'success',
+            'can'  => 'registerorder',
+            'can'  => 'registerpay',
             'submenu' => [
                 [
                     'text' => 'Orden de Pago',
+                    'icon' => 'fas fa-check',
                     'url'  => 'registerorder',
                     'can'  => 'registerorder',
                 ],
                 [
                     'text' => 'Registrar Pago',
+                    'icon' => 'fas fa-check',
                     'url'  => 'registerpay',
                     'can'  => 'registerpay',
                 ],             
@@ -408,47 +423,51 @@ return [
         [
             'text'        => 'Retenciones',
             'icon'        => 'fas fa-money-bill',
+            'can'  => 'findagent',
+            'can'  => 'listpay',
             'submenu' => [
                 [
                     'text' => 'Impuestos Sobre la Renta',
+                    'icon' => 'fas fa-check',
                     'url'  => 'findagent',
                     'can'  => 'findagent',
                 ],
                 [
                     'text' => 'Impuestos al Valor Agregado',
+                    'icon' => 'fas fa-check',
                     'url'  => 'listpay',
                     'can'  => 'listpay',
                 ],
             ],
         ],
+        ['header' => 'CONTABLES'],
         [
-            'text'        => 'Contabilidad',
+            'text'        => 'Proyección de Gastos',
             'icon'        => 'fas fad fa-credit-card',
+            'url'         => 'proyectgast',
+            'can'         => 'proyectgast',
             'label_color' => 'success',
-            'submenu' => [
-                [
-                    'text' => 'Proyección de Gastos',
-                    'url'  => 'proyectgast',
-                    'can'  => 'proyectgast',
-                ],
-                [
-                    'text' => 'Libro Diario',
-                    'url'  => 'diarybook',
-                    'can'  => 'diarybook',
-                ],
-                [
-                    'text' => 'Reporte de Ingresos',
-                    'url'  => 'reporting',
-                    'can'  => 'reporting'
-                ],
-                [
-                    'text' => 'Reporte de Egresos',
-                    'url'  => 'reportgast',
-                    'can'  => 'reportgast',
-                ],
-                
-                
-            ],
+        ],
+        [
+            'text'        => 'Libro Diario',
+            'icon'        => 'fas fa-book',
+            'url'         => 'diarybook',
+            'can'         => 'diarybook',
+            'label_color' => 'success',
+        ],
+        [
+            'text'        => 'Reporte de Ingresos',
+            'icon'        => 'fas fa-book',
+            'url'         => 'reporting',
+            'can'         => 'reporting',
+            'label_color' => 'success',
+        ],
+        [
+            'text'        => 'Reporte de Egresos',
+            'icon'        => 'fas fa-book',
+            'url'         => 'reportgast',
+            'can'         => 'reportgast',
+            'label_color' => 'success',
         ],
         [
             'text'        => 'admin',
@@ -458,27 +477,20 @@ return [
             'label_color' => 'success',
             'can'         => ['admin'],
         ],
-        ['header' => 'account_settings'],
+        ['header' => 'AJUSTES DE USUARIOS'],
         [
-            'text' => 'Usuarios',
-            'url'  => 'users',
-            'icon' => 'fas fa-fw fa-user',
+            'text' => 'Lista de Usuarios',
+            'url'  => 'users.index',
+            'icon' => 'fas fa-users-cog',
             'can'  => 'users.index',
-            'submenu' => [
-                [
-                    'text' => 'Lista de Roles',
-                    'url'  => 'roles',
-                ],[
-                    'text' => 'Lista de Usuarios',
-                    'url'  => 'users',
-                ],
-            ],
         ],
         [
-            'text' => 'change_password',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
+            'text' => 'Lista de Roles',
+            'url'  => 'roles.index',
+            'icon' => 'fas fa-address-book',
+            'can'  => 'users.index',
         ],
+
 
     ],
 

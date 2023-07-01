@@ -15,6 +15,9 @@ use App\Models\CatgSubCuenta;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Pagination\Paginator;
 use Carbon\Carbon;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PayrollController extends Controller
 {
@@ -219,7 +222,7 @@ class PayrollController extends Controller
             'dayst' => 'required',
             'incent' => 'required'
         ]);
-
+        
         if (strlen($request->get('money')) > 3) {
             Session::flash('error','debe seleccionar un tipo de moneda para el incentivo');
             return redirect()->route('payemployee',intval($request->get('idnom')));
@@ -253,15 +256,16 @@ class PayrollController extends Controller
         $valueHed = ValoresNomina::where('idval',2)->first();
         $valueFes = ValoresNomina::where('idval',3)->first();
         $valueHen = ValoresNomina::where('idval',4)->first();
-        $employee = Nomina::select('sueldo')
-                            ->where('idnom',intval($request->get('idnom')))
+        $employee = Nomina::where('idnom',intval($request->get('idnom')))
                             ->first();
+                            
         $valueMen = round(floatval($employee->sueldo / 30),2);
         //SUELDO DEL EMPLEADO
         $payrollSuel = new PagoNomina();
         $payrollSuel->idnom = intval($request->get('idnom'));
         $payrollSuel->concepto_pago = 'total de sueldo mensual';
         $payrollSuel->montopago = (floatval($valueMen * intval($request->get('dayst') ) ));
+        $payrollSuel->diast = $request->get('dayst');
         $payrollSuel->fecpag = $fecpag;
         $payrollSuel->save();
         //HORAS EXTRAS DIURNAS SI REQUIERE
@@ -270,8 +274,10 @@ class PayrollController extends Controller
         $payrollHed->concepto_pago = $request->get('concepthed');
         if ($request->get('amounthed') == null) {
             $payrollHed->montopago = 0;
+            $payrollHed->dayst = 0;
         } else {
             $payrollHed->montopago = (floatval($request->get('amounthed') * $valueHed->monto_valor));
+            $payrollHed->dayst = $request->get('amounthed');
         }
         $payrollHed->fecpag = $fecpag;
         $payrollHed->save();
@@ -281,9 +287,12 @@ class PayrollController extends Controller
         $payrollHen->concepto_pago = $request->get('concepthen');
         if ($request->get('amounthen') == null) {
             $payrollHen->montopago = 0;
+            $payrollHen->diast = 0;
         } else {
             $payrollHen->montopago = (floatval($request->get('amounthen')) * floatval($valueHen->monto_valor));
+            $payrollHen->diast = $request->get('amounthen');
         }
+
         $payrollHen->fecpag = $fecpag;
         $payrollHen->save();
         //DIAS FERIADO SI REQUIERE
@@ -292,8 +301,10 @@ class PayrollController extends Controller
         $payrollFer->concepto_pago = $request->get('conceptfer');
         if ($request->get('amountfer') == null) {
             $payrollFer->montopago = 0;
+            $payrollFer->diast = 0;
         } else {
             $payrollFer->montopago = (floatval($request->get('amountfer')) * floatval($valueFes->monto_valor));
+            $payrollFer->diast = $request->get('amountfer');
         }
         $payrollFer->fecpag = $fecpag;
         $payrollFer->save();
@@ -302,6 +313,7 @@ class PayrollController extends Controller
         $payrollCes->idnom = intval($request->get('idnom'));
         $payrollCes->concepto_pago = $request->get('conceptces');
         $payrollCes->montopago = (floatval($request->get('cestaticket')));
+        $payrollCes->diast = $request->get('dayst');
         $payrollCes->fecpag = $fecpag;
         $payrollCes->save();
         //INCENTIVO
@@ -309,7 +321,8 @@ class PayrollController extends Controller
             $payrollInc = new PagoNomina();
             $payrollInc->idnom = intval($request->get('idnom'));
             $payrollInc->concepto_pago = 'Incentivo';
-            $payrollInc->montopago = (floatval($request->get('incent') * $request->get('tasa_cambio')));
+            $payrollInc->montopago = (floatval($request->get('incent') / $request->get('tasa_cambio')));
+            $payrollCes->diast = $request->get('dayst');
             $payrollInc->fecpag = $fecpag;
             $payrollInc->save();
         }
@@ -367,11 +380,70 @@ class PayrollController extends Controller
         $totalPag->totalasignacion = $totalAsing;
         $totalPag->totaldeduccion = $totalDeduc;
         $totalPag->netocobrar = $totalNeto;
+        $totalPag->fecpag = $fecpag;
         $totalPag->save();
 
+        $idtnom = intval($totalPag->idtnom);
+        $idnom = intval($employee->idnom);
+        
         Session::flash('message','Se realizo el pago correctamente');
-        return redirect('/payroll');
+        return redirect()->route('totalpayemployee',['idnom' => $idnom, 'idtnom' => $idtnom,'fecpag' => $fecpag,'dayst' => intval($request->get('dayst'))]);
 
+    }
+
+    public function totalpayemployee($idnom,$idtnom,$fecpag,$dayst){
+        $employee = Nomina::find($idnom);
+        $totalpay = TotalPagoNomina::where('idnom',$idnom)
+                                    ->where('fecpag',$fecpag)
+                                    ->first();
+        $tipcarg = TipCargoEmpleado::where('idcarg',intval($employee->idcarg))->first();
+        return view('payroll.totalpay',compact('employee','totalpay','idnom','idtnom','fecpag','tipcarg','dayst'));
+
+    }
+
+    public function proofemployee($idnom,$idtnom,$fecpag,$dayst){
+        $employee = Nomina::find($idnom);
+        $totalpay = TotalPagoNomina::where('idnom',$idnom)
+                                    ->where('fecpag',$fecpag)
+                                    ->first();
+        $salary = PagoNomina::where('idnom',$idnom)
+                            ->where('concepto_pago','total de sueldo mensual')
+                            ->where('fecpag',$fecpag)
+                            ->first();
+        $valueHED = PagoNomina::where('idnom',$idnom)
+                            ->where('concepto_pago','Horas Extras Diurnas')
+                            ->where('fecpag',$fecpag)
+                            ->first();
+        $valueHEN = PagoNomina::where('idnom',$idnom)
+                            ->where('concepto_pago','Horas Extras Diurnas')
+                            ->where('fecpag',$fecpag)
+                            ->first();
+        $valueFer= PagoNomina::where('idnom',$idnom)
+                            ->where('concepto_pago','Feriada')
+                            ->where('fecpag',$fecpag)
+                            ->first();
+        $valueCest = PagoNomina::where('idnom',$idnom)
+                                ->where('concepto_pago','CestaTicket')
+                                ->where('fecpag',$fecpag)
+                                ->first();
+        
+        $salaryph = floatval($salary->montopago / 30);
+        $sysdate = Carbon::now();
+        $primerDia = $sysdate->startOfMonth()->format('Y-m-d');
+        //obtener los dias no laborados
+        $daysNT = intval(30 - $dayst);
+        if ($daysNT > 0) {
+            $restDays = floatval($salaryph * $daysNT);
+        }else{
+            $restDays= floatval(0.00);
+        }
+
+        // Obtener el último día del mes
+        $ultimoDia = $sysdate->endOfMonth()->format('Y-m-d');
+        $tipcarg = TipCargoEmpleado::where('idcarg',intval($employee->idcarg))->first();
+        $pdf = PDF::loadView('payroll.proofpdf',compact('employee','daysNT','restDays','primerDia','ultimoDia','salaryph','totalpay','tipcarg','fecpag','dayst','salary','valueHED','valueHEN','valueFer','valueCest'));
+        
+        return $pdf->stream("pago_empleado" . $employee->nombre . ".pdf");
     }
 
 }

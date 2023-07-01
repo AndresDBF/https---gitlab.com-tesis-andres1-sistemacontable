@@ -97,6 +97,7 @@ Route::post('subaccountname2/{idgcu}', [IncomeController::class, 'subaccountname
 
 //Proveedores
 Route::resource('supplier','App\Http\Controllers\SupplierController');
+Route::resource('catsupplier','App\Http\Controllers\CatSupplierController')->only('index','create','store','edit','update');
 
 //Orden de compra
 Route::get('reportorder',[PurchaseOrderController::class,'reportorder'])->name('reportorder');
@@ -161,7 +162,8 @@ Route::post('tipagente/{tippersona}', [RetentionIslrController::class, 'tipagent
 Route::resource('payroll', 'App\Http\Controllers\PayrollController');
 Route::get('payemployee/{idnom}', [PayrollController::class,'payemployee'])->name('payemployee');
 Route::post('storepayemployee', [PayrollController::class,'storepayemployee'])->name('storepayemployee');
-
+Route::get('totalpayemployee/{idnom}/{idtnom}/{fecpag}/{dayst}',[PayrollController::class,'totalpayemployee'])->name('totalpayemployee');
+Route::get('proofemployee/{idnom}/{idtnom}/{fecpag}/{dayst}',[PayrollController::class,'proofemployee'])->name('proofemployee');
 //cargos del empleado
 Route::get('chargescreate', [ConfigPayrollController::class,'chargescreate'])->name('chargescreate');
 Route::post('chargesStore', [ConfigPayrollController::class,'chargesStore'])->name('chargesStore');

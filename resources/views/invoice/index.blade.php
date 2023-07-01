@@ -24,7 +24,10 @@
                 <th scope="col">Monto Total del Contrato</th>
                 <th scope="col">Tipo de Contrato</th>
                 <th scope="col">Fecha de Emisión del Contrato</th>
-                <th scope="col">Acciones</th>
+                @can('createinvoiceing')
+                    <th scope="col">Acciones</th>
+                @endcan
+               
             </tr>
         </thead>
         <tbody>
@@ -50,9 +53,12 @@
                         <th>TRIMESTRAL</th>
                     @endif
                     <th>{{$cli->fec_emi}}</th>
-                    <td>
-                        <a href="{{ route('createinvoiceing', ['idcli' => $cli->idcli]) }}" class="btn btn-info mb-2" onclick="confirmCreate(event, '{{ route('createinvoiceing', ['idcli' => $cli->idcli]) }}')"><i class="fas fa-check"></i></a>
-                    </td>
+                    @can('createinvoiceing')
+                        <td>
+                            <a href="{{ route('createinvoiceing', ['idcli' => $cli->idcli]) }}" class="btn btn-info mb-2" onclick="confirmCreate(event, '{{ route('createinvoiceing', ['idcli' => $cli->idcli]) }}')"><i class="fas fa-check"></i></a>
+                        </td>
+                    @endcan
+                   
                 </tr>
             @endforeach
         </tbody>

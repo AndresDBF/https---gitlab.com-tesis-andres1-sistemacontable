@@ -17,7 +17,10 @@
             <th scope="col">Numero de factura </th>
             <th scope="col">Fecha de Control</th>
             <th scope="col">Monto Total de la Factura</th>
-            <th scope="col">Acción</th>
+            @can('createretention')
+                <th scope="col">Acción</th>
+            @endcan
+           
         </tr>
     </thead>
     <tbody>
@@ -30,9 +33,12 @@
                     <th>{{ $pay->numfact}}</th>
                     <th>{{ $pay->numctrl }}</th>
                     <th>{{ $pay->montototallocal}}</th>
-                    <td>       
-                        <a href="#" class="btn btn-info mb-2" onclick="confirmCrear('{{route('createretention',['idorpa' => $pay->idorpa , 'idprov' => $pay->idprov])}}')"><i class="fas fa-check"></i></a>
-                    </td>
+                    @can('createretention')
+                        <td>       
+                            <a href="#" class="btn btn-info mb-2" onclick="confirmCrear('{{route('createretention',['idorpa' => $pay->idorpa , 'idprov' => $pay->idprov])}}')"><i class="fas fa-check"></i></a>
+                        </td>
+                    @endcan
+                   
                 </tr>
             @endforeach
         </tr>
@@ -55,7 +61,10 @@
                         <th scope="col">Numero de factura </th>
                         <th scope="col">Numero de Control </th>
                         <th scope="col">Base Imponible de la Factura</th>
-                        <th scope="col">Acción</th>
+                        @can('createretening')
+                            <th scope="col">Acción</th>
+                        @endcan
+                       
                     </tr>
                 </thead>
                 <tbody>
@@ -66,9 +75,12 @@
                                 <th>{{$income->numfact}}</th>
                                 <th>{{$income->numctrl}}</th>
                                 <th>{{$income->mtoimponiblelocal}}</th>
-                                <th>
-                                    <a href="{{route('createretening',['idfact' => $income->idfact,'idcli' => $income->idcli])}}" class="btn btn-info"><i class="fas fa-check"></i></a>
-                                </th>
+                                @can('createretening')
+                                    <th>
+                                        <a href="{{route('createretening',['idfact' => $income->idfact,'idcli' => $income->idcli])}}" class="btn btn-info"><i class="fas fa-check"></i></a>
+                                    </th> 
+                                @endcan
+                               
                             </tr>
                         @endforeach
                     </tr>

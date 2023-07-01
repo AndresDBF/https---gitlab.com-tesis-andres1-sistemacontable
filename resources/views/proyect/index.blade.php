@@ -12,7 +12,10 @@
             {{session('message')}}
         </div>
     @endif
-    <a href="{{route('createproyectgast')}}" class="btn btn-primary mb-3">Crear Proyección <i class="fas fa-pen"></i></a>
+    @can('createproyectgast')
+        <a href="{{route('createproyectgast')}}" class="btn btn-primary mb-3">Crear Proyección <i class="fas fa-pen"></i></a>
+    @endcan
+   
     @if (isset($seats, $proyect, $amountGast))
        
             <table id="clientes" class="table table-striped table-bordered shadow-lg mt-4" style="width: 100%">

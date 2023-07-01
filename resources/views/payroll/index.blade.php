@@ -3,7 +3,7 @@
 @section('title', 'Nomina')
 
 @section('content_header')
-    <h1>Registro de Empleados</h1>
+    <h1 class="text-secondary fs-5 shadow-lg p-2 mb-5 bg-body rounded text-center">Registro de Empleados</h1>
 @stop
 
 @section('content')

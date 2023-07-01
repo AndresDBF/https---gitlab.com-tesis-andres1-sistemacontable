@@ -18,7 +18,10 @@
         {{ session('error') }}
     </div>
     @endif
-    <a href="supplier/create" class="btn btn-primary mb-3">CREAR</a>
+
+    @can('supplier.create')
+        <a href="supplier/create" class="btn btn-primary mb-3">CREAR</a>
+    @endcan
     <table id="clientes" class="table table-striped table-bordered shadow-lg mt-4" style="width: 100%">
 
         <thead class="bd-primary text-dark">
@@ -29,6 +32,7 @@
                 <th scope="col">Telefono</th>
                 <th scope="col">Dirección</th>
                 <th scope="col">Categoria</th>
+                <th scope="col">Acción</th>
             </tr>
         </thead>
         <tbody>
@@ -49,13 +53,18 @@
                         @endif
                     @endforeach
                     <td>
-                        <a href="/supplier/{{$supplier->idprov}}/edit" class="btn btn-info">Editar</a>
-                        <form action="{{route('supplier.destroy',$supplier->idprov)}}" method="POST">
-                            
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger pt-2">Borrar</button>
-                        </form>
+                        @can('supplier.edit')
+                            <a href="/supplier/{{$supplier->idprov}}/edit" class="btn btn-info">Editar</a>  
+                        @endcan
+                       
+                        @can('supplier.destroy')
+                            <form action="{{route('supplier.destroy',$supplier->idprov)}}" method="POST">
+                                
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger pt-2">Borrar</button>
+                            </form>
+                        @endcan
                     </td>
                 </tr>
             @endforeach

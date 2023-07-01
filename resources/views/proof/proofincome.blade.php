@@ -56,7 +56,10 @@
                     <th scope="col">Número de Control</th>
                     <th scope="col">Forma de Pago</th>
                     <th scope="col">Monto Total de Factura</th>
-                    <th scope="col">Seleccionar</th>
+                    @can('createIncome')
+                        <th scope="col">Seleccionar</th>
+                    @endcan
+                    
                 </tr>
             </thead>
             <tbody>
@@ -82,12 +85,14 @@
                         @else
                             <th>{{ $Invoice->mtototallocal }}</th> 
                         @endif
+                        @can('createIncome')
+                            <th class="text-center">
+                                <a href="#" class="btn btn-info mb-2" onclick="confirmCreate('{{ route('createIncome', ['idfact' => $Invoice->idfact, 'idcli' => $nameCli->idcli]) }}')">
+                                    <i class="fas fa-plus-circle"></i>
+                                </a>
+                            </th>
+                        @endcan
 
-                        <th class="text-center">
-                            <a href="#" class="btn btn-info mb-2" onclick="confirmCreate('{{ route('createIncome', ['idfact' => $Invoice->idfact, 'idcli' => $nameCli->idcli]) }}')">
-                                <i class="fas fa-plus-circle"></i>
-                            </a>
-                        </th>
                     </tr>
                 @endforeach
 

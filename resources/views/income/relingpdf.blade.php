@@ -11,15 +11,15 @@
 
         body {
             margin-top: 0;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .img {
             display: flex;
             align-items: flex-start;
-            margin-left: 35px;
-            margin-top: 40px;
+            margin-left: 15px;
+            margin-top: 10px;
         }
 
         .title {

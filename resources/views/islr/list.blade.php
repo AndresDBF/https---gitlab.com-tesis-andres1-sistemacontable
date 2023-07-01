@@ -22,7 +22,10 @@
                 <th scope="col">Número de factura </th>
                 <th scope="col">Número de Control</th>
                 <th scope="col">Base Imponible de la Factura</th>
-                <th scope="col">Acción</th>
+                @can('createislr')
+                    <th scope="col">Acción</th>
+                @endcan
+                
             </tr>
         </thead>
         <tbody>
@@ -34,9 +37,11 @@
                         <th>{{ $pay->numfact}}</th>
                         <th>{{ $pay->numctrl}}</th>
                         <th>{{ $pay->baseimponiblelocal}}</th> 
-                        <td>       
-                            <a href="#" class="btn btn-info mb-2" onclick="confirmCrear('{{route('createislr',['idorpa' => $pay->idorpa , 'idprov' => $pay->idprov, 'idage' => $tipagent->idage])}}')"><i class="fas fa-check"></i></a>
-                        </td>
+                        @can('createislr')
+                            <td>       
+                                <a href="#" class="btn btn-info mb-2" onclick="confirmCrear('{{route('createislr',['idorpa' => $pay->idorpa , 'idprov' => $pay->idprov, 'idage' => $tipagent->idage])}}')"><i class="fas fa-check"></i></a>
+                            </td>
+                        @endcan
                     </tr>
                 @endforeach
             </tr>

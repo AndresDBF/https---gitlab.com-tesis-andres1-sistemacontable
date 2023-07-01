@@ -20,7 +20,7 @@ class RoleSeeder extends Seeder
         $role4 =  Role::create(['name' => 'asistente']);
         $role5 =  Role::create(['name' => 'desarrollo']);
 
-
+ 
         //CLIENTES
         Permission::create(['name' => 'clientes.index', 'description' => 'Ver Cliente' ])->syncRoles([$role5,$role1, $role2,$role3]); //asigna el permiso para mas de dos roles
         Permission::create(['name' => 'clientes.create', 'description' => 'Crear Cliente' ])->syncRoles([$role5,$role1,$role2]);//asigna el permiso para un rol

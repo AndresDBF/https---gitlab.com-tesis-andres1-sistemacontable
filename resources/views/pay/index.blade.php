@@ -20,7 +20,10 @@
                 <th scope="col">Moneda</th>
                 <th scope="col">Tipo de Pago</th>
                 <th scope="col">Monto de Orden de Pago</th>
-                <th scope="col">Acción</th>
+                @can('createpay')
+                    <th scope="col">Acción</th>
+                @endcan
+               
             </tr>
         </thead>
         <tbody>
@@ -52,12 +55,14 @@
                         <th>{{ $detPayOrder[$index]->montototallocal}}</th>
                         
                     @endif
+                    @can('createpay')
+                        <td>
+                            
+                            <a href="#" class="btn btn-success mb-2" onclick="confirmCrear('{{route('createpay',['idprov' => $pay->idprov , 'idorpa' => $pay->idorpa])}}')"><i class="fas fa-check"></i></a>
+                            <a href="#" class="btn btn-danger mb-2" onclick="ConfirmElimi('{{route('deletepay',['idorpa' => $pay->idorpa])}}')"> <i class="fas fa-trash-alt"></i></a>
+                        </td>
+                    @endcan
                     
-                    <td>
-                        
-                        <a href="#" class="btn btn-success mb-2" onclick="confirmCrear('{{route('createpay',['idprov' => $pay->idprov , 'idorpa' => $pay->idorpa])}}')"><i class="fas fa-check"></i></a>
-                        <a href="#" class="btn btn-danger mb-2" onclick="ConfirmElimi('{{route('deletepay',['idorpa' => $pay->idorpa])}}')"> <i class="fas fa-trash-alt"></i></a>
-                    </td>
                 </tr>
             @endforeach
         </tbody>

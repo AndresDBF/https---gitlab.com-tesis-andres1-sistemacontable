@@ -14,7 +14,8 @@ class TotalPagoNomina extends Model
         'idasi',
         'totalasignacion',
         'totaldeduccion',
-        'netocobrar'
+        'netocobrar',
+        'fecpag'
 
     ];
 }

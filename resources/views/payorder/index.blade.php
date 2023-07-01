@@ -15,7 +15,10 @@
                 <th scope="col">Nombre del Beneficiario</th>
                 <th scope="col">Dirección</th>
                 <th scope="col">Tiempo de Pago</th>
-                <th scope="col">Acción</th>
+                @can('createpayorder')
+                    <th scope="col">Acción</th>
+                @endcan
+               
             </tr>
         </thead>
         <tbody>
@@ -25,9 +28,12 @@
                 <th>{{ $purchase->nombre }}</th>
                 <th>{{ $purchase->direccion }}</th>
                 <th>{{ $purchase->tiempo_pago }} Dias</th>
-                <td>
-                    <a href="#" class="btn btn-info mb-2" onclick="confirmAutorizar('{{ route('createpayorder', ['idprov' => $purchase->idprov,'idorco' => $purchase->idorco]) }}')">Crear Orden</a>                
-                </td>
+                @can('createpayorder')
+                    <td>
+                        <a href="#" class="btn btn-info mb-2" onclick="confirmAutorizar('{{ route('createpayorder', ['idprov' => $purchase->idprov,'idorco' => $purchase->idorco]) }}')">Crear Orden</a>                
+                    </td>
+                @endcan
+
             </tr>
             @endforeach
         </tbody>

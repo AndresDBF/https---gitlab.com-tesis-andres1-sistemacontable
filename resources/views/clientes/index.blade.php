@@ -31,7 +31,11 @@
                 <th scope="col">Identificación</th>
                 <th scope="col">Fecha de Emisión del Contrato</th>
                 <th scope="col">Tipo de Contrato</th>
-                <th scope="col">Acciones</th>
+                @can('clientes.edit')
+                    <th scope="col">Acciones</th>
+                @endcan
+                
+
             </tr>
         </thead>
         <tbody>
@@ -56,15 +60,15 @@
                     @endif
                     <td>
                         @can('clientes.edit')
-                            <a href="{{ route('clientes.edit', ['cliente' => $cli->idcli]) }}" class="btn btn-info mb-2" onclick="confirmEdit(event, '{{ route('clientes.edit', ['cliente' => $cli->idcli]) }}')">Editar</a> 
+                                <a href="{{ route('clientes.edit', ['cliente' => $cli->idcli]) }}" class="btn btn-info mb-2" onclick="confirmEdit(event, '{{ route('clientes.edit', ['cliente' => $cli->idcli]) }}')">Editar</a> 
                         @endcan
-                        
+                            
                         @can('clientes.destroy')
-                            <form action="{{route('clientes.destroy',$cli->idcli)}}" method="POST" id="deleteForm{{$cli->idcli}}">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-danger pt-2" onclick="confirmDelete(event, 'deleteForm{{$cli->idcli}}')">Borrar</button>
-                            </form>
+                                <form action="{{route('clientes.destroy',$cli->idcli)}}" method="POST" id="deleteForm{{$cli->idcli}}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger pt-2" onclick="confirmDelete(event, 'deleteForm{{$cli->idcli}}')">Borrar</button>
+                                </form>
                         @endcan
                     </td>
                 </tr>
