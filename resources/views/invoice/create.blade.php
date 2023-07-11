@@ -8,6 +8,11 @@
 
 @section('content')
     <div class="container"> 
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{session('error')}}
+            </div>
+        @endif
         <div class="card">
             <div class="card-body pl-6">
                 <form action="{{route('storeinvoiceing')}}" method="POST">

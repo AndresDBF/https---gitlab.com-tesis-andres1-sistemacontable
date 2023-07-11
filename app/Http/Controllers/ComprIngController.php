@@ -91,6 +91,12 @@ class ComprIngController extends Controller
     }
 
     public function storeproof(Request $request){
+        $this->validate($request,[
+            'numconfirm' => 'required|numeric',
+            'amount' => 'required|numeric',
+            'byconcept' => 'required',
+            'description' => 'required'
+        ]);
         $idcli = intval($request->get('idcli'));
         $idfact = intval($request->get('idfact'));
         if (strlen($request->get('money')) > 3 ) {

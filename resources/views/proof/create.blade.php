@@ -15,7 +15,7 @@
     @endif
     <div class="card">
         <div class="card-body pl-6">
-        <h3 class="text-center fw-bolder pb-4">Ingresa la Identificación del Beneficiario de la Factura</h3>
+        <h3 class="text-center fw-bolder pb-4">Datos del Beneficiario de la Factura</h3>
             <div class="well">
                 <div class="row">
                     <div class="col-xs-3 col-sm-6 col-md-4">
@@ -95,6 +95,9 @@
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <label for="" class="form-label">Numero de Confirmación</label>
+                        @if($errors->first('numconfirm'))
+                            <p class="text-danger">{{$errors->first('numconfirm')}}</p>
+                        @endif
                         <input type="text" name="numconfirm" id="numconfirm" class="form-control text-decoration-none" tabindex="1">
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-4">
@@ -130,16 +133,25 @@
                     <input type="hidden" name="tasa_cambio" value="">
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <label for="" class="form-label">Cantidad</label>
+                        @if($errors->first('amount'))
+                            <p class="text-danger">{{$errors->first('amount')}}</p>
+                        @endif
                         <input type="text" name="amount" id="amount" class="form-control" tabindex="4">
                     </div>
                 </div>
             </div>
             <div class="mb-3 mt-3">
                 <label for="" class="form-label">Por Concepto de</label>
+                @if($errors->first('byconcept'))
+                            <p class="text-danger">{{$errors->first('byconcept')}}</p>
+                        @endif
                 <input type="text" name="byconcept" id="byconcept" class="form-control" tabindex="5">
             </div>
             <div class="mb-3 mt-3">
                 <label for="" class="form-label">Descripción de Comprobante de Ingreso</label>
+                @if($errors->first('description'))
+                            <p class="text-danger">{{$errors->first('description')}}</p>
+                        @endif
                 <textarea class="form-control" name="description" id="description" tabindex="6"></textarea>
             </div>
             

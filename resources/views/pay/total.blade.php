@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Total Orden')
+@section('title', 'Total Registro de Pago')
 
 @section('content_header')
-    <h1 class="fw-bold text-center">Confirmacion de Recbio de Pago</h1>
+    <h1 class="fw-bold text-center">Confirmacion de Registro de Pago</h1>
 @stop
 
 @section('content')

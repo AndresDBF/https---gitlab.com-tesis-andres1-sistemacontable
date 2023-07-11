@@ -40,7 +40,7 @@ class RetentionController extends Controller
     public function index(){
         $registerOrderPay = OrdenPago::join('detalle_orden_pagos','orden_pagos.idorpa','=','detalle_orden_pagos.idorpa')
                                      ->select('orden_pagos.idorpa','orden_pagos.idprov','orden_pagos.numfact','orden_pagos.numctrl','orden_pagos.moneda',
-                                     'detalle_orden_pagos.montototallocal','detalle_orden_pagos.montototalmoneda','orden_pagos.num_egre')
+                                     'detalle_orden_pagos.montototallocal','detalle_orden_pagos.baseimponiblelocal','detalle_orden_pagos.montototalmoneda','orden_pagos.num_egre')
                                      ->where('orden_pagos.stsorpa','PAG')
                                      ->where('detalle_orden_pagos.indiva','S')
                                      ->get();

@@ -222,6 +222,7 @@ class PayrollController extends Controller
             'dayst' => 'required',
             'incent' => 'required'
         ]);
+      
         
         if (strlen($request->get('money')) > 3) {
             Session::flash('error','debe seleccionar un tipo de moneda para el incentivo');
@@ -274,10 +275,10 @@ class PayrollController extends Controller
         $payrollHed->concepto_pago = $request->get('concepthed');
         if ($request->get('amounthed') == null) {
             $payrollHed->montopago = 0;
-            $payrollHed->dayst = 0;
+            $payrollHed->diast = 0;
         } else {
             $payrollHed->montopago = (floatval($request->get('amounthed') * $valueHed->monto_valor));
-            $payrollHed->dayst = $request->get('amounthed');
+            $payrollHed->diast = $request->get('amounthed');
         }
         $payrollHed->fecpag = $fecpag;
         $payrollHed->save();
@@ -322,7 +323,7 @@ class PayrollController extends Controller
             $payrollInc->idnom = intval($request->get('idnom'));
             $payrollInc->concepto_pago = 'Incentivo';
             $payrollInc->montopago = (floatval($request->get('incent') / $request->get('tasa_cambio')));
-            $payrollCes->diast = $request->get('dayst');
+            $payrollInc->diast = $request->get('dayst');
             $payrollInc->fecpag = $fecpag;
             $payrollInc->save();
         }
@@ -443,7 +444,7 @@ class PayrollController extends Controller
         $tipcarg = TipCargoEmpleado::where('idcarg',intval($employee->idcarg))->first();
         $pdf = PDF::loadView('payroll.proofpdf',compact('employee','daysNT','restDays','primerDia','ultimoDia','salaryph','totalpay','tipcarg','fecpag','dayst','salary','valueHED','valueHEN','valueFer','valueCest'));
         
-        return $pdf->stream("pago_empleado" . $employee->nombre . ".pdf");
+        return $pdf->download("pago_empleado" . $employee->nombre . ".pdf");
     }
 
 }

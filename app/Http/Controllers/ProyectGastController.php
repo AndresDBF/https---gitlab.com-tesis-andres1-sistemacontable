@@ -36,6 +36,7 @@ class ProyectGastController extends Controller
         }                      
         $seats = Asiento::whereBetween('fec_asi',[$proyect->fecstsini,$proyect->fecstsfin])
                         ->whereBetween('idcta1',[222,260])
+                        ->whereNotIn('idcta1',[259  ])
                         ->orderBy('fec_asi','asc')
                         ->paginate(12);        
         if (count($seats)> 0) {
@@ -68,8 +69,15 @@ class ProyectGastController extends Controller
     }
 
     public function createproyectgast(){
+        $sysdate = Carbon::now(); // Obtener la fecha actual
+
+        // Obtener el primer día del mes
+        $monthIni = $sysdate->startOfMonth()->format('Y-m-d');
+
+        // Obtener el último día del mes
+        $monthFin = $sysdate->endOfMonth()->format('Y-m-d');
         $seats = Asiento::select('monto_deb')
-                        ->whereBetween('fec_asi',['2023-06-10','2023-06-30'])
+                        ->whereBetween('fec_asi',[$monthIni,$monthFin])
                         ->whereBetween('idcta1',[4,16])
                         ->sum('monto_deb');
         $fecstsini = Carbon::now()->toDateString();

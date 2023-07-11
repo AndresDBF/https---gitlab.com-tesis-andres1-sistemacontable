@@ -91,9 +91,9 @@
     {{-- Register link --}}
     @if($register_url)
         <p class="my-0">
-            <a href="{{ $register_url }}">
-                Registrar un Nuevo Usuario{{-- {{ __('adminlte::adminlte.register_a_new_membership') }} --}}
-            </a>
+            {{-- <a href="{{ $register_url }}">
+                Registrar un Nuevo Usuario{{-- {{ __('adminlte::adminlte.register_a_new_membership') }}
+            </a> --}}
         </p>
     @endif
 @stop

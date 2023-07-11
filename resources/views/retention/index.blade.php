@@ -32,7 +32,7 @@
                     <th>{{ $supplier[$index]->tipid}}-{{ $supplier[$index]->identificacion }}-{{$supplier[$index]->tiprif}}</th>
                     <th>{{ $pay->numfact}}</th>
                     <th>{{ $pay->numctrl }}</th>
-                    <th>{{ $pay->montototallocal}}</th>
+                    <th>{{ $pay->baseimponiblelocal}}</th>
                     @can('createretention')
                         <td>       
                             <a href="#" class="btn btn-info mb-2" onclick="confirmCrear('{{route('createretention',['idorpa' => $pay->idorpa , 'idprov' => $pay->idprov])}}')"><i class="fas fa-check"></i></a>

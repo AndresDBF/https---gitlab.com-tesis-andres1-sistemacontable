@@ -15,7 +15,7 @@
     @endif
     <div class="card">
         <div class="card-body pl-6">
-        <h3 class="text-center fw-bolder pb-4">Ingresa la Identificación del Beneficiario de la Factura</h3>
+        <h3 class="text-center fw-bolder pb-4"> Identificación del Beneficiario de la Factura</h3>
             <div class="well">
                 <div class="row">
                     <div class="col-xs-3 col-sm-6 col-md-4">
@@ -148,11 +148,11 @@
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <label for="" class="form-label">Cantidad</label>
                         @if ($contrCli->moneda != 'BS')
-                            <input type="text" name="amount" value="{{$proofIncome->mtomoneda}}" id="amount" class="form-control" tabindex="4" readonly="readonly">
+                            <input type="text" name="amount" value="{{$proofIncome->mtomoneda}}" id="amount" class="form-control" tabindex="2" readonly="readonly">
                         @else
-                        <input type="text" name="amount" value="{{$proofIncome->mtolocal}}" id="amount" class="form-control" tabindex="4" readonly="readonly">
+                        <input type="text" name="amount" value="{{$proofIncome->mtolocal}}" id="amount" class="form-control" tabindex="2" readonly="readonly">
                         @endif
-                        <input type="hidden" name="finalamount" value="{{$proofIncome->mtomoneda}}" id="amount" class="form-control" tabindex="4" readonly="readonly">
+                        <input type="hidden" name="finalamount" value="{{$proofIncome->mtomoneda}}" id="amount" class="form-control" readonly="readonly">
                         
                     </div>
                 </div>
@@ -163,14 +163,14 @@
                 @if($errors->first('byconcept'))
                     <p class="text-danger">{{$errors->first('byconcept')}}</p>
                 @endif
-                <input type="text" name="byconcept" id="byconcept" class="form-control" tabindex="5">
+                <input type="text" name="byconcept" id="byconcept" class="form-control" tabindex="3">
             </div>
             <div class="mb-3 mt-3">
                 <label for="" class="form-label">Descripción de Comprobante de Ingreso</label>
                 @if($errors->first('descriptioni'))
                     <p class="text-danger">{{$errors->first('descriptioni')}}</p>
                 @endif
-                <textarea class="form-control" name="descriptioni" aria-valuemax="{{$proofIncome->descripcion}}" id="description" tabindex="6"></textarea>
+                <textarea class="form-control" name="descriptioni" aria-valuemax="{{$proofIncome->descripcion}}" id="description" tabindex="4"></textarea>
             </div>
             <input type="hidden" name="iddcomp" id="iddcomp" value="{{$proofIncome->iddcomp}}">
             <input type="hidden" name="idcli" id="idcli" value="{{$customer->idcli}}">
@@ -187,7 +187,7 @@
             </div> --}}
             <div class="well pb-3">
                 <a href="{{route('searchIncome')}}" class="btn btn-secondary" tabindex="5">Cancelar</a>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#seatmodal">Confirmar</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#seatmodal" tabindex="6">Confirmar</button>
                 {{-- <button type="submit" class="btn btn-primary" tabindex="6">Guardar</button>--}}
                 <!-- Modal -->
             </div>

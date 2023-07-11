@@ -3,7 +3,7 @@
 @section('title', 'Total Recibo de Pago')
 
 @section('content_header')
-    <h1 class="fw-bold text-center">Confirmacion de Recbio de Pago</h1>
+    <h1 class="fw-bold text-center">Confirmación de Recibo de Pago</h1>
 @stop
 
 @section('content')
@@ -13,7 +13,7 @@
             <div class="row">
                
                     <div class="col-xs-4 col-sm-4 col-md-4 col-pb-2">
-                        <label for="" class="form-label text-center">Numero de Confirmacion</label>
+                        <label for="" class="form-label text-center">Número de Confirmacion</label>
                         <input type="text" name="concept" id="concept" value="{{$proofIncome->numconfirm}}" class="form-control text-decoration-none text-center pb-2" readonly="readonly" tabindex="7">
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-pb-2">
@@ -52,7 +52,7 @@
 <a href="{{route('deleteproof',['idcom' => $idcom])}}">
     <button type="button" class="btn btn-secondary">Atras</button>
 </a>
-<a href="{{ route('proofinvoicepdf', ['idcom' => $idcom, 'idcli' => $idcli]) }}" class="btn btn-primary ml-2">Imprimir PDF</a>
+<a href="{{ route('proofinvoicepdf', ['idcom' => $idcom, 'idcli' => $idcli]) }}" class="btn btn-primary ml-2">Imprimir Recibo</a>
 <a href="{{ route('searchInvoice') }}" class="btn btn-primary ml-2">Aceptar</a>
 
 @stop

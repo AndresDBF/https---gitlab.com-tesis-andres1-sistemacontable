@@ -82,7 +82,7 @@ class PayController extends Controller
             'conceptDesc' => 'required',
             'description' => 'required',
             'observation' => 'required',
-            'descriptionseat' => 'required',
+            'descriptionseat' => 'required'
         ]);
         
         $payOrder = DetalleOrdenPago::where('idorpa', $request->get('idorpa'))->first();
@@ -93,14 +93,6 @@ class PayController extends Controller
         
         $presupuesto->save();
       
-
-        $proyect = ProyeccionGasto::orderBy('fecstsini','asc')->first();
-        if ($proyect->presupuesto < 0) {
-            $presupuesto->presupuesto -= -floatval($payOrder->montototallocal);
-            $presupuesto->save();
-            Session::flash('error','ha superado el monto total del presupuesto ');
-            return redirect()->route('registerpay');
-        }
         $idcta1 = CatgSubCuenta::select('idcta')
                                 ->where('idscu', $request->get('subaccountname1'))
                                 ->first();
@@ -117,6 +109,7 @@ class PayController extends Controller
         $seatAmount->descripcion = $request->get('description');
         $seatAmount->monto_deb = $amount;
         $seatAmount->monto_hab = $amount;
+     
         $seatAmount->save();
 
         if ($request->get('indiva') == 'S') {

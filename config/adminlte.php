@@ -480,13 +480,13 @@ return [
         ['header' => 'AJUSTES DE USUARIOS'],
         [
             'text' => 'Lista de Usuarios',
-            'url'  => 'users.index',
+            'url'  => 'users',
             'icon' => 'fas fa-users-cog',
             'can'  => 'users.index',
         ],
         [
             'text' => 'Lista de Roles',
-            'url'  => 'roles.index',
+            'url'  => 'roles',
             'icon' => 'fas fa-address-book',
             'can'  => 'users.index',
         ],

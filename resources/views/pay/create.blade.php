@@ -13,12 +13,6 @@
             <div class="card-header">
                 
                 <h3 class="text-center fw-bolder">Datos del Proveedor</h3>
-                @if($errors->first('descriptionseat'))
-                    <p class="alert alert-danger" role="alert">{{$errors->first('descriptionseat')}}</p>
-                @endif
-                @if($errors->first('descriptionseat'))
-                    <p class="alert alert-danger" role="alert">{{$errors->first('descriptionseat')}}</p>
-                @endif
             </div>
             <div class="card-body pl-6">
                     <input type="hidden" name="idorpa" value="{{$valueIdorpa}}">

@@ -13,6 +13,7 @@ class PagoNomina extends Model
         'idnom',
         'concepto_pago',
         'montopago',
+        'diast',
         'fecpag'
     ];
 }

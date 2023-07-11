@@ -54,7 +54,7 @@ class RetentionIslrController extends Controller
                 return view('islr.list',compact('registerOrderPay','tipagent','supplier'));
             }
             else {
-                Session::flash('message','El monto es menor a lo estimado, no requiere retencion');
+                Session::flash('message','El monto es menor a lo estimado para este contribuyente, no requiere retencion');
                 return redirect()->route('findagent');
             }
 

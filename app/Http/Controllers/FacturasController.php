@@ -106,6 +106,15 @@ class FacturasController extends Controller
             'numfact' => 'required',
             'numctrl' => 'required',
         ]);
+
+        if (strlen($request->get('tip_pag')) > 3 ) {
+            Session::flash('error','debe seleccionar un tipo de pago');
+            return redirect()->route('createinvoiceing',intval($request->get('idcli')));
+        }
+        if (strlen($request->get('money')) > 3 ) {
+            Session::flash('error','debe seleccionar un tipo de moneda');
+            return redirect()->route('createinvoiceing',intval($request->get('idcli')));
+        }
         $idcli = intval($request->get('idcli'));
         $conceptFact = new ConceptoFact();
         $conceptFact->num_ing = $request->get('numreling');

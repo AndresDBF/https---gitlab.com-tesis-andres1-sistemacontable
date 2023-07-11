@@ -16,6 +16,7 @@
       <div class="card-body pl-6">
           @csrf
             <input type="hidden" name="idorco" id="idorco" value="{{$purchase->idorco}}">
+            <input type="hidden" name="money" id="money" value="{{$purchase->moneda}}">
             <div class="mb-3">
               <label for="" class="form-label">Numero de Orden</label>
               <input type="numeric" name="numorder" id="numorder" value ="{{$purchase->numorden}}" class="form-control" readonly="readonly">

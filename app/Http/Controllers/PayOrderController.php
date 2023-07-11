@@ -12,6 +12,7 @@ use App\Models\TipPago;
 use App\Models\Moneda;
 use App\Models\OrdenPago;
 use App\Models\ConceptoOrden;
+use App\Models\ProyeccionGasto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -150,19 +151,35 @@ class PayOrderController extends Controller
     }
 
     public function storedetorder(Request $request){
-
+        $proyect = ProyeccionGasto::orderBy('fecstsini','asc')->first();
         $tasa_cambio = floatval($request->get('tasa'));
         $numConcept = intval($request->get('numconcept'));
         $taxes = 0;
         $amountTot = 0;
         $totOrder = 0;
         if ($numConcept == 1) {
+            if ($request->get('amountUnit_0') == null) {
+                Session::flash('error','Debe ingresar el monto en el concepto de la factura');
+                return redirect()->route('detorder',['numConcept' => intval($request->get('numconcept')), 'tasa' => floatval($request->get('tasa'))]);
+            }
+            if ($request->get('CantUnit_0') == null) {
+                Session::flash('error','Debe ingresar la cantidad en el concepto de la factura');
+                return redirect()->route('detorder',['numConcept' => intval($request->get('numconcept')), 'tasa' => floatval($request->get('tasa'))]);
+            }
+            if ($request->get('concept_0') == null) {
+                Session::flash('error','Debe ingresar una descripcion en el concepto de la factura');
+                return redirect()->route('detorder',['numConcept' => intval($request->get('numconcept')), 'tasa' => floatval($request->get('tasa'))]);
+            }
             $amountUnit = floatval($request->get('amountUnit_0'));
             $amountTot = floatval($request->get('total-amount0'));
             $conceptOrder = new ConceptoOrden();
             $conceptOrder->idorpa = $request->get('idorpa');
             $conceptOrder->descripcion = $request->get("concept_0");
             if ($request->get('money') == 'BS'){
+                if ($proyect->presupuesto < floatval($amountTot) ) {
+                    Session::flash('error','ha superado el monto total del presupuesto ');
+                    return redirect()->route('detorder',['numConcept' => intval($request->get('numconcept')), 'tasa' => floatval($request->get('tasa'))]);
+                }
                 $conceptOrder->montounitariolocal = $amountUnit;
                 $conceptOrder->montounitariomoneda = 0;
                 $conceptOrder->montobienlocal = $amountTot;
@@ -170,6 +187,10 @@ class PayOrderController extends Controller
                 $conceptOrder->save();
             }
             elseif ($request->get('money') == 'USD' || $request->get('money') == 'EUR') {
+                if ($proyect->presupuesto < floatval($amountTot * $tasa_cambio) ) {
+                    Session::flash('error','ha superado el monto total del presupuesto ');
+                    return redirect()->route('detorder',['numConcept' => intval($request->get('numconcept')), 'tasa' => floatval($request->get('tasa'))]);
+                }
                 $conceptOrder->montounitariolocal =  $amountUnit * $tasa_cambio;
                 $conceptOrder->montounitariomoneda = $amountUnit;
                 $conceptOrder->montobienlocal = $amountTot * $tasa_cambio;
@@ -177,6 +198,10 @@ class PayOrderController extends Controller
                 $conceptOrder->save();
             }
             else {
+                if ($proyect->presupuesto < floatval($amountTot / $tasa_cambio) ) {
+                    Session::flash('error','ha superado el monto total del presupuesto ');
+                    return redirect()->route('detorder',['numConcept' => intval($request->get('numconcept')), 'tasa' => floatval($request->get('tasa'))]);
+                }
                 $conceptOrder->montounitariolocal = $amountUnit / $tasa_cambio;
                 $conceptOrder->montounitariomoneda =  $amountUnit;
                 $conceptOrder->montobienlocal = $amountTot / $tasa_cambio;
@@ -209,6 +234,12 @@ class PayOrderController extends Controller
 
             $totpayorderlocal = $amountTotlocal + $igtflocal;
             $totpayordermoneda = $amountTotmoneda + $igtfmoneda;
+            if ($proyect->presupuesto < $totpayorderlocal ) {  
+                $conceptOrdens = ConceptoOrden::where('idorpa',intval($request->get('idorpa')))->delete();
+
+                Session::flash('error','ha superado el monto total del presupuesto');
+                return redirect()->route('detorder',['numConcept' => intval($request->get('numconcept')), 'tasa' => floatval($request->get('tasa'))]);
+            }
 
             $detOrder = new DetalleOrdenPago();
             $detOrder->idorpa = $request->get('idorpa');
@@ -234,12 +265,28 @@ class PayOrderController extends Controller
         }
         else {
             for ($i=0; $i < $numConcept; $i++) { 
+                if ($request->get("amountUnit_" . $i) == null) {
+                    Session::flash('error','Debe ingresar el monto en el concepto de la factura');
+                    return redirect()->route('detorder',['numConcept' => intval($request->get('numconcept')), 'tasa' => floatval($request->get('tasa'))]);
+                }
+                if ($request->get("CantUnit_" . $i) == null) {
+                    Session::flash('error','Debe ingresar la cantidad en el concepto de la factura');
+                    return redirect()->route('detorder',['numConcept' => intval($request->get('numconcept')), 'tasa' => floatval($request->get('tasa'))]);
+                }
+                if ($request->get("concept_" .$i) == null) {
+                    Session::flash('error','Debe ingresar una descripcion en el concepto de la factura');
+                    return redirect()->route('detorder',['numConcept' => intval($request->get('numconcept')), 'tasa' => floatval($request->get('tasa'))]);
+                }
                 $amountUnit = floatval($request->get("amountUnit_" . $i));
                 $amountTot = floatval($request->get("total-amount" . $i));
                 $conceptOrder = new ConceptoOrden();
                 $conceptOrder->idorpa = $request->get('idorpa');
                 $conceptOrder->descripcion = $request->get("concept_" . $i);
                 if ($request->get('money') == 'BS'){
+                    if ($proyect->presupuesto < floatval($amountTot) ) {
+                        Session::flash('error','ha superado el monto total del presupuesto ');
+                        return redirect()->route('detorder',['numConcept' => intval($request->get('numconcept')), 'tasa' => floatval($request->get('tasa'))]);
+                    }
                     $conceptOrder->montounitariolocal = $amountUnit;
                     $conceptOrder->montounitariomoneda = 0;
                     $conceptOrder->montobienlocal = $amountTot;
@@ -247,6 +294,10 @@ class PayOrderController extends Controller
                     $conceptOrder->save();
                 }
                 elseif ($request->get('money') == 'USD' || $request->get('money') == 'EUR') {
+                    if ($proyect->presupuesto < floatval($amountTot * $tasa_cambio) ) {
+                        Session::flash('error','ha superado el monto total del presupuesto ');
+                        return redirect()->route('detorder',['numConcept' => intval($request->get('numconcept')), 'tasa' => floatval($request->get('tasa'))]);
+                    }
                     $conceptOrder->montounitariolocal =  $amountUnit * $tasa_cambio;
                     $conceptOrder->montounitariomoneda = $amountUnit;
                     $conceptOrder->montobienlocal = $amountTot * $tasa_cambio;
@@ -254,6 +305,10 @@ class PayOrderController extends Controller
                     $conceptOrder->save();
                 }
                 else {
+                    if ($proyect->presupuesto < floatval($amountTot / $tasa_cambio) ) {
+                        Session::flash('error','ha superado el monto total del presupuesto ');
+                        return redirect()->route('detorder',['numConcept' => intval($request->get('numconcept')), 'tasa' => floatval($request->get('tasa'))]);
+                    }
                     $conceptOrder->montounitariolocal = $amountUnit / $tasa_cambio;
                     $conceptOrder->montounitariomoneda = $amountUnit;
                     $conceptOrder->montobienlocal = $amountTot / $tasa_cambio;
@@ -287,7 +342,12 @@ class PayOrderController extends Controller
     
                 $totpayorderlocal = $amountTotlocal + $igtflocal;
                 $totpayordermoneda = $amountTotmoneda + $igtfmoneda;
+                if ($proyect->presupuesto < $totpayorderlocal ) {  
+                    $conceptOrdens = ConceptoOrden::where('idorpa',intval($request->get('idorpa')))->delete();
     
+                    Session::flash('error','ha superado el monto total del presupuesto');
+                    return redirect()->route('detorder',['numConcept' => intval($request->get('numconcept')), 'tasa' => floatval($request->get('tasa'))]);
+                }
                 $detOrder = new DetalleOrdenPago();
                 $detOrder->idorpa = $request->get('idorpa');
                 $detOrder->idcon = $conceptOrder->idcon;

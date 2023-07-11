@@ -132,6 +132,7 @@ class PurchaseOrderController extends Controller
 
     public function storedetpurchase(Request $request){
 
+        $proyect = ProyeccionGasto::orderBy('fecstsini','asc')->first();
         $numConcept = intval($request->get('numconcept'));
         if (strlen($request->get('money')) > 3) {
             Session::flash('error','Seleccione un tipo de moneda');
@@ -144,14 +145,31 @@ class PurchaseOrderController extends Controller
         } 
         else {
             if ($numConcept == 1  ) {
+                if ($request->get('amountUnit_0') == null) {
+                    Session::flash('error','Debe ingresar el monto en el concepto de la factura');
+                    return redirect()->route('createdetorder',['numConcept' => intval($request->get('numconcept')),'tasa_cambio' => floatval($request->get('tasa_cambio'))]);
+                }
+                if ($request->get('CantUnit_0') == null) {
+                    Session::flash('error','Debe ingresar la cantidad en el concepto de la factura');
+                    return redirect()->route('createdetorder',['numConcept' => intval($request->get('numconcept')),'tasa_cambio' => floatval($request->get('tasa_cambio'))]);
+                }
+                if ($request->get('concept_0') == null) {
+                    Session::flash('error','Debe ingresar una descripcion en el concepto de la factura');
+                    return redirect()->route('createdetorder',['numConcept' => intval($request->get('numconcept')),'tasa_cambio' => floatval($request->get('tasa_cambio'))]);
+                }
                 $amountUnit = floatval($request->get('amountUnit_0'));
                 $amountTotal = floatval($request->get('total-amount0'));
-                
+
                 $detPurchase = new DetalleOrdenCompra();
                 $detPurchase->idorco = $request->get('idorco');
                 $detPurchase->descripcion = $request->get("concept_0");
                 if ($request->get('money') != 'BS') {
                     if ($request->get('money') == 'USD' || $request->get('EUR')){
+                        if ($proyect->presupuesto < floatval($amountTotal * $tasa_cambio) ) {
+                            Session::flash('error','ha superado el monto total del presupuesto ');
+                            return redirect()->route('createdetorder',['numConcept' => intval($request->get('numconcept')),'tasa_cambio' => floatval($request->get('tasa_cambio'))]);
+                        }
+                     
                         $detPurchase->montounitlocal = $amountUnit * $tasa_cambio;
                         $detPurchase->montounitmoneda = $amountUnit;
                         $detPurchase->montobienlocal = $amountTotal * $tasa_cambio;
@@ -163,6 +181,10 @@ class PurchaseOrderController extends Controller
                         
                     }
                     else {
+                        if ($proyect->presupuesto < floatval($amountTotal / $tasa_cambio) ) {         
+                            Session::flash('error','ha superado el monto total del presupuesto ');
+                            return redirect()->route('createdetorder',['numConcept' => intval($request->get('numconcept')),'tasa_cambio' => floatval($request->get('tasa_cambio'))]);
+                        }
                         $detPurchase->montounitlocal = $amountUnit / $tasa_cambio;
                         $detPurchase->montounitmoneda =  $amountUnit;
                         $detPurchase->montobienlocal = $amountTotal / $tasa_cambio;
@@ -176,6 +198,10 @@ class PurchaseOrderController extends Controller
                     
                 }
                 else {
+                    if ($proyect->presupuesto < floatval($amountTotal * $tasa_cambio) ) {  
+                        Session::flash('error','ha superado el monto total del presupuesto ');
+                        return redirect()->route('createdetorder',['numConcept' => intval($request->get('numconcept')),'tasa_cambio' => floatval($request->get('tasa_cambio'))]);
+                    }
                     $detPurchase->montounitlocal = $amountTotal;
                     $detPurchase->montounitmoneda = 0;
                     $detPurchase->montobienlocal = $amountTotal;
@@ -196,6 +222,12 @@ class PurchaseOrderController extends Controller
                     $taxeslocal =  floatval($sumAmountlocal * 0.16);
                     $taxesmoneda = floatval($sumAmountmoneda * 0.16);
                     $totPurchaselocal = floatval($sumAmountlocal + $taxeslocal);   
+                    if ($proyect->presupuesto < $totPurchaselocal ) {  
+                        $detPurchase = DetalleOrdenCompra::where('idorco',$idorco)->delete();
+
+                        Session::flash('error','ha superado el monto total del presupuesto ');
+                        return redirect()->route('createdetorder',['numConcept' => intval($request->get('numconcept')),'tasa_cambio' => floatval($request->get('tasa_cambio'))]);
+                    }
                     $totPurchasemoneda = floatval($sumAmountmoneda + $taxesmoneda);   
                     DetalleOrdenCompra::where('idorco', $idorco)->update([
                         'montoivalocal' => $taxeslocal,
@@ -223,6 +255,18 @@ class PurchaseOrderController extends Controller
             else {
                 
                 for ($i=0; $i < $numConcept; $i++) { 
+                    if ($request->get("amountUnit_" . $i) == null) {
+                        Session::flash('error','Debe ingresar el monto en el concepto de la factura');
+                        return redirect()->route('createdetorder',['numConcept' => intval($request->get('numconcept')),'tasa_cambio' => floatval($request->get('tasa_cambio'))]);
+                    }
+                    if ($request->get("CantUnit_" . $i) == null) {
+                        Session::flash('error','Debe ingresar la cantidad en el concepto de la factura');
+                        return redirect()->route('createdetorder',['numConcept' => intval($request->get('numconcept')),'tasa_cambio' => floatval($request->get('tasa_cambio'))]);
+                    }
+                    if ($request->get("concept_" .$i) == null) {
+                        Session::flash('error','Debe ingresar una descripcion en el concepto de la factura');
+                        return redirect()->route('createdetorder',['numConcept' => intval($request->get('numconcept')),'tasa_cambio' => floatval($request->get('tasa_cambio'))]);
+                    }
                     $amountUnit = floatval($request->get("amountUnit_" . $i));
                     $amountTotal = floatval($request->get("total-amount" . $i));
                      
@@ -335,7 +379,7 @@ class PurchaseOrderController extends Controller
     public function deleteorderco($idorco){
         $conceptPurchase = DetalleOrdenCompra::where('idorco',$idorco)->delete();
         $Purchase = OrdenCompra::where('idorco',$idorco)->delete();
-        
+        Session::flash('delete','se ha eliminado la orden de compra');
         return redirect()->route('findsupplier');
     }
     public function deleteordercom($idorco){

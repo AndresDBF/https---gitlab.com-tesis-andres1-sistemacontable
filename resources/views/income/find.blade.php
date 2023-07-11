@@ -83,13 +83,13 @@
                         @else
                             <td>{{ $invoice->mtototallocal }}</td> 
                         @endif
-                        @can('createIng', $post)
+                      
                             <td class="text-center">
                                 <a href="#" class="btn btn-info mb-2" onclick="confirmCreate('{{ route('createIng', ['idfact' => $invoice->idfact, 'idcli' => $customer->idcli]) }}')">
                                     <i class="fas fa-plus-circle"></i>
                                 </a>
                             </td>
-                        @endcan
+                
                         
                     </tr>
                 @endforeach
